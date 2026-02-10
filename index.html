@@ -26,7 +26,6 @@
     a{color:inherit;text-decoration:none}
     .container{max-width:1100px;margin:0 auto;padding:26px 16px 70px}
 
-    /* Navbar */
     .nav{
       position:sticky; top:0; z-index:50;
       backdrop-filter: blur(10px);
@@ -36,20 +35,20 @@
     .nav-inner{
       max-width:1100px; margin:0 auto;
       padding:14px 16px;
-      display:flex; align-items:center; justify-content:space-between; gap:16px;
+      display:flex; align-items:center; justify-content:space-between;
     }
-    .brand{font-weight:900; letter-spacing:.2px; font-size:18px}
-    .links{display:flex; gap:14px; color:var(--muted); flex-wrap:wrap}
+    .brand{font-weight:900; font-size:18px}
+    .links{display:flex; gap:14px; color:var(--muted)}
     .links a:hover{color:var(--txt)}
+
     .btn{
       border:1px solid var(--border);
       background: rgba(255,255,255,.04);
       color:var(--txt);
       padding:10px 12px;
       border-radius:12px;
-      cursor:pointer;
-      display:inline-block;
       font-weight:650;
+      display:inline-block;
     }
     .btn.primary{
       border:none;
@@ -58,26 +57,19 @@
       font-weight:800;
     }
 
-    /* Hero */
     .hero{padding-top:18px}
     .hero-card{
       border:1px solid var(--border);
       background: var(--panel);
       border-radius:20px;
       padding:22px;
-      overflow:hidden;
     }
-    .badge{
-      display:inline-block;
-      font-size:12px;
-      color:var(--muted);
-      border:1px solid var(--border);
-      padding:6px 10px;
-      border-radius:999px;
-    }
-    h1{margin:10px 0 6px; font-size:44px; letter-spacing:-.02em}
-    p{margin:0; color:var(--muted); line-height:1.6}
+
+    h1{margin:10px 0 6px; font-size:44px}
+    p{margin:0; color:var(--muted)}
+
     .cta{display:flex; gap:10px; flex-wrap:wrap; margin-top:14px}
+
     .quick{
       margin-top:14px;
       display:grid;
@@ -86,14 +78,12 @@
     }
     .quick-item{
       border:1px solid var(--border);
-      background: rgba(0,0,0,.15);
       border-radius:14px;
       padding:12px;
     }
     .quick-item .k{font-size:12px; color:var(--muted)}
     .quick-item .v{font-weight:800; margin-top:4px}
 
-    /* Sections */
     .grid3{
       margin-top:14px;
       display:grid;
@@ -106,11 +96,7 @@
       border-radius:18px;
       padding:16px;
     }
-    .card h3{margin:0 0 8px}
-    .card p{margin:0 0 10px}
-    .link{color: var(--acc); font-weight:800}
 
-    /* News preview */
     .news{
       margin-top:14px;
       border:1px solid var(--border);
@@ -118,122 +104,88 @@
       border-radius:18px;
       padding:16px;
     }
-    .news-head{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;flex-wrap:wrap}
-    .news-list{margin-top:10px;display:grid;gap:10px}
-    .news-item{
-      border:1px solid var(--border);
-      background: rgba(0,0,0,.12);
-      border-radius:14px;
-      padding:12px;
-    }
-    .news-item .meta{font-size:12px;color:var(--muted);margin-bottom:6px}
-    .footer{margin-top:22px;color:var(--muted);font-size:13px;opacity:.9}
+
+    .footer{margin-top:22px;color:var(--muted);font-size:13px}
 
     @media (max-width: 900px){
       .links{display:none}
-      h1{font-size:36px}
       .grid3{grid-template-columns:1fr}
       .quick{grid-template-columns:1fr}
     }
   </style>
 </head>
 <body>
-  <header class="nav">
-    <div class="nav-inner">
-      <a class="brand" href="#">SkyFrost</a>
-      <nav class="links">
-        <a href="#wiki">Wiki</a>
-        <a href="#supporto">Supporto</a>
-        <a href="#vote">Vote</a>
-        <a href="#news">News</a>
-      </nav>
-      <div>
-        <a class="btn" href="#login">Login</a>
-        <a class="btn primary" href="#discord">Discord</a>
+
+<header class="nav">
+  <div class="nav-inner">
+    <div class="brand">SkyFrost</div>
+    <nav class="links">
+      <a href="#">Wiki</a>
+      <a href="#">Supporto</a>
+      <a href="#">Vote</a>
+      <a href="#">News</a>
+    </nav>
+    <a class="btn primary" href="http://discord.skyfrost.it/" target="_blank">Discord</a>
+  </div>
+</header>
+
+<main class="container">
+
+  <section class="hero">
+    <div class="hero-card">
+      <h1>SkyFrost</h1>
+      <p>Server Hytale italiano — entra nella community.</p>
+
+      <div class="cta">
+        <a class="btn primary" href="http://discord.skyfrost.it/" target="_blank">Unisciti al Discord</a>
+      </div>
+
+      <div class="quick">
+        <div class="quick-item">
+          <div class="k">IP</div>
+          <div class="v">play.skyfrost.it</div>
+        </div>
+        <div class="quick-item">
+          <div class="k">Discord</div>
+          <div class="v">discord.skyfrost.it</div>
+        </div>
+        <div class="quick-item">
+          <div class="k">Status</div>
+          <div class="v">Online (demo)</div>
+        </div>
       </div>
     </div>
-  </header>
+  </section>
 
-  <main class="container">
-    <section class="hero">
-      <div class="hero-card">
-        <span class="badge">Hytale Server • ITA</span>
-        <h1>SkyFrost</h1>
-        <p>
-          Avventure, eventi e progressione. Entra nella community e scopri il mondo di SkyFrost.
-        </p>
-
-        <div class="cta">
-          <a class="btn primary" href="#discord">Unisciti al Discord</a>
-          <a class="btn" href="#wiki">Guarda la Wiki</a>
-          <a class="btn" href="#supporto">Apri un Ticket</a>
-        </div>
-
-        <div class="quick">
-          <div class="quick-item">
-            <div class="k">IP</div>
-            <div class="v">play.skyfrost.it</div>
-          </div>
-          <div class="quick-item">
-            <div class="k">Discord</div>
-            <div class="v">discord.gg/INVITO</div>
-          </div>
-          <div class="quick-item">
-            <div class="k">Status</div>
-            <div class="v">Online (demo)</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="grid3">
-      <div class="card" id="wiki">
-        <h3>Wiki</h3>
-        <p>Guide, regole e info sul server.</p>
-        <a class="link" href="#">Apri la Wiki →</a>
-      </div>
-      <div class="card" id="supporto">
-        <h3>Supporto</h3>
-        <p>Ticket per bug, ban appeal e assistenza.</p>
-        <a class="link" href="#">Apri un Ticket →</a>
-      </div>
-      <div class="card" id="vote">
-        <h3>Vote</h3>
-        <p>Vota SkyFrost e ottieni ricompense.</p>
-        <a class="link" href="#">Vai alla pagina Vote →</a>
-      </div>
-    </section>
-
-    <section class="news" id="news">
-      <div class="news-head">
-        <div>
-          <h3 style="margin:0">News & Updates</h3>
-          <p style="margin:6px 0 0">Annunci, eventi e changelog.</p>
-        </div>
-        <a class="btn" href="#">Vedi tutte</a>
-      </div>
-
-      <div class="news-list">
-        <div class="news-item">
-          <div class="meta">09 Feb • Update</div>
-          <div style="font-weight:800">Benvenuti su SkyFrost</div>
-          <div class="meta" style="margin-top:6px">Il sito è online! Presto arrivano wiki e supporto.</div>
-        </div>
-        <div class="news-item">
-          <div class="meta">—</div>
-          <div style="font-weight:800">Prossimo: Login Discord</div>
-          <div class="meta" style="margin-top:6px">Aggiungeremo area utente e ticket veri.</div>
-        </div>
-      </div>
-    </section>
-
-    <div class="footer">
-      © <span id="y"></span> SkyFrost — Tutti i diritti riservati.
+  <section class="grid3">
+    <div class="card">
+      <h3>Wiki</h3>
+      <p>Guide e informazioni sul server.</p>
     </div>
-  </main>
+    <div class="card">
+      <h3>Supporto</h3>
+      <p>Apri ticket per assistenza.</p>
+    </div>
+    <div class="card">
+      <h3>Vote</h3>
+      <p>Vota il server e ottieni ricompense.</p>
+    </div>
+  </section>
 
-  <script>
-    document.getElementById("y").textContent = new Date().getFullYear();
-  </script>
+  <section class="news">
+    <h3>News</h3>
+    <p>Presto arriveranno le news automatiche di Hytale.</p>
+  </section>
+
+  <div class="footer">
+    © <span id="y"></span> SkyFrost
+  </div>
+
+</main>
+
+<script>
+document.getElementById("y").textContent = new Date().getFullYear();
+</script>
+
 </body>
 </html>
