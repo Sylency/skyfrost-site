@@ -220,7 +220,7 @@
       </div>
 
       <p style="margin:12px 0 0; font-size:12px; color:var(--muted);">
-        Nota: le news sono prese da un feed RSS pubblico che traccia gli aggiornamenti di Hytale.
+        Nota: se il feed non risponde, riprova più tardi (dipende dalla fonte esterna).
       </p>
     </section>
 
@@ -232,30 +232,28 @@
   <script>
     document.getElementById("y").textContent = new Date().getFullYear();
 
-    // Feed RSS (pubblico) che traccia le news di Hytale:
-    // https://hytaletracker.github.io/rss.xml
+    // Feed RSS pubblico che traccia le news di Hytale
     const RSS_URL = "https://hytaletracker.github.io/rss.xml";
 
-    // Per evitare blocchi CORS, usiamo un proxy “read-only” che permette fetch dal browser.
-    // (Se un giorno smette di funzionare, ti cambio proxy in 1 minuto.)
-    const PROXY = (url) => "https://r.jina.ai/http://r.jina.ai/http://".includes("??") ? url : ("https://r.jina.ai/http://" + url.replace(/^https?:\/\//, ""));
+    // Proxy CORS affidabile per leggere RSS dal browser
+    const ALLORIGINS = "https://api.allorigins.win/raw?url=" + encodeURIComponent(RSS_URL);
 
     const listEl = document.getElementById("news-list");
     const sourceEl = document.getElementById("news-source");
     sourceEl.href = RSS_URL;
 
-    function esc(s){ return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+    function esc(s){
+      return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+    }
 
     async function loadNews(){
       try{
-        const res = await fetch(PROXY(RSS_URL));
+        const res = await fetch(ALLORIGINS, { cache: "no-store" });
         if(!res.ok) throw new Error("Fetch failed");
-        const text = await res.text();
+        const xmlText = await res.text();
 
-        // r.jina.ai ritorna testo “pulito”: cerchiamo comunque l'XML dentro.
-        // Se non troviamo <item>, mostriamo errore.
         const parser = new DOMParser();
-        const xml = parser.parseFromString(text, "text/xml");
+        const xml = parser.parseFromString(xmlText, "text/xml");
         const items = Array.from(xml.querySelectorAll("item")).slice(0, 5);
 
         if(items.length === 0) throw new Error("No items");
@@ -281,9 +279,9 @@
         listEl.innerHTML = `
           <div class="news-item">
             <div class="meta">Oops</div>
-            <div style="font-weight:900">Non riesco a caricare le news in questo momento.</div>
+            <div style="font-weight:900">Non riesco a caricare le news adesso.</div>
             <div class="meta" style="margin-top:6px">
-              Apri la fonte: <a class="link" href="${RSS_URL}" target="_blank" rel="noopener">RSS Hytale</a>
+              Apri la fonte: <a class="link" href="${esc(RSS_URL)}" target="_blank" rel="noopener">RSS Hytale</a>
             </div>
           </div>
         `;
