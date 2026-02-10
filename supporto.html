@@ -90,6 +90,9 @@
     const msg = document.getElementById("msg");
 
     form.addEventListener("submit", async (e) => {
+      const last = Number(localStorage.getItem("sf_last_ticket") || "0");
+if (Date.now() - last < 30000) { msg.textContent = "Aspetta 30 secondi prima di inviare un altro ticket."; return; }
+localStorage.setItem("sf_last_ticket", String(Date.now()));
       e.preventDefault();
       msg.textContent = "Invio in corso…";
 
