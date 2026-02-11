@@ -8,17 +8,11 @@
   <style>
     :root{
       --bg:#070a12;
-      --panel: rgba(255,255,255,.06);
-      --panel2: rgba(255,255,255,.08);
       --border: rgba(255,255,255,.10);
       --border2: rgba(255,255,255,.14);
       --txt:#eaf0ff;
       --muted:#a9b6d3;
-      --acc:#7dd3fc;
-      --acc2:#60a5fa;
-      --shadow: 0 20px 60px rgba(0,0,0,.45);
     }
-
     *{box-sizing:border-box}
     body{
       margin:0;
@@ -30,7 +24,6 @@
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
       overflow-x:hidden;
     }
-
     a{color:inherit;text-decoration:none}
     .container{max-width:1120px;margin:0 auto;padding:22px 16px 70px}
 
@@ -72,11 +65,7 @@
       font-weight:900;
       transition: transform .12s ease, background .12s ease, border-color .12s ease;
     }
-    .btn:hover{
-      transform: translateY(-1px);
-      border-color: rgba(255,255,255,.16);
-      background: rgba(255,255,255,.06);
-    }
+    .btn:hover{transform: translateY(-1px); border-color: rgba(255,255,255,.16); background: rgba(255,255,255,.06);}
     .btn.primary{
       border:none;
       background: linear-gradient(90deg, #22d3ee, #60a5fa);
@@ -85,7 +74,6 @@
       box-shadow: 0 16px 40px rgba(34,211,238,.10);
     }
     .btn.ghost{background: transparent}
-
     .right{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 
     .grid{
@@ -104,11 +92,7 @@
       box-shadow: 0 12px 40px rgba(0,0,0,.25);
     }
 
-    .title{
-      margin:0 0 10px;
-      font-size:18px;
-      letter-spacing:-.01em;
-    }
+    .title{margin:0 0 10px;font-size:18px;letter-spacing:-.01em}
     .muted{color:rgba(234,240,255,.70);line-height:1.55}
 
     .profile{
@@ -139,43 +123,7 @@
       align-items:center;
       gap:8px;
     }
-    .dot{width:9px;height:9px;border-radius:999px;box-shadow:0 0 0 3px rgba(255,255,255,.06)}
-    .dot.dev{background:#60a5fa}
-    .dot.online{background:#22c55e}
-    .dot.offline{background:#ef4444}
-    .dot.maintenance{background:#f59e0b}
 
-    .actions{display:grid;gap:10px;margin-top:12px}
-    .action{
-      border:1px solid var(--border);
-      background: rgba(0,0,0,.12);
-      border-radius:16px;
-      padding:12px;
-      display:flex;justify-content:space-between;align-items:center;gap:10px;
-    }
-    .action .l{display:flex;gap:10px;align-items:flex-start}
-    .action .ico{
-      width:34px;height:34px;border-radius:14px;
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(0,0,0,.14);
-      display:flex;align-items:center;justify-content:center;
-      font-size:16px;
-      flex:0 0 auto;
-    }
-    .action .h{font-weight:950;margin:0}
-    .action .d{margin:2px 0 0;color:rgba(234,240,255,.70);font-size:13px;line-height:1.45}
-
-    .news-list{display:grid;gap:10px;margin-top:10px}
-    .news-item{
-      border:1px solid var(--border);
-      background: rgba(0,0,0,.12);
-      border-radius:16px;
-      padding:12px;
-    }
-    .news-item .meta{font-size:12px;color:rgba(234,240,255,.62);margin-bottom:6px}
-    .spinner{color:rgba(234,240,255,.70);font-size:14px}
-
-    /* Roles */
     .roles{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
     .role{
       border:1px solid var(--border);
@@ -191,15 +139,14 @@
     }
     .role .r-dot{width:9px;height:9px;border-radius:999px;background:rgba(125,211,252,.85);flex:0 0 auto}
     .role .r-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:260px}
-    .hint{
-      margin-top:10px;
-      padding:12px;
+
+    .action{
+      border:1px solid var(--border);
+      background: rgba(0,0,0,.12);
       border-radius:16px;
-      border:1px dashed rgba(255,255,255,.18);
-      background: rgba(0,0,0,.10);
-      color:rgba(234,240,255,.70);
-      line-height:1.55;
-      font-size:13px;
+      padding:12px;
+      display:flex;justify-content:space-between;align-items:center;gap:10px;
+      margin-top:10px;
     }
 
     @media (max-width: 980px){
@@ -218,6 +165,7 @@
 
       <div class="right">
         <a class="btn" href="/">Home</a>
+        <a class="btn" href="/profilo.html">Profilo</a>
         <a class="btn" href="/wiki.html">Wiki</a>
         <a class="btn" href="/supporto.html">Supporto</a>
         <a class="btn primary" href="http://discord.skyfrost.it/" target="_blank" rel="noopener">Discord</a>
@@ -239,277 +187,87 @@
           </div>
         </div>
 
-        <div class="pillrow">
-          <div class="pill" id="status-pill">
-            <span class="dot dev" id="status-dot"></span>
-            <span id="status-text">In sviluppo</span>
-          </div>
+        <div class="pillrow" id="badges"></div>
 
-          <div class="pill">
-            <span>📌</span>
-            <span id="ip-text">play.skyfrost.it</span>
+        <div class="action">
+          <div>
+            <div style="font-weight:950">Vai al profilo completo</div>
+            <div class="muted" style="margin-top:2px;font-size:13px">Ruoli, link rapidi e info account.</div>
           </div>
-
-          <div class="pill" id="boost-pill" style="display:none;">
-            <span>🚀</span>
-            <span>Server Booster</span>
-          </div>
+          <a class="btn" href="/profilo.html">Apri</a>
         </div>
-
-        <div class="actions">
-          <div class="action">
-            <div class="l">
-              <div class="ico">📋</div>
-              <div>
-                <div class="h">Copia IP</div>
-                <div class="d">Copia l’IP del server negli appunti.</div>
-              </div>
-            </div>
-            <button class="btn" id="copy-ip" type="button">Copia</button>
-          </div>
-
-          <a class="action" href="/supporto.html">
-            <div class="l">
-              <div class="ico">🛠️</div>
-              <div>
-                <div class="h">Apri un Ticket</div>
-                <div class="d">Supporto rapido su Discord.</div>
-              </div>
-            </div>
-            <span class="btn">Apri</span>
-          </a>
-
-          <a class="action" href="/wiki.html">
-            <div class="l">
-              <div class="ico">📚</div>
-              <div>
-                <div class="h">Wiki</div>
-                <div class="d">Regole e guide aggiornate.</div>
-              </div>
-            </div>
-            <span class="btn">Vai</span>
-          </a>
-        </div>
-
-        <div class="hint" id="copy-note" style="display:none;"></div>
       </aside>
 
-      <section style="display:grid; gap:12px;">
-        <div class="card">
-          <h2 class="title">Ruoli Discord</h2>
-          <p class="muted" style="margin:0">I tuoi ruoli reali nel server SkyFrost.</p>
+      <section class="card">
+        <h2 class="title">Ruoli Discord (filtrati)</h2>
+        <p class="muted" style="margin:0">
+          Mostro solo: Owner, Sr. Admin, Admin, Staff, VIP, Utente.
+        </p>
 
-          <div class="roles" id="roles">
-            <div class="spinner">Caricamento ruoli…</div>
-          </div>
-
-          <div class="hint" id="roles-hint" style="display:none;"></div>
-        </div>
-
-        <div class="card">
-          <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:10px;flex-wrap:wrap">
-            <div>
-              <h2 class="title" style="margin-bottom:4px">News di Hytale</h2>
-              <p class="muted" style="margin:0">Aggiornate automaticamente.</p>
-            </div>
-            <a class="btn" id="news-source" href="#" target="_blank" rel="noopener">Fonte</a>
-          </div>
-
-          <div class="news-list" id="news-list">
-            <div class="spinner">Caricamento news…</div>
-          </div>
-
-          <p class="muted" style="margin:12px 0 0; font-size:12px">
-            Nota: se il feed non risponde, riprova più tardi.
-          </p>
+        <div class="roles" id="roles" style="margin-top:10px">
+          <div class="muted">Caricamento…</div>
         </div>
       </section>
     </div>
   </main>
 
   <script>
-    // ===== Config =====
-    const SKYFROST_STATUS = "dev"; // online | offline | maintenance | dev
-    const SERVER_IP = "play.skyfrost.it";
-
-    // ===== Status =====
-    (function applyStatus(){
-      const dot = document.getElementById("status-dot");
-      const text = document.getElementById("status-text");
-
-      const map = {
-        online: { cls: "online", label: "Online" },
-        offline: { cls: "offline", label: "Offline" },
-        maintenance: { cls: "maintenance", label: "Manutenzione" },
-        dev: { cls: "dev", label: "In sviluppo" },
-      };
-      const s = map[SKYFROST_STATUS] || map.dev;
-      dot.className = "dot " + s.cls;
-      text.textContent = s.label;
-    })();
-
-    document.getElementById("ip-text").textContent = SERVER_IP;
-
-    // ===== Auth: carica profilo =====
-    async function loadMe(){
-      const r = await fetch("/api/me", { cache: "no-store" });
-      const j = await r.json();
-
-      if(!j.loggedIn){
-        window.location.href = "/api/login";
-        return;
-      }
-
-      const u = j.user;
-      document.getElementById("name").textContent = u.username || "User";
-      document.getElementById("uid").textContent = "ID: " + (u.id || "-");
-
-      const av = document.getElementById("avatar");
-      if(u.avatar){
-        av.src = u.avatar;
-      }else{
-        av.style.display = "none";
-      }
-    }
-    loadMe();
-
-    // ===== Copia IP =====
-    const note = document.getElementById("copy-note");
-    async function copyText(text){
-      try{
-        await navigator.clipboard.writeText(text);
-        return true;
-      }catch{
-        const ta = document.createElement("textarea");
-        ta.value = text;
-        ta.style.position = "fixed";
-        ta.style.left = "-9999px";
-        document.body.appendChild(ta);
-        ta.select();
-        try{
-          const ok = document.execCommand("copy");
-          document.body.removeChild(ta);
-          return ok;
-        }catch{
-          document.body.removeChild(ta);
-          return false;
-        }
-      }
-    }
-
-    document.getElementById("copy-ip").addEventListener("click", async () => {
-      const ok = await copyText(SERVER_IP);
-      note.style.display = "block";
-      note.innerHTML = ok ? "✅ IP copiato negli appunti!" : "❌ Non riesco a copiare. Copia manualmente l'IP.";
-      setTimeout(() => (note.style.display = "none"), 2500);
-    });
-
-    // ===== Ruoli veri =====
     function colorToHex(n){
       const hex = Number(n || 0).toString(16).padStart(6, "0");
       return "#" + hex;
     }
 
+    async function loadMe(){
+      const r = await fetch("/api/me", { cache: "no-store" });
+      const j = await r.json();
+      if(!j.loggedIn){ window.location.href="/api/login"; return; }
+
+      const u = j.user;
+      document.getElementById("name").textContent = u.username || "User";
+      document.getElementById("uid").textContent = "ID: " + (u.id || "-");
+      const av = document.getElementById("avatar");
+      if(u.avatar){ av.src = u.avatar; } else { av.style.display="none"; }
+    }
+
     async function loadRoles(){
       const rolesEl = document.getElementById("roles");
-      const hintEl = document.getElementById("roles-hint");
-      rolesEl.innerHTML = `<div class="spinner">Caricamento ruoli…</div>`;
+      const badgesEl = document.getElementById("badges");
 
-      try{
-        const r = await fetch("/api/roles", { cache: "no-store" });
-        if(!r.ok){
-          const t = await r.text().catch(()=> "");
-          throw new Error(t || "roles error");
-        }
-        const j = await r.json();
+      const r = await fetch("/api/roles", { cache: "no-store" });
+      const j = await r.json();
 
-        if(!j.ok){
-          if(j.reason === "not_in_guild"){
-            rolesEl.innerHTML = `<div class="role"><span class="r-dot"></span><span class="r-name">Non sei nel server Discord</span></div>`;
-            hintEl.style.display = "block";
-            hintEl.textContent = "Entra su Discord (discord.skyfrost.it) per vedere i tuoi ruoli qui.";
-            return;
-          }
-          rolesEl.innerHTML = `<div class="role"><span class="r-dot"></span><span class="r-name">Fai login per vedere i ruoli</span></div>`;
-          return;
-        }
-
-        const roles = Array.isArray(j.roles) ? j.roles : [];
-        if(roles.length === 0){
-          rolesEl.innerHTML = `<div class="role"><span class="r-dot"></span><span class="r-name">Nessun ruolo speciale</span></div>`;
-        } else {
-          rolesEl.innerHTML = roles.map(r => {
-            const c = colorToHex(r.color);
-            return `<div class="role" title="${r.id}">
-              <span class="r-dot" style="background:${c}"></span>
-              <span class="r-name">${r.name}</span>
-            </div>`;
-          }).join("");
-        }
-
-        // booster pill
-        if(j.booster){
-          document.getElementById("boost-pill").style.display = "inline-flex";
-        }
-      }catch(e){
-        rolesEl.innerHTML = `<div class="role"><span class="r-dot"></span><span class="r-name">Errore caricamento ruoli</span></div>`;
-        hintEl.style.display = "block";
-        hintEl.textContent = "Controlla che su Vercel ci siano DISCORD_BOT_TOKEN e DISCORD_GUILD_ID e che il bot sia nel server.";
+      if(!j.ok){
+        rolesEl.innerHTML = `<div class="muted">Non disponibile.</div>`;
+        return;
       }
+
+      // badges
+      badgesEl.innerHTML = "";
+      if(j.primaryRole){
+        const c = colorToHex(j.primaryRole.color);
+        badgesEl.innerHTML += `<div class="pill"><span style="display:inline-block;width:10px;height:10px;border-radius:999px;background:${c}"></span>${j.primaryRole.name}</div>`;
+      }
+      if(j.booster){
+        badgesEl.innerHTML += `<div class="pill">🚀 Booster</div>`;
+      }
+
+      const roles = Array.isArray(j.roles) ? j.roles : [];
+      if(roles.length === 0){
+        rolesEl.innerHTML = `<div class="role"><span class="r-dot"></span><span class="r-name">Nessun ruolo tra quelli mostrati</span></div>`;
+        return;
+      }
+
+      rolesEl.innerHTML = roles.map(rr => {
+        const c = colorToHex(rr.color);
+        return `<div class="role" title="${rr.id}">
+          <span class="r-dot" style="background:${c}"></span>
+          <span class="r-name">${rr.name}</span>
+        </div>`;
+      }).join("");
     }
+
+    loadMe();
     loadRoles();
-
-    // ===== News Hytale =====
-    const RSS_URL = "https://hytaletracker.github.io/rss.xml";
-    const ALLORIGINS = "https://api.allorigins.win/raw?url=" + encodeURIComponent(RSS_URL);
-
-    const newsList = document.getElementById("news-list");
-    const sourceEl = document.getElementById("news-source");
-    sourceEl.href = RSS_URL;
-
-    function esc(s){
-      return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-    }
-
-    async function loadNews(){
-      try{
-        const res = await fetch(ALLORIGINS, { cache: "no-store" });
-        if(!res.ok) throw new Error("Fetch failed");
-        const xmlText = await res.text();
-
-        const parser = new DOMParser();
-        const xml = parser.parseFromString(xmlText, "text/xml");
-        const items = Array.from(xml.querySelectorAll("item")).slice(0, 5);
-        if(items.length === 0) throw new Error("No items");
-
-        newsList.innerHTML = items.map(it => {
-          const title = it.querySelector("title")?.textContent?.trim() || "News";
-          const link = it.querySelector("link")?.textContent?.trim() || "#";
-          const pubDate = it.querySelector("pubDate")?.textContent?.trim() || "";
-          const dateTxt = pubDate ? new Date(pubDate).toLocaleDateString("it-IT", { day:"2-digit", month:"short" }) : "";
-
-          return `
-            <div class="news-item">
-              <div class="meta">${esc(dateTxt)} • Hytale</div>
-              <div style="font-weight:950">
-                <a href="${esc(link)}" target="_blank" rel="noopener">${esc(title)}</a>
-              </div>
-            </div>
-          `;
-        }).join("");
-      } catch(e){
-        newsList.innerHTML = `
-          <div class="news-item">
-            <div class="meta">Oops</div>
-            <div style="font-weight:950">Non riesco a caricare le news adesso.</div>
-            <div class="meta" style="margin-top:6px">
-              Apri la fonte: <a class="link" href="${esc(RSS_URL)}" target="_blank" rel="noopener">RSS Hytale</a>
-            </div>
-          </div>
-        `;
-      }
-    }
-    loadNews();
   </script>
 </body>
 </html>
