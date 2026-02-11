@@ -130,7 +130,7 @@
       border-radius:999px;
       background: rgba(0,0,0,.12);
       display:none;
-      max-width:280px;
+      max-width:320px;
       overflow:hidden;
       text-overflow:ellipsis;
       white-space:nowrap;
@@ -141,6 +141,29 @@
       width:22px;height:22px;border-radius:999px;
       border:1px solid rgba(255,255,255,.14);
       display:none;
+    }
+
+    /* Badge ruolo (navbar) */
+    .role-badge{
+      display:none;
+      align-items:center;
+      gap:8px;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.14);
+      font-weight:950;
+      font-size:13px;
+      max-width:220px;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+    }
+    .role-dot{
+      width:9px;height:9px;border-radius:999px;
+      box-shadow: 0 0 0 3px rgba(255,255,255,.06);
+      background: rgba(125,211,252,.85);
+      flex:0 0 auto;
     }
 
     /* HERO */
@@ -347,26 +370,6 @@
     .mode h4{margin:0;font-size:16px}
     .mode p{margin:0;color:rgba(234,240,255,.72);line-height:1.55}
 
-    /* NEWS */
-    .news{
-      margin-top:14px;
-      border:1px solid var(--border2);
-      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.04));
-      border-radius:20px;
-      padding:16px;
-      box-shadow: 0 12px 40px rgba(0,0,0,.25);
-    }
-    .news-head{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;flex-wrap:wrap}
-    .news-list{margin-top:10px;display:grid;gap:10px}
-    .news-item{
-      border:1px solid var(--border);
-      background: rgba(0,0,0,.12);
-      border-radius:16px;
-      padding:12px;
-    }
-    .news-item .meta{font-size:12px;color:rgba(234,240,255,.62);margin-bottom:6px}
-    .spinner{color:rgba(234,240,255,.70);font-size:14px}
-
     .footer{margin-top:22px;color:rgba(234,240,255,.62);font-size:13px;opacity:.95}
 
     @media (max-width: 900px){
@@ -376,12 +379,12 @@
       .quick{grid-template-columns:1fr}
       .modes{grid-template-columns:1fr}
       .auth{justify-content:flex-start}
+      .role-badge{display:none !important;} /* su mobile nascondiamo il badge per spazio */
     }
   </style>
 </head>
 
 <body>
-  <!-- ❄️ neve -->
   <canvas id="snow"></canvas>
 
   <header class="nav">
@@ -394,11 +397,16 @@
       <nav class="links">
         <a href="/wiki.html">Wiki</a>
         <a href="/supporto.html">Supporto</a>
+        <a href="/profilo.html">Profilo</a>
         <a href="#vote">Vote</a>
-        <a href="#news">News</a>
       </nav>
 
       <div class="auth">
+        <span class="role-badge" id="nav-role">
+          <span class="role-dot" id="nav-role-dot"></span>
+          <span id="nav-role-text">Ruolo</span>
+        </span>
+
         <span class="hello" id="nav-hello">
           <img id="nav-avatar" alt="">
           <span id="nav-hello-text">Ciao, …</span>
@@ -432,11 +440,11 @@
             <a class="btn primary" href="http://discord.skyfrost.it/" target="_blank" rel="noopener">Unisciti al Discord</a>
             <a class="btn" href="/wiki.html">Guarda la Wiki</a>
             <a class="btn" href="/supporto.html">Apri un Ticket</a>
+            <a class="btn" href="/profilo.html">Vai al Profilo</a>
             <a class="btn" id="hero-dashboard" href="/dashboard.html">Vai alla Dashboard</a>
           </div>
 
           <div class="quick">
-            <!-- IP + COPIA -->
             <div class="quick-item">
               <div class="k">IP</div>
               <div class="ip-row">
@@ -466,7 +474,6 @@
       </div>
     </section>
 
-    <!-- MODALITÀ DI GIOCO -->
     <h3 class="section-title">Modalità di gioco</h3>
     <p class="section-sub">Una preview di cosa troverai su SkyFrost (puoi cambiare questi testi quando vuoi).</p>
 
@@ -496,7 +503,6 @@
       </div>
     </section>
 
-    <!-- Cards utili -->
     <section class="grid3" style="margin-top:14px;">
       <div class="card" id="wiki">
         <h3>📚 Wiki</h3>
@@ -517,25 +523,6 @@
       </div>
     </section>
 
-    <!-- NEWS -->
-    <section class="news" id="news">
-      <div class="news-head">
-        <div>
-          <h3 style="margin:0">News di Hytale</h3>
-          <p style="margin:6px 0 0; color:rgba(234,240,255,.72)">Aggiornate automaticamente.</p>
-        </div>
-        <a class="btn" id="news-source" href="#" target="_blank" rel="noopener">Fonte</a>
-      </div>
-
-      <div class="news-list" id="news-list">
-        <div class="spinner">Caricamento news…</div>
-      </div>
-
-      <p style="margin:12px 0 0; font-size:12px; color:rgba(234,240,255,.62);">
-        Nota: se il feed non risponde, riprova più tardi (dipende dalla fonte esterna).
-      </p>
-    </section>
-
     <div class="footer">
       © <span id="y"></span> SkyFrost — Tutti i diritti riservati.
     </div>
@@ -543,58 +530,6 @@
 
   <script>
     document.getElementById("y").textContent = new Date().getFullYear();
-
-    // ====== NEWS HYTALE (RSS via proxy CORS) ======
-    const RSS_URL = "https://hytaletracker.github.io/rss.xml";
-    const ALLORIGINS = "https://api.allorigins.win/raw?url=" + encodeURIComponent(RSS_URL);
-
-    const listEl = document.getElementById("news-list");
-    const sourceEl = document.getElementById("news-source");
-    sourceEl.href = RSS_URL;
-
-    function esc(s){
-      return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-    }
-
-    async function loadNews(){
-      try{
-        const res = await fetch(ALLORIGINS, { cache: "no-store" });
-        if(!res.ok) throw new Error("Fetch failed");
-        const xmlText = await res.text();
-
-        const parser = new DOMParser();
-        const xml = parser.parseFromString(xmlText, "text/xml");
-        const items = Array.from(xml.querySelectorAll("item")).slice(0, 5);
-        if(items.length === 0) throw new Error("No items");
-
-        listEl.innerHTML = items.map(it => {
-          const title = it.querySelector("title")?.textContent?.trim() || "News";
-          const link = it.querySelector("link")?.textContent?.trim() || "#";
-          const pubDate = it.querySelector("pubDate")?.textContent?.trim() || "";
-          const dateTxt = pubDate ? new Date(pubDate).toLocaleDateString("it-IT", { day:"2-digit", month:"short" }) : "";
-
-          return `
-            <div class="news-item">
-              <div class="meta">${esc(dateTxt)} • Hytale</div>
-              <div style="font-weight:950">
-                <a href="${esc(link)}" target="_blank" rel="noopener">${esc(title)}</a>
-              </div>
-            </div>
-          `;
-        }).join("");
-      } catch(e){
-        listEl.innerHTML = `
-          <div class="news-item">
-            <div class="meta">Oops</div>
-            <div style="font-weight:950">Non riesco a caricare le news adesso.</div>
-            <div class="meta" style="margin-top:6px">
-              Apri la fonte: <a class="link" href="${esc(RSS_URL)}" target="_blank" rel="noopener">RSS Hytale</a>
-            </div>
-          </div>
-        `;
-      }
-    }
-    loadNews();
 
     // ====== STATUS MANUALE ======
     // valori: "online" | "offline" | "maintenance" | "dev"
@@ -628,7 +563,6 @@
         await navigator.clipboard.writeText(text);
         return true;
       }catch{
-        // fallback
         const ta = document.createElement("textarea");
         ta.value = text;
         ta.style.position = "fixed";
@@ -662,6 +596,16 @@
     const heroDashEl = document.getElementById("hero-dashboard");
     const logoutEl = document.getElementById("nav-logout");
 
+    // Badge ruolo navbar
+    const roleBadgeEl = document.getElementById("nav-role");
+    const roleTextEl = document.getElementById("nav-role-text");
+    const roleDotEl = document.getElementById("nav-role-dot");
+
+    function colorToHex(n){
+      const hex = Number(n || 0).toString(16).padStart(6, "0");
+      return "#" + hex;
+    }
+
     async function refreshAuth(){
       try{
         const r = await fetch("/api/me", { cache: "no-store" });
@@ -683,26 +627,45 @@
 
           dashEl.href = "/dashboard.html";
           heroDashEl.href = "/dashboard.html";
+
+          // carica ruolo più alto (filtrato lato API)
+          try{
+            const rr = await fetch("/api/roles", { cache: "no-store" });
+            const jj = await rr.json();
+            if(jj.ok && jj.primaryRole){
+              roleBadgeEl.style.display = "inline-flex";
+              roleTextEl.textContent = jj.primaryRole.name;
+              roleDotEl.style.background = colorToHex(jj.primaryRole.color);
+            }else{
+              roleBadgeEl.style.display = "none";
+            }
+          }catch{
+            roleBadgeEl.style.display = "none";
+          }
+
           return;
         }
 
         // non loggato
         helloEl.style.display = "none";
         avatarEl.style.display = "none";
+        roleBadgeEl.style.display = "none";
+
         loginEl.style.display = "inline-flex";
         logoutEl.style.display = "none";
 
         dashEl.href = "/api/login";
         heroDashEl.href = "/api/login";
       } catch(e){
-        // fallback
         helloEl.style.display = "none";
         avatarEl.style.display = "none";
+        roleBadgeEl.style.display = "none";
         logoutEl.style.display = "none";
         dashEl.href = "/api/login";
         heroDashEl.href = "/api/login";
       }
     }
+
     refreshAuth();
 
     // ====== ❄️ NEVE (leggera) ======
@@ -736,10 +699,8 @@
             x: rand(0, w),
             y: rand(0, h),
             r: rand(0.8, 2.6),
-            s: rand(0.6, 1.8),
             vx: rand(-0.35, 0.35),
             vy: rand(0.8, 2.2),
-            a: rand(0.25, 0.9)
           });
         }
       }
@@ -757,8 +718,6 @@
         for(const f of flakes){
           f.x += (f.vx * dt) * 0.06;
           f.y += (f.vy * dt) * 0.06;
-
-          // piccola oscillazione
           f.x += Math.sin((f.y + now*0.02) * 0.01) * 0.25;
 
           if(f.y - f.r > h){ f.y = -f.r; f.x = rand(0,w); }
