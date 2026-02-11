@@ -1,7 +1,7 @@
-import { clearCookie } from "./_lib.js";
+const { clearCookie } = require("./_lib.js");
 
-export default async function handler(req, res) {
+module.exports = async (req, res) => {
   clearCookie(res, "sf_session");
   res.writeHead(302, { Location: "/" });
   res.end();
-}
+};
