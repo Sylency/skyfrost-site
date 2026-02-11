@@ -28,18 +28,27 @@ export default async function handler(req, res) {
     return;
   }
 
-  const content =
-    `📩 **Nuovo ticket SkyFrost**\n` +
-    `**Nome:** ${name}\n` +
-    (discord ? `**Discord:** ${discord}\n` : "") +
-    `**Motivo:** ${subject}\n` +
-    `**Messaggio:**\n${message}`;
+  // Embed Discord
+  const embed = {
+    title: "📩 Nuovo ticket SkyFrost",
+    description: message,
+    color: 0x7dd3fc,
+    fields: [
+      { name: "Nome", value: name, inline: true },
+      ...(discord ? [{ name: "Discord", value: discord, inline: true }] : []),
+      { name: "Motivo", value: subject, inline: false }
+    ],
+    timestamp: new Date().toISOString()
+  };
 
   try {
     const r = await fetch(webhook, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ content }),
+      body: JSON.stringify({
+        username: "SkyFrost Support",
+        embeds: [embed]
+      })
     });
 
     if (!r.ok) {
