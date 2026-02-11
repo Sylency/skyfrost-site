@@ -1,548 +1,227 @@
 <!doctype html>
 <html lang="it">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>SkyFrost • Server Hytale ITA</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>SkyFrost • Server Hytale ITA</title>
 
-  <style>
-    :root{
-      --bg:#070a12;
-      --panel: rgba(255,255,255,.06);
-      --panel2: rgba(255,255,255,.08);
-      --border: rgba(255,255,255,.10);
-      --border2: rgba(255,255,255,.14);
-      --txt:#eaf0ff;
-      --muted:#a9b6d3;
-      --acc:#7dd3fc;
-      --acc2:#60a5fa;
-      --shadow: 0 20px 60px rgba(0,0,0,.45);
-    }
+<style>
+:root{
+--bg:#070a12;
+--panel: rgba(255,255,255,.06);
+--border: rgba(255,255,255,.10);
+--txt:#eaf0ff;
+--muted:#a9b6d3;
+--acc:#7dd3fc;
+}
 
-    *{box-sizing:border-box}
-    html,body{height:100%}
+body{
+margin:0;
+color:var(--txt);
+background:linear-gradient(180deg,#050711,var(--bg));
+font-family:system-ui,Arial;
+}
 
-    body{
-      margin:0;
-      color:var(--txt);
-      background:
-        radial-gradient(1200px 600px at 20% 0%, rgba(125,211,252,.16), transparent 55%),
-        radial-gradient(900px 600px at 80% 10%, rgba(96,165,250,.14), transparent 55%),
-        radial-gradient(900px 900px at 50% 120%, rgba(34,211,238,.08), transparent 60%),
-        linear-gradient(180deg, #050711, var(--bg));
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
-      overflow-x:hidden;
-    }
+a{color:inherit;text-decoration:none}
+.container{max-width:1100px;margin:0 auto;padding:26px 16px 70px}
 
-    /* Grain leggero */
-    body:before{
-      content:"";
-      position:fixed; inset:0;
-      pointer-events:none;
-      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)' opacity='.18'/%3E%3C/svg%3E");
-      mix-blend-mode:overlay;
-      opacity:.22;
-    }
+.nav{
+position:sticky;
+top:0;
+background:rgba(7,10,18,.7);
+backdrop-filter:blur(10px);
+border-bottom:1px solid var(--border);
+}
 
-    a{color:inherit;text-decoration:none}
-    .container{max-width:1120px;margin:0 auto;padding:26px 16px 70px}
+.nav-inner{
+max-width:1100px;
+margin:0 auto;
+padding:14px 16px;
+display:flex;
+align-items:center;
+justify-content:space-between;
+}
 
-    /* NAV */
-    .nav{
-      position:sticky; top:0; z-index:50;
-      backdrop-filter: blur(12px);
-      background: rgba(7,10,18,.55);
-      border-bottom: 1px solid var(--border);
-    }
-    .nav-inner{
-      max-width:1120px; margin:0 auto;
-      padding:14px 16px;
-      display:flex; align-items:center; justify-content:space-between; gap:16px;
-    }
-    .brand{
-      display:flex; align-items:center; gap:10px;
-      font-weight:950; letter-spacing:.2px; font-size:18px;
-    }
-    .brand-badge{
-      width:34px;height:34px;border-radius:12px;
-      border:1px solid var(--border2);
-      background: radial-gradient(70% 70% at 30% 30%, rgba(125,211,252,.35), rgba(96,165,250,.18) 60%, rgba(0,0,0,.10));
-      box-shadow: 0 8px 30px rgba(125,211,252,.10);
-      display:flex;align-items:center;justify-content:center;
-      font-size:16px;
-    }
-    .links{display:flex; gap:14px; color:var(--muted); flex-wrap:wrap}
-    .links a{padding:8px 10px;border-radius:12px}
-    .links a:hover{
-      color:var(--txt);
-      background: rgba(255,255,255,.05);
-      border:1px solid rgba(255,255,255,.10);
-      padding:7px 9px;
-    }
+.brand{
+display:flex;
+align-items:center;
+gap:10px;
+font-weight:900;
+font-size:18px;
+}
 
-    .auth{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.brand img{
+width:32px;
+height:32px;
+border-radius:8px;
+}
 
-    .btn{
-      border:1px solid var(--border);
-      background: rgba(255,255,255,.04);
-      color:var(--txt);
-      padding:10px 12px;
-      border-radius:12px;
-      cursor:pointer;
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      font-weight:700;
-      transition: transform .12s ease, background .12s ease, border-color .12s ease;
-    }
-    .btn:hover{
-      transform: translateY(-1px);
-      border-color: rgba(255,255,255,.16);
-      background: rgba(255,255,255,.06);
-    }
-    .btn.primary{
-      border:none;
-      background: linear-gradient(90deg, #22d3ee, #60a5fa);
-      color:#07101f;
-      font-weight:900;
-      box-shadow: 0 16px 40px rgba(34,211,238,.10);
-    }
-    .btn.primary:hover{transform: translateY(-1px) scale(1.01)}
-    .btn.ghost{background: transparent}
+.links{display:flex;gap:14px;color:var(--muted)}
 
-    .hello{
-      color:var(--muted);
-      font-size:13px;
-      padding:8px 10px;
-      border:1px solid var(--border);
-      border-radius:999px;
-      background: rgba(0,0,0,.12);
-      display:none;
-      max-width:260px;
-      overflow:hidden;
-      text-overflow:ellipsis;
-      white-space:nowrap;
-    }
+.auth{display:flex;gap:6px;align-items:center}
 
-    /* HERO */
-    .hero{padding-top:18px}
-    .hero-wrap{
-      position:relative;
-      border:1px solid var(--border2);
-      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.04));
-      border-radius:24px;
-      padding:22px;
-      overflow:hidden;
-      box-shadow: var(--shadow);
-    }
-    .hero-wrap:before{
-      /* “frost aurora” */
-      content:"";
-      position:absolute; inset:-60px;
-      background:
-        radial-gradient(600px 320px at 20% 10%, rgba(125,211,252,.28), transparent 60%),
-        radial-gradient(520px 320px at 75% 10%, rgba(96,165,250,.22), transparent 60%),
-        radial-gradient(520px 320px at 55% 80%, rgba(34,211,238,.16), transparent 60%);
-      filter: blur(8px);
-      opacity:.9;
-      transform: translateZ(0);
-      animation: floatGlow 10s ease-in-out infinite;
-      pointer-events:none;
-    }
-    .hero-wrap:after{
-      /* shimmer diagonale */
-      content:"";
-      position:absolute; inset:-120px;
-      background: linear-gradient(110deg, transparent 40%, rgba(255,255,255,.10) 50%, transparent 60%);
-      transform: translateX(-40%);
-      animation: shimmer 7s ease-in-out infinite;
-      pointer-events:none;
-      opacity:.35;
-    }
-    @keyframes shimmer{
-      0%{ transform: translateX(-55%) rotate(0.001deg); }
-      50%{ transform: translateX(10%) rotate(0.001deg); }
-      100%{ transform: translateX(-55%) rotate(0.001deg); }
-    }
-    @keyframes floatGlow{
-      0%,100%{ transform: translateY(0px); }
-      50%{ transform: translateY(10px); }
-    }
+.btn{
+border:1px solid var(--border);
+background:rgba(255,255,255,.04);
+color:var(--txt);
+padding:10px 12px;
+border-radius:12px;
+font-weight:650;
+display:inline-block;
+}
 
-    .hero-top{
-      position:relative;
-      display:flex;
-      justify-content:space-between;
-      align-items:flex-start;
-      gap:14px;
-      flex-wrap:wrap;
-    }
-    .badge{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      font-size:12px;
-      color:var(--muted);
-      border:1px solid var(--border);
-      padding:6px 10px;
-      border-radius:999px;
-      background: rgba(0,0,0,.12);
-    }
-    .badge-dot{
-      width:7px;height:7px;border-radius:999px;background: var(--acc);
-      box-shadow: 0 0 0 3px rgba(125,211,252,.15);
-    }
+.btn.primary{
+border:none;
+background:linear-gradient(90deg,#22d3ee,#60a5fa);
+color:#07101f;
+font-weight:800;
+}
 
-    h1{
-      position:relative;
-      margin:12px 0 6px;
-      font-size:48px;
-      letter-spacing:-.03em;
-      text-shadow: 0 12px 40px rgba(0,0,0,.35);
-    }
-    .subtitle{
-      position:relative;
-      margin:0;
-      color:var(--muted);
-      line-height:1.6;
-      max-width:70ch;
-    }
+.hero{
+position:relative;
+border-radius:20px;
+overflow:hidden;
+margin-top:20px;
+}
 
-    .cta{
-      position:relative;
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:14px;
-    }
+.hero-bg{
+position:absolute;
+inset:0;
+background:url("assets/banner.png") center/cover no-repeat;
+filter:brightness(.5);
+}
 
-    .quick{
-      position:relative;
-      margin-top:14px;
-      display:grid;
-      grid-template-columns:repeat(3, 1fr);
-      gap:10px;
-    }
-    .quick-item{
-      border:1px solid var(--border);
-      background: rgba(0,0,0,.15);
-      border-radius:16px;
-      padding:12px;
-    }
-    .quick-item .k{font-size:12px;color:var(--muted)}
-    .quick-item .v{font-weight:900;margin-top:4px}
+.hero-content{
+position:relative;
+padding:40px;
+}
 
-    /* STATUS pill */
-    .status-pill{
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-      border:1px solid var(--border);
-      background: rgba(0,0,0,.18);
-      border-radius:999px;
-      padding:10px 12px;
-      font-weight:900;
-      margin-top:6px;
-    }
-    .dot{
-      width:10px;height:10px;border-radius:999px;
-      box-shadow: 0 0 0 3px rgba(255,255,255,.06);
-    }
-    .dot.online{ background:#22c55e; }
-    .dot.offline{ background:#ef4444; }
-    .dot.maintenance{ background:#f59e0b; }
-    .dot.dev{ background:#60a5fa; }
-    .status-sub{ color:var(--muted); font-weight:700; font-size:13px; margin-top:6px; }
+h1{margin:0 0 10px;font-size:42px}
+p{margin:0;color:var(--muted)}
 
-    /* GRID cards */
-    .grid3{
-      margin-top:14px;
-      display:grid;
-      grid-template-columns:repeat(3, 1fr);
-      gap:12px;
-    }
-    .card{
-      border:1px solid var(--border2);
-      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.04));
-      border-radius:20px;
-      padding:16px;
-      box-shadow: 0 12px 40px rgba(0,0,0,.25);
-      transition: transform .12s ease, border-color .12s ease;
-    }
-    .card:hover{
-      transform: translateY(-2px);
-      border-color: rgba(125,211,252,.22);
-    }
-    .card h3{margin:0 0 8px}
-    .card p{margin:0 0 10px; color:var(--muted); line-height:1.55}
-    .link{color: var(--acc); font-weight:900}
+.quick{
+margin-top:20px;
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:10px;
+}
 
-    /* NEWS */
-    .news{
-      margin-top:14px;
-      border:1px solid var(--border2);
-      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.04));
-      border-radius:20px;
-      padding:16px;
-      box-shadow: 0 12px 40px rgba(0,0,0,.25);
-    }
-    .news-head{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;flex-wrap:wrap}
-    .news-list{margin-top:10px;display:grid;gap:10px}
-    .news-item{
-      border:1px solid var(--border);
-      background: rgba(0,0,0,.12);
-      border-radius:16px;
-      padding:12px;
-    }
-    .news-item .meta{font-size:12px;color:var(--muted);margin-bottom:6px}
-    .spinner{color:var(--muted);font-size:14px}
+.quick-item{
+border:1px solid var(--border);
+border-radius:14px;
+padding:12px;
+background:rgba(0,0,0,.4);
+}
 
-    .footer{margin-top:22px;color:var(--muted);font-size:13px;opacity:.9}
+.status-pill{
+display:inline-flex;
+align-items:center;
+gap:8px;
+margin-top:6px;
+}
 
-    @media (max-width: 900px){
-      .links{display:none}
-      h1{font-size:38px}
-      .grid3{grid-template-columns:1fr}
-      .quick{grid-template-columns:1fr}
-      .auth{justify-content:flex-start}
-    }
-  </style>
+.dot{
+width:10px;height:10px;border-radius:999px;
+}
+.dot.online{background:#22c55e;}
+.dot.offline{background:#ef4444;}
+.dot.dev{background:#60a5fa;}
+
+.footer{
+margin-top:22px;
+color:var(--muted);
+font-size:13px;
+}
+</style>
 </head>
 
 <body>
-  <header class="nav">
-    <div class="nav-inner">
-      <a class="brand" href="/">
-        <span class="brand-badge">❄️</span>
-        <span>SkyFrost</span>
-      </a>
 
-      <nav class="links">
-        <a href="/wiki.html">Wiki</a>
-        <a href="/supporto.html">Supporto</a>
-        <a href="#vote">Vote</a>
-        <a href="#news">News</a>
-      </nav>
+<header class="nav">
+<div class="nav-inner">
 
-      <div class="auth">
-        <span class="hello" id="nav-hello">Ciao, …</span>
+<div class="brand">
+<img src="assets/logo.png">
+SkyFrost
+</div>
 
-        <a class="btn" id="nav-login" href="/api/login">🔐 Login</a>
-        <a class="btn" id="nav-dashboard" href="/dashboard.html">✨ Dashboard</a>
-        <a class="btn ghost" id="nav-logout" href="/api/logout" style="display:none;">Logout</a>
+<nav class="links">
+<a href="/wiki.html">Wiki</a>
+<a href="/supporto.html">Supporto</a>
+</nav>
 
-        <a class="btn primary" href="http://discord.skyfrost.it/" target="_blank" rel="noopener">Discord</a>
-      </div>
-    </div>
-  </header>
+<div class="auth">
+<a class="btn" id="nav-login" href="/api/login">Login</a>
+<a class="btn" id="nav-dashboard" href="/dashboard.html">Dashboard</a>
+<a class="btn primary" href="http://discord.skyfrost.it/" target="_blank">Discord</a>
+</div>
 
-  <main class="container">
-    <section class="hero">
-      <div class="hero-wrap">
-        <div class="hero-top">
-          <span class="badge"><span class="badge-dot"></span> Hytale Server • ITA</span>
-        </div>
+</div>
+</header>
 
-        <h1>SkyFrost</h1>
-        <p class="subtitle">
-          Un server Hytale italiano con progressione, eventi e community. Entra su Discord e resta aggiornato su apertura e patch.
-        </p>
+<main class="container">
 
-        <div class="cta">
-          <a class="btn primary" href="http://discord.skyfrost.it/" target="_blank" rel="noopener">Unisciti al Discord</a>
-          <a class="btn" href="/wiki.html">Guarda la Wiki</a>
-          <a class="btn" href="/supporto.html">Apri un Ticket</a>
-          <a class="btn" id="hero-dashboard" href="/dashboard.html">Vai alla Dashboard</a>
-        </div>
+<section class="hero">
 
-        <div class="quick">
-          <div class="quick-item">
-            <div class="k">IP</div>
-            <div class="v">play.skyfrost.it</div>
-          </div>
+<div class="hero-bg"></div>
 
-          <div class="quick-item">
-            <div class="k">Discord</div>
-            <div class="v">discord.skyfrost.it</div>
-          </div>
+<div class="hero-content">
+<h1>SkyFrost</h1>
+<p>Server Hytale italiano — entra nella community.</p>
 
-          <div class="quick-item">
-            <div class="k">Status</div>
+<div class="quick">
 
-            <div class="status-pill" id="sf-status-pill">
-              <span class="dot dev" id="sf-status-dot"></span>
-              <span id="sf-status-text">In sviluppo</span>
-            </div>
+<div class="quick-item">
+<div class="k">IP</div>
+<div class="v">play.skyfrost.it</div>
+</div>
 
-            <div class="status-sub" id="sf-status-sub">Aggiornato manualmente dallo staff</div>
-          </div>
-        </div>
-      </div>
-    </section>
+<div class="quick-item">
+<div class="k">Discord</div>
+<div class="v">discord.skyfrost.it</div>
+</div>
 
-    <section class="grid3">
-      <div class="card" id="wiki">
-        <h3>📚 Wiki</h3>
-        <p>Regole, guide e info sul server. Aggiorniamo spesso.</p>
-        <a class="link" href="/wiki.html">Apri la Wiki →</a>
-      </div>
+<div class="quick-item">
+<div class="k">Status</div>
 
-      <div class="card" id="supporto">
-        <h3>🛠️ Supporto</h3>
-        <p>Ticket per bug, ban appeal e assistenza rapida su Discord.</p>
-        <a class="link" href="/supporto.html">Apri un Ticket →</a>
-      </div>
+<div class="status-pill">
+<span class="dot dev" id="sf-status-dot"></span>
+<span id="sf-status-text">In sviluppo</span>
+</div>
 
-      <div class="card" id="vote">
-        <h3>🗳️ Vote</h3>
-        <p>Vota SkyFrost e ottieni ricompense (in arrivo).</p>
-        <a class="link" href="#" onclick="alert('Arriva presto!')">Vai alla pagina Vote →</a>
-      </div>
-    </section>
+</div>
 
-    <section class="news" id="news">
-      <div class="news-head">
-        <div>
-          <h3 style="margin:0">News di Hytale</h3>
-          <p style="margin:6px 0 0; color:var(--muted)">Aggiornate automaticamente.</p>
-        </div>
-        <a class="btn" id="news-source" href="#" target="_blank" rel="noopener">Fonte</a>
-      </div>
+</div>
+</div>
 
-      <div class="news-list" id="news-list">
-        <div class="spinner">Caricamento news…</div>
-      </div>
+</section>
 
-      <p style="margin:12px 0 0; font-size:12px; color:var(--muted);">
-        Nota: se il feed non risponde, riprova più tardi (dipende dalla fonte esterna).
-      </p>
-    </section>
+<div class="footer">
+© <span id="y"></span> SkyFrost
+</div>
 
-    <div class="footer">
-      © <span id="y"></span> SkyFrost — Tutti i diritti riservati.
-    </div>
-  </main>
+</main>
 
-  <script>
-    document.getElementById("y").textContent = new Date().getFullYear();
+<script>
+document.getElementById("y").textContent=new Date().getFullYear();
 
-    // ====== NEWS HYTALE (RSS via proxy CORS) ======
-    const RSS_URL = "https://hytaletracker.github.io/rss.xml";
-    const ALLORIGINS = "https://api.allorigins.win/raw?url=" + encodeURIComponent(RSS_URL);
+const SKYFROST_STATUS="dev";
 
-    const listEl = document.getElementById("news-list");
-    const sourceEl = document.getElementById("news-source");
-    sourceEl.href = RSS_URL;
+(function(){
+const dot=document.getElementById("sf-status-dot");
+const text=document.getElementById("sf-status-text");
 
-    function esc(s){
-      return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-    }
+const map={
+online:["online","Online"],
+offline:["offline","Offline"],
+dev:["dev","In sviluppo"]
+};
 
-    async function loadNews(){
-      try{
-        const res = await fetch(ALLORIGINS, { cache: "no-store" });
-        if(!res.ok) throw new Error("Fetch failed");
-        const xmlText = await res.text();
+const s=map[SKYFROST_STATUS];
+dot.className="dot "+s[0];
+text.textContent=s[1];
+})();
+</script>
 
-        const parser = new DOMParser();
-        const xml = parser.parseFromString(xmlText, "text/xml");
-        const items = Array.from(xml.querySelectorAll("item")).slice(0, 5);
-
-        if(items.length === 0) throw new Error("No items");
-
-        const html = items.map(it => {
-          const title = it.querySelector("title")?.textContent?.trim() || "News";
-          const link = it.querySelector("link")?.textContent?.trim() || "#";
-          const pubDate = it.querySelector("pubDate")?.textContent?.trim() || "";
-          const dateTxt = pubDate ? new Date(pubDate).toLocaleDateString("it-IT", { day:"2-digit", month:"short" }) : "";
-
-          return `
-            <div class="news-item">
-              <div class="meta">${esc(dateTxt)} • Hytale</div>
-              <div style="font-weight:950">
-                <a href="${esc(link)}" target="_blank" rel="noopener">${esc(title)}</a>
-              </div>
-            </div>
-          `;
-        }).join("");
-
-        listEl.innerHTML = html;
-      } catch(e){
-        listEl.innerHTML = `
-          <div class="news-item">
-            <div class="meta">Oops</div>
-            <div style="font-weight:950">Non riesco a caricare le news adesso.</div>
-            <div class="meta" style="margin-top:6px">
-              Apri la fonte: <a class="link" href="${esc(RSS_URL)}" target="_blank" rel="noopener">RSS Hytale</a>
-            </div>
-          </div>
-        `;
-      }
-    }
-    loadNews();
-
-    // ====== STATUS MANUALE ======
-    // Cambia SOLO questa riga per aggiornare lo status:
-    // valori: "online" | "offline" | "maintenance" | "dev"
-    const SKYFROST_STATUS = "dev";
-
-    (function applyStatus(){
-      const dot = document.getElementById("sf-status-dot");
-      const text = document.getElementById("sf-status-text");
-      const sub = document.getElementById("sf-status-sub");
-
-      const map = {
-        online: { cls: "online", label: "Online", sub: "Server attivo" },
-        offline: { cls: "offline", label: "Offline", sub: "Server non disponibile" },
-        maintenance: { cls: "maintenance", label: "Manutenzione", sub: "Stiamo aggiornando il server" },
-        dev: { cls: "dev", label: "In sviluppo", sub: "Apertura presto — entra su Discord" },
-      };
-
-      const s = map[SKYFROST_STATUS] || map.dev;
-      dot.className = "dot " + s.cls;
-      text.textContent = s.label;
-      sub.textContent = s.sub;
-    })();
-
-    // ====== LOGIN UI (Ciao nome + Dashboard smart) ======
-    const helloEl = document.getElementById("nav-hello");
-    const loginEl = document.getElementById("nav-login");
-    const dashEl = document.getElementById("nav-dashboard");
-    const heroDashEl = document.getElementById("hero-dashboard");
-    const logoutEl = document.getElementById("nav-logout");
-
-    async function refreshAuth(){
-      try{
-        const r = await fetch("/api/me", { cache: "no-store" });
-        const j = await r.json();
-
-        if(j.loggedIn && j.user){
-          helloEl.style.display = "inline-block";
-          helloEl.textContent = `Ciao, ${j.user.username}`;
-
-          loginEl.style.display = "none";
-          logoutEl.style.display = "inline-flex";
-
-          dashEl.href = "/dashboard.html";
-          heroDashEl.href = "/dashboard.html";
-          return;
-        }
-
-        helloEl.style.display = "none";
-        loginEl.style.display = "inline-flex";
-        logoutEl.style.display = "none";
-
-        dashEl.href = "/api/login";
-        heroDashEl.href = "/api/login";
-      } catch(e){
-        helloEl.style.display = "none";
-        logoutEl.style.display = "none";
-        dashEl.href = "/api/login";
-        heroDashEl.href = "/api/login";
-      }
-    }
-
-    refreshAuth();
-  </script>
 </body>
 </html>
