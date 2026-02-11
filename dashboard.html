@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SkyFrost • Dashboard</title>
+  <style>
+    :root{--bg:#070a12;--panel:rgba(255,255,255,.06);--border:rgba(255,255,255,.10);--txt:#eaf0ff;--muted:#a9b6d3}
+    body{margin:0;background:linear-gradient(180deg,#050711,var(--bg));color:var(--txt);font-family:system-ui,Arial}
+    .box{max-width:850px;margin:60px auto;padding:16px}
+    .card{border:1px solid var(--border);background:var(--panel);border-radius:16px;padding:16px}
+    .btn{display:inline-block;margin-top:10px;padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.12);color:var(--txt);text-decoration:none}
+    .btn.primary{border:none;background:linear-gradient(90deg,#22d3ee,#60a5fa);color:#07101f;font-weight:800}
+    img{width:44px;height:44px;border-radius:999px;vertical-align:middle;margin-right:10px}
+  </style>
+</head>
+<body>
+  <div class="box">
+    <div class="card">
+      <h2 style="margin:0 0 10px">Dashboard</h2>
+      <div id="status">Caricamento…</div>
+      <div id="actions" style="margin-top:10px"></div>
+    </div>
+  </div>
+
+  <script>
+    async function run(){
+      const r = await fetch("/api/me");
+      const j = await r.json();
+
+      const status = document.getElementById("status");
+      const actions = document.getElementById("actions");
+
+      if(!j.loggedIn){
+        status.textContent = "Non sei loggato.";
+        actions.innerHTML = `<a class="btn primary" href="/api/login">Login con Discord</a> <a class="btn" href="/">Home</a>`;
+        return;
+      }
+
+      const u = j.user;
+      status.innerHTML = `
+        <div>
+          ${u.avatar ? `<img src="${u.avatar}" alt="">` : ""}
+          <b>Loggato come:</b> ${u.username}
+        </div>
+      `;
+      actions.innerHTML = `
+        <a class="btn" href="/">Home</a>
+        <a class="btn" href="/wiki.html">Wiki</a>
+        <a class="btn" href="/supporto.html">Supporto</a>
+        <a class="btn" href="/api/logout">Logout</a>
+      `;
+    }
+    run();
+  </script>
+</body>
+</html>

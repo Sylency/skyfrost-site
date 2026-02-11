@@ -4,6 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>SkyFrost • Server Hytale ITA</title>
+
   <style>
     :root{
       --bg:#070a12;
@@ -13,7 +14,9 @@
       --muted:#a9b6d3;
       --acc:#7dd3fc;
     }
+
     *{box-sizing:border-box}
+
     body{
       margin:0;
       color:var(--txt);
@@ -21,24 +24,33 @@
         radial-gradient(1200px 600px at 20% 0%, rgba(125,211,252,.14), transparent 55%),
         radial-gradient(900px 600px at 80% 10%, rgba(99,102,241,.12), transparent 55%),
         linear-gradient(180deg, #050711, var(--bg));
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      font-family: ui-sans-serif, system-ui, Arial;
     }
+
     a{color:inherit;text-decoration:none}
+
     .container{max-width:1100px;margin:0 auto;padding:26px 16px 70px}
 
     .nav{
-      position:sticky; top:0; z-index:50;
+      position:sticky;
+      top:0;
       backdrop-filter: blur(10px);
       background: rgba(7,10,18,.55);
       border-bottom: 1px solid var(--border);
     }
+
     .nav-inner{
-      max-width:1100px; margin:0 auto;
+      max-width:1100px;
+      margin:0 auto;
       padding:14px 16px;
-      display:flex; align-items:center; justify-content:space-between; gap:16px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
     }
-    .brand{font-weight:900; letter-spacing:.2px; font-size:18px}
-    .links{display:flex; gap:14px; color:var(--muted); flex-wrap:wrap}
+
+    .brand{font-weight:900;font-size:18px}
+
+    .links{display:flex;gap:14px;color:var(--muted)}
     .links a:hover{color:var(--txt)}
 
     .btn{
@@ -47,10 +59,11 @@
       color:var(--txt);
       padding:10px 12px;
       border-radius:12px;
-      cursor:pointer;
-      display:inline-block;
       font-weight:650;
+      display:inline-block;
+      margin-left:6px;
     }
+
     .btn.primary{
       border:none;
       background: linear-gradient(90deg, #22d3ee, #60a5fa);
@@ -58,237 +71,117 @@
       font-weight:800;
     }
 
-    .hero{padding-top:18px}
     .hero-card{
       border:1px solid var(--border);
       background: var(--panel);
       border-radius:20px;
       padding:22px;
-      overflow:hidden;
+      margin-top:20px;
     }
-    .badge{
-      display:inline-block;
-      font-size:12px;
-      color:var(--muted);
-      border:1px solid var(--border);
-      padding:6px 10px;
-      border-radius:999px;
-    }
-    h1{margin:10px 0 6px; font-size:44px; letter-spacing:-.02em}
-    p{margin:0; color:var(--muted); line-height:1.6}
-    .cta{display:flex; gap:10px; flex-wrap:wrap; margin-top:14px}
+
+    h1{margin:10px 0 6px;font-size:44px}
+    p{margin:0;color:var(--muted)}
+
+    .cta{margin-top:14px;display:flex;gap:10px;flex-wrap:wrap}
 
     .quick{
       margin-top:14px;
       display:grid;
-      grid-template-columns:repeat(3, 1fr);
+      grid-template-columns:repeat(3,1fr);
       gap:10px;
     }
+
     .quick-item{
       border:1px solid var(--border);
-      background: rgba(0,0,0,.15);
       border-radius:14px;
       padding:12px;
     }
-    .quick-item .k{font-size:12px; color:var(--muted)}
-    .quick-item .v{font-weight:800; margin-top:4px}
 
-    .grid3{
-      margin-top:14px;
-      display:grid;
-      grid-template-columns:repeat(3, 1fr);
-      gap:12px;
-    }
-    .card{
-      border:1px solid var(--border);
-      background: var(--panel);
-      border-radius:18px;
-      padding:16px;
-    }
-    .card h3{margin:0 0 8px}
-    .card p{margin:0 0 10px}
-    .link{color: var(--acc); font-weight:800}
+    .quick-item .k{font-size:12px;color:var(--muted)}
+    .quick-item .v{font-weight:800;margin-top:4px}
 
     .news{
-      margin-top:14px;
+      margin-top:20px;
       border:1px solid var(--border);
       background: var(--panel);
       border-radius:18px;
       padding:16px;
     }
-    .news-head{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;flex-wrap:wrap}
-    .news-list{margin-top:10px;display:grid;gap:10px}
-    .news-item{
-      border:1px solid var(--border);
-      background: rgba(0,0,0,.12);
-      border-radius:14px;
-      padding:12px;
-    }
-    .news-item .meta{font-size:12px;color:var(--muted);margin-bottom:6px}
-    .spinner{color:var(--muted);font-size:14px}
 
-    .footer{margin-top:22px;color:var(--muted);font-size:13px;opacity:.9}
-
-    @media (max-width: 900px){
-      .links{display:none}
-      h1{font-size:36px}
-      .grid3{grid-template-columns:1fr}
-      .quick{grid-template-columns:1fr}
+    .footer{
+      margin-top:22px;
+      color:var(--muted);
+      font-size:13px;
     }
   </style>
 </head>
 
 <body>
-  <header class="nav">
-    <div class="nav-inner">
-      <a class="brand" href="#">SkyFrost</a>
 
-      <nav class="links">
-        <a href="/wiki.html">Wiki</a>
-        <a href="/supporto.html">Supporto</a>
-        <a href="#vote">Vote</a>
-        <a href="#news">News</a>
-      </nav>
+<header class="nav">
+  <div class="nav-inner">
 
-      <div>
-        <a class="btn primary" href="http://discord.skyfrost.it/" target="_blank" rel="noopener">Discord</a>
+    <div class="brand">SkyFrost</div>
+
+    <nav class="links">
+      <a href="/wiki.html">Wiki</a>
+      <a href="/supporto.html">Supporto</a>
+      <a href="#news">News</a>
+    </nav>
+
+    <div>
+      <a class="btn" href="/api/login">Login</a>
+      <a class="btn" href="/dashboard.html">Dashboard</a>
+      <a class="btn primary" href="http://discord.skyfrost.it/" target="_blank">Discord</a>
+    </div>
+
+  </div>
+</header>
+
+<main class="container">
+
+  <section class="hero-card">
+    <h1>SkyFrost</h1>
+    <p>Server Hytale italiano — entra nella community.</p>
+
+    <div class="cta">
+      <a class="btn primary" href="http://discord.skyfrost.it/" target="_blank">Unisciti al Discord</a>
+      <a class="btn" href="/wiki.html">Guarda la Wiki</a>
+      <a class="btn" href="/supporto.html">Apri un Ticket</a>
+    </div>
+
+    <div class="quick">
+      <div class="quick-item">
+        <div class="k">IP</div>
+        <div class="v">play.skyfrost.it</div>
+      </div>
+
+      <div class="quick-item">
+        <div class="k">Discord</div>
+        <div class="v">discord.skyfrost.it</div>
+      </div>
+
+      <div class="quick-item">
+        <div class="k">Status</div>
+        <div class="v">Online (demo)</div>
       </div>
     </div>
-  </header>
+  </section>
 
-  <main class="container">
-    <section class="hero">
-      <div class="hero-card">
-        <span class="badge">Hytale Server • ITA</span>
-        <h1>SkyFrost</h1>
-        <p>Avventure, eventi e progressione. Entra nella community e scopri il mondo di SkyFrost.</p>
+  <section class="news" id="news">
+    <h3>News di Hytale</h3>
+    <p>Le news vengono caricate automaticamente.</p>
+  </section>
 
-        <div class="cta">
-          <a class="btn primary" href="http://discord.skyfrost.it/" target="_blank" rel="noopener">Unisciti al Discord</a>
-          <a class="btn" href="#wiki">Guarda la Wiki</a>
-          <a class="btn" href="/supporto.html">Apri un Ticket</a>
-        </div>
+  <div class="footer">
+    © <span id="y"></span> SkyFrost
+  </div>
 
-        <div class="quick">
-          <div class="quick-item">
-            <div class="k">IP</div>
-            <div class="v">play.skyfrost.it</div>
-          </div>
-          <div class="quick-item">
-            <div class="k">Discord</div>
-            <div class="v">discord.skyfrost.it</div>
-          </div>
-          <div class="quick-item">
-            <div class="k">Status</div>
-            <div class="v">Online (demo)</div>
-          </div>
-        </div>
-      </div>
-    </section>
+</main>
 
-    <section class="grid3">
-      <div class="card" id="wiki">
-        <h3>Wiki</h3>
-        <p>Guide, regole e info sul server.</p>
-        <a class="link" href="/wiki.html">Apri la Wiki →</a>
-      </div>
+<script>
+document.getElementById("y").textContent = new Date().getFullYear();
+</script>
 
-      <div class="card" id="supporto">
-        <h3>Supporto</h3>
-        <p>Ticket per bug, ban appeal e assistenza.</p>
-        <a class="link" href="/supporto.html">Apri un Ticket →</a>
-      </div>
-
-      <div class="card" id="vote">
-        <h3>Vote</h3>
-        <p>Vota SkyFrost e ottieni ricompense.</p>
-        <a class="link" href="#" onclick="alert('Arriva presto!')">Vai alla pagina Vote →</a>
-      </div>
-    </section>
-
-    <section class="news" id="news">
-      <div class="news-head">
-        <div>
-          <h3 style="margin:0">News di Hytale</h3>
-          <p style="margin:6px 0 0">Aggiornate automaticamente.</p>
-        </div>
-        <a class="btn" id="news-source" href="#" target="_blank" rel="noopener">Fonte</a>
-      </div>
-
-      <div class="news-list" id="news-list">
-        <div class="spinner">Caricamento news…</div>
-      </div>
-
-      <p style="margin:12px 0 0; font-size:12px; color:var(--muted);">
-        Nota: se il feed non risponde, riprova più tardi (dipende dalla fonte esterna).
-      </p>
-    </section>
-
-    <div class="footer">
-      © <span id="y"></span> SkyFrost — Tutti i diritti riservati.
-    </div>
-  </main>
-
-  <script>
-    document.getElementById("y").textContent = new Date().getFullYear();
-
-    // Feed RSS pubblico che traccia le news di Hytale
-    const RSS_URL = "https://hytaletracker.github.io/rss.xml";
-
-    // Proxy CORS affidabile per leggere RSS dal browser
-    const ALLORIGINS = "https://api.allorigins.win/raw?url=" + encodeURIComponent(RSS_URL);
-
-    const listEl = document.getElementById("news-list");
-    const sourceEl = document.getElementById("news-source");
-    sourceEl.href = RSS_URL;
-
-    function esc(s){
-      return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-    }
-
-    async function loadNews(){
-      try{
-        const res = await fetch(ALLORIGINS, { cache: "no-store" });
-        if(!res.ok) throw new Error("Fetch failed");
-        const xmlText = await res.text();
-
-        const parser = new DOMParser();
-        const xml = parser.parseFromString(xmlText, "text/xml");
-        const items = Array.from(xml.querySelectorAll("item")).slice(0, 5);
-
-        if(items.length === 0) throw new Error("No items");
-
-        const html = items.map(it => {
-          const title = it.querySelector("title")?.textContent?.trim() || "News";
-          const link = it.querySelector("link")?.textContent?.trim() || "#";
-          const pubDate = it.querySelector("pubDate")?.textContent?.trim() || "";
-          const dateTxt = pubDate ? new Date(pubDate).toLocaleDateString("it-IT", { day:"2-digit", month:"short" }) : "";
-
-          return `
-            <div class="news-item">
-              <div class="meta">${esc(dateTxt)} • Hytale</div>
-              <div style="font-weight:900">
-                <a href="${esc(link)}" target="_blank" rel="noopener">${esc(title)}</a>
-              </div>
-            </div>
-          `;
-        }).join("");
-
-        listEl.innerHTML = html;
-      } catch(e){
-        listEl.innerHTML = `
-          <div class="news-item">
-            <div class="meta">Oops</div>
-            <div style="font-weight:900">Non riesco a caricare le news adesso.</div>
-            <div class="meta" style="margin-top:6px">
-              Apri la fonte: <a class="link" href="${esc(RSS_URL)}" target="_blank" rel="noopener">RSS Hytale</a>
-            </div>
-          </div>
-        `;
-      }
-    }
-
-    loadNews();
-  </script>
 </body>
 </html>
