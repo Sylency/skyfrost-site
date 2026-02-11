@@ -1,227 +1,781 @@
 <!doctype html>
 <html lang="it">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>SkyFrost • Server Hytale ITA</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SkyFrost • Server Hytale ITA</title>
 
-<style>
-:root{
---bg:#070a12;
---panel: rgba(255,255,255,.06);
---border: rgba(255,255,255,.10);
---txt:#eaf0ff;
---muted:#a9b6d3;
---acc:#7dd3fc;
-}
+  <style>
+    :root{
+      --bg:#070a12;
+      --panel: rgba(255,255,255,.06);
+      --panel2: rgba(255,255,255,.08);
+      --border: rgba(255,255,255,.10);
+      --border2: rgba(255,255,255,.14);
+      --txt:#eaf0ff;
+      --muted:#a9b6d3;
+      --acc:#7dd3fc;
+      --acc2:#60a5fa;
+      --shadow: 0 20px 60px rgba(0,0,0,.45);
+    }
 
-body{
-margin:0;
-color:var(--txt);
-background:linear-gradient(180deg,#050711,var(--bg));
-font-family:system-ui,Arial;
-}
+    *{box-sizing:border-box}
+    html,body{height:100%}
 
-a{color:inherit;text-decoration:none}
-.container{max-width:1100px;margin:0 auto;padding:26px 16px 70px}
+    body{
+      margin:0;
+      color:var(--txt);
+      background:
+        radial-gradient(1200px 600px at 20% 0%, rgba(125,211,252,.16), transparent 55%),
+        radial-gradient(900px 600px at 80% 10%, rgba(96,165,250,.14), transparent 55%),
+        radial-gradient(900px 900px at 50% 120%, rgba(34,211,238,.08), transparent 60%),
+        linear-gradient(180deg, #050711, var(--bg));
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      overflow-x:hidden;
+    }
 
-.nav{
-position:sticky;
-top:0;
-background:rgba(7,10,18,.7);
-backdrop-filter:blur(10px);
-border-bottom:1px solid var(--border);
-}
+    /* Grain leggero */
+    body:before{
+      content:"";
+      position:fixed; inset:0;
+      pointer-events:none;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)' opacity='.18'/%3E%3C/svg%3E");
+      mix-blend-mode:overlay;
+      opacity:.22;
+    }
 
-.nav-inner{
-max-width:1100px;
-margin:0 auto;
-padding:14px 16px;
-display:flex;
-align-items:center;
-justify-content:space-between;
-}
+    /* ❄️ Neve (canvas sopra tutto, ma non cliccabile) */
+    #snow{
+      position:fixed;
+      inset:0;
+      z-index:5;
+      pointer-events:none;
+      opacity:.55;
+    }
 
-.brand{
-display:flex;
-align-items:center;
-gap:10px;
-font-weight:900;
-font-size:18px;
-}
+    a{color:inherit;text-decoration:none}
+    .container{max-width:1120px;margin:0 auto;padding:26px 16px 70px}
 
-.brand img{
-width:32px;
-height:32px;
-border-radius:8px;
-}
+    /* NAV */
+    .nav{
+      position:sticky; top:0; z-index:50;
+      backdrop-filter: blur(12px);
+      background: rgba(7,10,18,.55);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner{
+      max-width:1120px; margin:0 auto;
+      padding:14px 16px;
+      display:flex; align-items:center; justify-content:space-between; gap:16px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:10px;
+      font-weight:950; letter-spacing:.2px; font-size:18px;
+    }
+    .brand-badge{
+      width:34px;height:34px;border-radius:12px;
+      border:1px solid var(--border2);
+      overflow:hidden;
+      background: rgba(255,255,255,.06);
+      box-shadow: 0 8px 30px rgba(125,211,252,.10);
+      display:flex;align-items:center;justify-content:center;
+    }
+    .brand-badge img{width:100%;height:100%;object-fit:cover;display:block}
 
-.links{display:flex;gap:14px;color:var(--muted)}
+    .links{display:flex; gap:14px; color:var(--muted); flex-wrap:wrap}
+    .links a{padding:8px 10px;border-radius:12px}
+    .links a:hover{
+      color:var(--txt);
+      background: rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.10);
+      padding:7px 9px;
+    }
 
-.auth{display:flex;gap:6px;align-items:center}
+    .auth{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
 
-.btn{
-border:1px solid var(--border);
-background:rgba(255,255,255,.04);
-color:var(--txt);
-padding:10px 12px;
-border-radius:12px;
-font-weight:650;
-display:inline-block;
-}
+    .btn{
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.04);
+      color:var(--txt);
+      padding:10px 12px;
+      border-radius:12px;
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      font-weight:800;
+      transition: transform .12s ease, background .12s ease, border-color .12s ease;
+    }
+    .btn:hover{
+      transform: translateY(-1px);
+      border-color: rgba(255,255,255,.16);
+      background: rgba(255,255,255,.06);
+    }
+    .btn.primary{
+      border:none;
+      background: linear-gradient(90deg, #22d3ee, #60a5fa);
+      color:#07101f;
+      font-weight:950;
+      box-shadow: 0 16px 40px rgba(34,211,238,.10);
+    }
+    .btn.primary:hover{transform: translateY(-1px) scale(1.01)}
+    .btn.ghost{background: transparent}
+    .btn.small{padding:8px 10px; font-weight:900}
 
-.btn.primary{
-border:none;
-background:linear-gradient(90deg,#22d3ee,#60a5fa);
-color:#07101f;
-font-weight:800;
-}
+    .hello{
+      color:var(--muted);
+      font-size:13px;
+      padding:8px 10px;
+      border:1px solid var(--border);
+      border-radius:999px;
+      background: rgba(0,0,0,.12);
+      display:none;
+      max-width:280px;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+      align-items:center;
+      gap:8px;
+    }
+    .hello img{
+      width:22px;height:22px;border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      display:none;
+    }
 
-.hero{
-position:relative;
-border-radius:20px;
-overflow:hidden;
-margin-top:20px;
-}
+    /* HERO */
+    .hero{padding-top:18px}
+    .hero-wrap{
+      position:relative;
+      border:1px solid var(--border2);
+      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.04));
+      border-radius:24px;
+      overflow:hidden;
+      box-shadow: var(--shadow);
+    }
 
-.hero-bg{
-position:absolute;
-inset:0;
-background:url("assets/banner.png") center/cover no-repeat;
-filter:brightness(.5);
-}
+    /* banner reale */
+    .hero-banner{
+      position:absolute; inset:0;
+      background: url("assets/banner.jpg") center/cover no-repeat;
+      filter: saturate(1.05) contrast(1.05) brightness(.55);
+      transform: scale(1.03);
+    }
+    /* overlay per leggibilità */
+    .hero-overlay{
+      position:absolute; inset:0;
+      background:
+        radial-gradient(900px 420px at 22% 10%, rgba(125,211,252,.30), transparent 65%),
+        radial-gradient(700px 420px at 78% 10%, rgba(96,165,250,.22), transparent 65%),
+        linear-gradient(180deg, rgba(7,10,18,.15), rgba(7,10,18,.65));
+    }
+    /* shimmer */
+    .hero-shimmer{
+      position:absolute; inset:-140px;
+      background: linear-gradient(110deg, transparent 40%, rgba(255,255,255,.12) 50%, transparent 60%);
+      transform: translateX(-55%);
+      animation: shimmer 7s ease-in-out infinite;
+      pointer-events:none;
+      opacity:.30;
+    }
+    @keyframes shimmer{
+      0%{ transform: translateX(-55%) rotate(0.001deg); }
+      50%{ transform: translateX(10%) rotate(0.001deg); }
+      100%{ transform: translateX(-55%) rotate(0.001deg); }
+    }
 
-.hero-content{
-position:relative;
-padding:40px;
-}
+    .hero-content{
+      position:relative;
+      padding:22px;
+    }
 
-h1{margin:0 0 10px;font-size:42px}
-p{margin:0;color:var(--muted)}
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      font-size:12px;
+      color:var(--muted);
+      border:1px solid var(--border);
+      padding:6px 10px;
+      border-radius:999px;
+      background: rgba(0,0,0,.16);
+    }
+    .badge-dot{
+      width:7px;height:7px;border-radius:999px;background: var(--acc);
+      box-shadow: 0 0 0 3px rgba(125,211,252,.15);
+    }
 
-.quick{
-margin-top:20px;
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:10px;
-}
+    h1{
+      margin:12px 0 6px;
+      font-size:50px;
+      letter-spacing:-.03em;
+      text-shadow: 0 12px 40px rgba(0,0,0,.35);
+    }
+    .subtitle{
+      margin:0;
+      color:rgba(234,240,255,.82);
+      line-height:1.6;
+      max-width:72ch;
+    }
 
-.quick-item{
-border:1px solid var(--border);
-border-radius:14px;
-padding:12px;
-background:rgba(0,0,0,.4);
-}
+    .cta{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:14px;
+    }
 
-.status-pill{
-display:inline-flex;
-align-items:center;
-gap:8px;
-margin-top:6px;
-}
+    .quick{
+      margin-top:14px;
+      display:grid;
+      grid-template-columns:repeat(3, 1fr);
+      gap:10px;
+    }
+    .quick-item{
+      border:1px solid var(--border);
+      background: rgba(0,0,0,.22);
+      border-radius:16px;
+      padding:12px;
+      backdrop-filter: blur(6px);
+    }
+    .quick-item .k{font-size:12px;color:rgba(234,240,255,.72)}
+    .quick-item .v{font-weight:950;margin-top:4px}
 
-.dot{
-width:10px;height:10px;border-radius:999px;
-}
-.dot.online{background:#22c55e;}
-.dot.offline{background:#ef4444;}
-.dot.dev{background:#60a5fa;}
+    .ip-row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-top:4px;
+    }
+    .ip-value{
+      font-weight:950;
+      letter-spacing:.2px;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+      max-width:100%;
+    }
+    .copy-note{
+      margin-top:6px;
+      font-size:12px;
+      color:rgba(234,240,255,.62);
+      min-height:16px;
+    }
 
-.footer{
-margin-top:22px;
-color:var(--muted);
-font-size:13px;
-}
-</style>
+    /* STATUS pill */
+    .status-pill{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      border:1px solid var(--border);
+      background: rgba(0,0,0,.18);
+      border-radius:999px;
+      padding:10px 12px;
+      font-weight:950;
+      margin-top:6px;
+    }
+    .dot{
+      width:10px;height:10px;border-radius:999px;
+      box-shadow: 0 0 0 3px rgba(255,255,255,.06);
+    }
+    .dot.online{ background:#22c55e; }
+    .dot.offline{ background:#ef4444; }
+    .dot.maintenance{ background:#f59e0b; }
+    .dot.dev{ background:#60a5fa; }
+    .status-sub{ color:rgba(234,240,255,.72); font-weight:750; font-size:13px; margin-top:6px; }
+
+    /* GRID cards */
+    .grid3{
+      margin-top:14px;
+      display:grid;
+      grid-template-columns:repeat(3, 1fr);
+      gap:12px;
+    }
+    .card{
+      border:1px solid var(--border2);
+      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.04));
+      border-radius:20px;
+      padding:16px;
+      box-shadow: 0 12px 40px rgba(0,0,0,.25);
+      transition: transform .12s ease, border-color .12s ease;
+    }
+    .card:hover{
+      transform: translateY(-2px);
+      border-color: rgba(125,211,252,.22);
+    }
+    .card h3{margin:0 0 8px}
+    .card p{margin:0 0 10px; color:rgba(234,240,255,.75); line-height:1.55}
+    .link{color: var(--acc); font-weight:950}
+
+    /* MODALITÀ */
+    .section-title{
+      margin-top:18px;
+      margin-bottom:8px;
+      font-size:18px;
+      letter-spacing:-.01em;
+    }
+    .section-sub{
+      margin:0 0 10px;
+      color:rgba(234,240,255,.70);
+      line-height:1.6;
+    }
+    .modes{
+      margin-top:10px;
+      display:grid;
+      grid-template-columns:repeat(3, 1fr);
+      gap:12px;
+    }
+    .mode{
+      border:1px solid var(--border2);
+      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.04));
+      border-radius:20px;
+      padding:16px;
+      box-shadow: 0 12px 40px rgba(0,0,0,.22);
+    }
+    .mode-top{
+      display:flex; align-items:center; gap:10px;
+      margin-bottom:8px;
+    }
+    .mode-ico{
+      width:34px;height:34px;border-radius:14px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.18);
+      display:flex;align-items:center;justify-content:center;
+      font-size:16px;
+    }
+    .mode h4{margin:0;font-size:16px}
+    .mode p{margin:0;color:rgba(234,240,255,.72);line-height:1.55}
+
+    /* NEWS */
+    .news{
+      margin-top:14px;
+      border:1px solid var(--border2);
+      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.04));
+      border-radius:20px;
+      padding:16px;
+      box-shadow: 0 12px 40px rgba(0,0,0,.25);
+    }
+    .news-head{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;flex-wrap:wrap}
+    .news-list{margin-top:10px;display:grid;gap:10px}
+    .news-item{
+      border:1px solid var(--border);
+      background: rgba(0,0,0,.12);
+      border-radius:16px;
+      padding:12px;
+    }
+    .news-item .meta{font-size:12px;color:rgba(234,240,255,.62);margin-bottom:6px}
+    .spinner{color:rgba(234,240,255,.70);font-size:14px}
+
+    .footer{margin-top:22px;color:rgba(234,240,255,.62);font-size:13px;opacity:.95}
+
+    @media (max-width: 900px){
+      .links{display:none}
+      h1{font-size:38px}
+      .grid3{grid-template-columns:1fr}
+      .quick{grid-template-columns:1fr}
+      .modes{grid-template-columns:1fr}
+      .auth{justify-content:flex-start}
+    }
+  </style>
 </head>
 
 <body>
+  <!-- ❄️ neve -->
+  <canvas id="snow"></canvas>
 
-<header class="nav">
-<div class="nav-inner">
+  <header class="nav">
+    <div class="nav-inner">
+      <a class="brand" href="/">
+        <span class="brand-badge"><img src="assets/logo.png" alt="SkyFrost"></span>
+        <span>SkyFrost</span>
+      </a>
 
-<div class="brand">
-<img src="assets/logo.png">
-SkyFrost
-</div>
+      <nav class="links">
+        <a href="/wiki.html">Wiki</a>
+        <a href="/supporto.html">Supporto</a>
+        <a href="#vote">Vote</a>
+        <a href="#news">News</a>
+      </nav>
 
-<nav class="links">
-<a href="/wiki.html">Wiki</a>
-<a href="/supporto.html">Supporto</a>
-</nav>
+      <div class="auth">
+        <span class="hello" id="nav-hello">
+          <img id="nav-avatar" alt="">
+          <span id="nav-hello-text">Ciao, …</span>
+        </span>
 
-<div class="auth">
-<a class="btn" id="nav-login" href="/api/login">Login</a>
-<a class="btn" id="nav-dashboard" href="/dashboard.html">Dashboard</a>
-<a class="btn primary" href="http://discord.skyfrost.it/" target="_blank">Discord</a>
-</div>
+        <a class="btn" id="nav-login" href="/api/login">🔐 Login</a>
+        <a class="btn" id="nav-dashboard" href="/dashboard.html">✨ Dashboard</a>
+        <a class="btn ghost" id="nav-logout" href="/api/logout" style="display:none;">Logout</a>
 
-</div>
-</header>
+        <a class="btn primary" href="http://discord.skyfrost.it/" target="_blank" rel="noopener">Discord</a>
+      </div>
+    </div>
+  </header>
 
-<main class="container">
+  <main class="container">
+    <section class="hero">
+      <div class="hero-wrap">
+        <div class="hero-banner"></div>
+        <div class="hero-overlay"></div>
+        <div class="hero-shimmer"></div>
 
-<section class="hero">
+        <div class="hero-content">
+          <span class="badge"><span class="badge-dot"></span> Hytale Server • ITA</span>
 
-<div class="hero-bg"></div>
+          <h1>SkyFrost</h1>
+          <p class="subtitle">
+            Un server Hytale italiano con progressione, eventi e community. Entra su Discord e resta aggiornato su apertura e patch.
+          </p>
 
-<div class="hero-content">
-<h1>SkyFrost</h1>
-<p>Server Hytale italiano — entra nella community.</p>
+          <div class="cta">
+            <a class="btn primary" href="http://discord.skyfrost.it/" target="_blank" rel="noopener">Unisciti al Discord</a>
+            <a class="btn" href="/wiki.html">Guarda la Wiki</a>
+            <a class="btn" href="/supporto.html">Apri un Ticket</a>
+            <a class="btn" id="hero-dashboard" href="/dashboard.html">Vai alla Dashboard</a>
+          </div>
 
-<div class="quick">
+          <div class="quick">
+            <!-- IP + COPIA -->
+            <div class="quick-item">
+              <div class="k">IP</div>
+              <div class="ip-row">
+                <div class="ip-value" id="sf-ip">play.skyfrost.it</div>
+                <button class="btn small" id="copy-ip" type="button">📋 Copia</button>
+              </div>
+              <div class="copy-note" id="copy-note"></div>
+            </div>
 
-<div class="quick-item">
-<div class="k">IP</div>
-<div class="v">play.skyfrost.it</div>
-</div>
+            <div class="quick-item">
+              <div class="k">Discord</div>
+              <div class="v">discord.skyfrost.it</div>
+            </div>
 
-<div class="quick-item">
-<div class="k">Discord</div>
-<div class="v">discord.skyfrost.it</div>
-</div>
+            <div class="quick-item">
+              <div class="k">Status</div>
 
-<div class="quick-item">
-<div class="k">Status</div>
+              <div class="status-pill" id="sf-status-pill">
+                <span class="dot dev" id="sf-status-dot"></span>
+                <span id="sf-status-text">In sviluppo</span>
+              </div>
 
-<div class="status-pill">
-<span class="dot dev" id="sf-status-dot"></span>
-<span id="sf-status-text">In sviluppo</span>
-</div>
+              <div class="status-sub" id="sf-status-sub">Aggiornato manualmente dallo staff</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-</div>
+    <!-- MODALITÀ DI GIOCO -->
+    <h3 class="section-title">Modalità di gioco</h3>
+    <p class="section-sub">Una preview di cosa troverai su SkyFrost (puoi cambiare questi testi quando vuoi).</p>
 
-</div>
-</div>
+    <section class="modes">
+      <div class="mode">
+        <div class="mode-top">
+          <div class="mode-ico">🧭</div>
+          <h4>Survival RPG</h4>
+        </div>
+        <p>Progressione, skill e loot. Parti dal base e diventa leggenda.</p>
+      </div>
 
-</section>
+      <div class="mode">
+        <div class="mode-top">
+          <div class="mode-ico">🏰</div>
+          <h4>Claim & Build</h4>
+        </div>
+        <p>Costruisci, proteggi la tua area e crea il tuo villaggio con la community.</p>
+      </div>
 
-<div class="footer">
-© <span id="y"></span> SkyFrost
-</div>
+      <div class="mode">
+        <div class="mode-top">
+          <div class="mode-ico">⚔️</div>
+          <h4>Eventi & PvP</h4>
+        </div>
+        <p>Tornei, boss fight, sfide e ricompense. PvP solo dove previsto.</p>
+      </div>
+    </section>
 
-</main>
+    <!-- Cards utili -->
+    <section class="grid3" style="margin-top:14px;">
+      <div class="card" id="wiki">
+        <h3>📚 Wiki</h3>
+        <p>Regole, guide e info sul server. Aggiorniamo spesso.</p>
+        <a class="link" href="/wiki.html">Apri la Wiki →</a>
+      </div>
 
-<script>
-document.getElementById("y").textContent=new Date().getFullYear();
+      <div class="card" id="supporto">
+        <h3>🛠️ Supporto</h3>
+        <p>Ticket per bug, ban appeal e assistenza rapida su Discord.</p>
+        <a class="link" href="/supporto.html">Apri un Ticket →</a>
+      </div>
 
-const SKYFROST_STATUS="dev";
+      <div class="card" id="vote">
+        <h3>🗳️ Vote</h3>
+        <p>Vota SkyFrost e ottieni ricompense (in arrivo).</p>
+        <a class="link" href="#" onclick="alert('Arriva presto!')">Vai alla pagina Vote →</a>
+      </div>
+    </section>
 
-(function(){
-const dot=document.getElementById("sf-status-dot");
-const text=document.getElementById("sf-status-text");
+    <!-- NEWS -->
+    <section class="news" id="news">
+      <div class="news-head">
+        <div>
+          <h3 style="margin:0">News di Hytale</h3>
+          <p style="margin:6px 0 0; color:rgba(234,240,255,.72)">Aggiornate automaticamente.</p>
+        </div>
+        <a class="btn" id="news-source" href="#" target="_blank" rel="noopener">Fonte</a>
+      </div>
 
-const map={
-online:["online","Online"],
-offline:["offline","Offline"],
-dev:["dev","In sviluppo"]
-};
+      <div class="news-list" id="news-list">
+        <div class="spinner">Caricamento news…</div>
+      </div>
 
-const s=map[SKYFROST_STATUS];
-dot.className="dot "+s[0];
-text.textContent=s[1];
-})();
-</script>
+      <p style="margin:12px 0 0; font-size:12px; color:rgba(234,240,255,.62);">
+        Nota: se il feed non risponde, riprova più tardi (dipende dalla fonte esterna).
+      </p>
+    </section>
 
+    <div class="footer">
+      © <span id="y"></span> SkyFrost — Tutti i diritti riservati.
+    </div>
+  </main>
+
+  <script>
+    document.getElementById("y").textContent = new Date().getFullYear();
+
+    // ====== NEWS HYTALE (RSS via proxy CORS) ======
+    const RSS_URL = "https://hytaletracker.github.io/rss.xml";
+    const ALLORIGINS = "https://api.allorigins.win/raw?url=" + encodeURIComponent(RSS_URL);
+
+    const listEl = document.getElementById("news-list");
+    const sourceEl = document.getElementById("news-source");
+    sourceEl.href = RSS_URL;
+
+    function esc(s){
+      return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+    }
+
+    async function loadNews(){
+      try{
+        const res = await fetch(ALLORIGINS, { cache: "no-store" });
+        if(!res.ok) throw new Error("Fetch failed");
+        const xmlText = await res.text();
+
+        const parser = new DOMParser();
+        const xml = parser.parseFromString(xmlText, "text/xml");
+        const items = Array.from(xml.querySelectorAll("item")).slice(0, 5);
+        if(items.length === 0) throw new Error("No items");
+
+        listEl.innerHTML = items.map(it => {
+          const title = it.querySelector("title")?.textContent?.trim() || "News";
+          const link = it.querySelector("link")?.textContent?.trim() || "#";
+          const pubDate = it.querySelector("pubDate")?.textContent?.trim() || "";
+          const dateTxt = pubDate ? new Date(pubDate).toLocaleDateString("it-IT", { day:"2-digit", month:"short" }) : "";
+
+          return `
+            <div class="news-item">
+              <div class="meta">${esc(dateTxt)} • Hytale</div>
+              <div style="font-weight:950">
+                <a href="${esc(link)}" target="_blank" rel="noopener">${esc(title)}</a>
+              </div>
+            </div>
+          `;
+        }).join("");
+      } catch(e){
+        listEl.innerHTML = `
+          <div class="news-item">
+            <div class="meta">Oops</div>
+            <div style="font-weight:950">Non riesco a caricare le news adesso.</div>
+            <div class="meta" style="margin-top:6px">
+              Apri la fonte: <a class="link" href="${esc(RSS_URL)}" target="_blank" rel="noopener">RSS Hytale</a>
+            </div>
+          </div>
+        `;
+      }
+    }
+    loadNews();
+
+    // ====== STATUS MANUALE ======
+    // valori: "online" | "offline" | "maintenance" | "dev"
+    const SKYFROST_STATUS = "dev";
+
+    (function applyStatus(){
+      const dot = document.getElementById("sf-status-dot");
+      const text = document.getElementById("sf-status-text");
+      const sub = document.getElementById("sf-status-sub");
+
+      const map = {
+        online: { cls: "online", label: "Online", sub: "Server attivo" },
+        offline: { cls: "offline", label: "Offline", sub: "Server non disponibile" },
+        maintenance: { cls: "maintenance", label: "Manutenzione", sub: "Stiamo aggiornando il server" },
+        dev: { cls: "dev", label: "In sviluppo", sub: "Apertura presto — entra su Discord" },
+      };
+
+      const s = map[SKYFROST_STATUS] || map.dev;
+      dot.className = "dot " + s.cls;
+      text.textContent = s.label;
+      sub.textContent = s.sub;
+    })();
+
+    // ====== COPIA IP ======
+    const ipEl = document.getElementById("sf-ip");
+    const copyBtn = document.getElementById("copy-ip");
+    const noteEl = document.getElementById("copy-note");
+
+    async function copyText(text){
+      try{
+        await navigator.clipboard.writeText(text);
+        return true;
+      }catch{
+        // fallback
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        ta.style.position = "fixed";
+        ta.style.left = "-9999px";
+        document.body.appendChild(ta);
+        ta.select();
+        try{
+          const ok = document.execCommand("copy");
+          document.body.removeChild(ta);
+          return ok;
+        }catch{
+          document.body.removeChild(ta);
+          return false;
+        }
+      }
+    }
+
+    copyBtn.addEventListener("click", async () => {
+      const ip = ipEl.textContent.trim();
+      const ok = await copyText(ip);
+      noteEl.textContent = ok ? "✅ IP copiato negli appunti!" : "❌ Non riesco a copiare. Copia manualmente l'IP.";
+      setTimeout(() => (noteEl.textContent = ""), 2500);
+    });
+
+    // ====== LOGIN UI (Ciao nome + avatar + Dashboard smart) ======
+    const helloEl = document.getElementById("nav-hello");
+    const helloTextEl = document.getElementById("nav-hello-text");
+    const avatarEl = document.getElementById("nav-avatar");
+    const loginEl = document.getElementById("nav-login");
+    const dashEl = document.getElementById("nav-dashboard");
+    const heroDashEl = document.getElementById("hero-dashboard");
+    const logoutEl = document.getElementById("nav-logout");
+
+    async function refreshAuth(){
+      try{
+        const r = await fetch("/api/me", { cache: "no-store" });
+        const j = await r.json();
+
+        if(j.loggedIn && j.user){
+          helloEl.style.display = "inline-flex";
+          helloTextEl.textContent = `Ciao, ${j.user.username}`;
+
+          if(j.user.avatar){
+            avatarEl.src = j.user.avatar;
+            avatarEl.style.display = "inline-block";
+          } else {
+            avatarEl.style.display = "none";
+          }
+
+          loginEl.style.display = "none";
+          logoutEl.style.display = "inline-flex";
+
+          dashEl.href = "/dashboard.html";
+          heroDashEl.href = "/dashboard.html";
+          return;
+        }
+
+        // non loggato
+        helloEl.style.display = "none";
+        avatarEl.style.display = "none";
+        loginEl.style.display = "inline-flex";
+        logoutEl.style.display = "none";
+
+        dashEl.href = "/api/login";
+        heroDashEl.href = "/api/login";
+      } catch(e){
+        // fallback
+        helloEl.style.display = "none";
+        avatarEl.style.display = "none";
+        logoutEl.style.display = "none";
+        dashEl.href = "/api/login";
+        heroDashEl.href = "/api/login";
+      }
+    }
+    refreshAuth();
+
+    // ====== ❄️ NEVE (leggera) ======
+    (function snow(){
+      const c = document.getElementById("snow");
+      const ctx = c.getContext("2d", { alpha: true });
+
+      let w = 0, h = 0, dpr = 1;
+      function resize(){
+        dpr = Math.min(window.devicePixelRatio || 1, 2);
+        w = Math.floor(window.innerWidth);
+        h = Math.floor(window.innerHeight);
+        c.width = Math.floor(w * dpr);
+        c.height = Math.floor(h * dpr);
+        c.style.width = w + "px";
+        c.style.height = h + "px";
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+      window.addEventListener("resize", resize);
+      resize();
+
+      const flakes = [];
+      const COUNT = Math.min(140, Math.max(70, Math.floor((w*h)/18000)));
+
+      function rand(min, max){ return Math.random() * (max - min) + min; }
+
+      function init(){
+        flakes.length = 0;
+        for(let i=0;i<COUNT;i++){
+          flakes.push({
+            x: rand(0, w),
+            y: rand(0, h),
+            r: rand(0.8, 2.6),
+            s: rand(0.6, 1.8),
+            vx: rand(-0.35, 0.35),
+            vy: rand(0.8, 2.2),
+            a: rand(0.25, 0.9)
+          });
+        }
+      }
+      init();
+      window.addEventListener("resize", init);
+
+      let last = performance.now();
+      function tick(now){
+        const dt = Math.min(32, now - last);
+        last = now;
+
+        ctx.clearRect(0,0,w,h);
+        ctx.beginPath();
+
+        for(const f of flakes){
+          f.x += (f.vx * dt) * 0.06;
+          f.y += (f.vy * dt) * 0.06;
+
+          // piccola oscillazione
+          f.x += Math.sin((f.y + now*0.02) * 0.01) * 0.25;
+
+          if(f.y - f.r > h){ f.y = -f.r; f.x = rand(0,w); }
+          if(f.x < -10) f.x = w + 10;
+          if(f.x > w + 10) f.x = -10;
+
+          ctx.moveTo(f.x + f.r, f.y);
+          ctx.arc(f.x, f.y, f.r, 0, Math.PI*2);
+        }
+
+        ctx.fillStyle = "rgba(234, 240, 255, 0.55)";
+        ctx.fill();
+
+        requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    })();
+  </script>
 </body>
 </html>
