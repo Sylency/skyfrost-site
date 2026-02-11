@@ -70,8 +70,16 @@
         </div>
 
         <label>Motivo</label>
-        <input name="subject" required placeholder="Es. Bug / Ban appeal / Pagamento / Altro" />
-
+<select name="subject" required
+  style="width:100%;margin-top:6px;padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,.10);background: rgba(0,0,0,.20);color:#eaf0ff;outline:none">
+  <option value="" selected disabled>Scegli un motivo…</option>
+  <option>Bug</option>
+  <option>Ban appeal</option>
+  <option>Segnalazione player</option>
+  <option>Problema accesso</option>
+  <option>Altro</option>
+</select>
+        
         <label>Messaggio</label>
         <textarea name="message" required placeholder="Spiega bene il problema e cosa hai già provato."></textarea>
 
