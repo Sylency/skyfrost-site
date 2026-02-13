@@ -144,6 +144,16 @@
       background: rgba(125,211,252,.16);
       border-color: rgba(125,211,252,.28);
     }
+.catCount{
+  margin-left:8px;
+  padding:2px 7px;
+  border-radius:999px;
+  border:1px solid var(--border);
+  background: rgba(0,0,0,.22);
+  color: var(--muted);
+  font-weight:900;
+  font-size:11px;
+}
 
     .packages{
       display:grid;
@@ -252,14 +262,25 @@
       display:none;
     }
     .toast.show{display:block}
-  </style>
+    .brand-badge{position:relative}
+  .brandFallback{
+    position:absolute; inset:0;
+    display:none;
+    align-items:center; justify-content:center;
+    font-weight:1000;
+    color: rgba(255,255,255,.85);
+    letter-spacing:.4px;
+    font-size:12px;
+    background: rgba(0,0,0,.18);
+  }
+</style>
 </head>
 
 <body>
   <div class="topbar">
     <div class="topbar-inner">
       <div class="brand">
-        <span class="brand-badge"><img src="assets/icon.png" alt="SkyFrost"></span>
+        <span class="brand-badge"><img src="assets/logo.png" alt="SkyFrost" loading="eager" onerror="if(!this.dataset.f){this.dataset.f=1;this.src='assets/icon.png';}else{this.style.display='none';this.nextElementSibling.style.display='flex';}"><span class="brandFallback" aria-hidden="true">SF</span></span>
         <span>SkyFrost</span>
         <span class="pill"><i class="bi bi-bag-fill ico"></i>Store</span>
       </div>
@@ -392,31 +413,64 @@
     }
 
     function renderCats(){
-      const wrap = el("cats");
-      wrap.innerHTML = "";
-      const allBtn = document.createElement("button");
-      allBtn.className = "catBtn" + (activeCat === "ALL" ? " active" : "");
-      allBtn.textContent = "Tutti";
-      allBtn.onclick = () => { activeCat = "ALL"; renderAll(); };
-      wrap.appendChild(allBtn);
+  const wrap = el("cats");
+  wrap.innerHTML = "";
 
-      for (const c of categories){
-        const b = document.createElement("button");
-        b.className = "catBtn" + (activeCat === String(c.id) ? " active" : "");
-        b.textContent = c.name || "Categoria";
-        b.onclick = () => { activeCat = String(c.id); renderAll(); };
-        wrap.appendChild(b);
-      }
-    }
+  // calcola conteggi pacchetti per categoria
+  const counts = new Map();
+  for (const c of categories){
+    const pkgs = Array.isArray(c.packages) ? c.packages : [];
+    counts.set(String(c.id), pkgs.length);
+  }
+
+  const allBtn = document.createElement("button");
+  allBtn.className = "catBtn" + (activeCat === "ALL" ? " active" : "");
+  allBtn.innerHTML = `Tutti <span class="catCount">${packagesFlat().length}</span>`;
+  allBtn.onclick = () => { activeCat = "ALL"; renderAll(); };
+  wrap.appendChild(allBtn);
+
+  // solo categorie non vuote, ordinate
+  const nonEmpty = categories
+    .filter(c => (counts.get(String(c.id)) || 0) > 0)
+    .sort((a,b) => {
+      const ao = Number(a.sort_order ?? a.order ?? 0);
+      const bo = Number(b.sort_order ?? b.order ?? 0);
+      if (ao !== bo) return ao - bo;
+      return String(a.name||"").localeCompare(String(b.name||""), "it");
+    });
+
+  for (const c of nonEmpty){
+    const b = document.createElement("button");
+    b.className = "catBtn" + (activeCat === String(c.id) ? " active" : "");
+    const n = counts.get(String(c.id)) || 0;
+    b.innerHTML = `${c.name || "Categoria"} <span class="catCount">${n}</span>`;
+    b.onclick = () => { activeCat = String(c.id); renderAll(); };
+    wrap.appendChild(b);
+  }
+}
 
     function packagesFlat(){
-      const out = [];
-      for (const c of categories){
-        const pkgs = Array.isArray(c.packages) ? c.packages : [];
-        for (const p of pkgs) out.push(p);
-      }
-      return out;
+  const out = [];
+  for (const c of categories){
+    const pkgs = Array.isArray(c.packages) ? c.packages : [];
+    for (const p of pkgs){
+      // alcuni payload Tebex non includono category_id dentro il package:
+      // lo “attacchiamo” noi per poter filtrare correttamente.
+      out.push({
+        ...p,
+        category_id: p.category_id ?? c.id,
+        category: p.category ?? { id: c.id, name: c.name }
+      });
     }
+  }
+  // ordina in modo stabile: prima per categoria (ordine), poi per nome
+  return out.sort((a,b) => {
+    const ac = String(a.category_id ?? "");
+    const bc = String(b.category_id ?? "");
+    if (ac !== bc) return ac.localeCompare(bc, "en");
+    return String(a.name||"").localeCompare(String(b.name||""), "it");
+  });
+}
 
     function filteredPackages(){
       const q = (search || "").toLowerCase();
