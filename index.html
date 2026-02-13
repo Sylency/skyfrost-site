@@ -6,7 +6,11 @@
   <title>SkyFrost • Server Hytale ITA</title>
 
   <style>
-    :root{
+
+    /* Bootstrap Icons */
+    .bi{vertical-align:-0.125em}
+    .ico{margin-right:.45rem}
+:root{
       --bg:#070a12;
       --panel: rgba(255,255,255,.06);
       --panel2: rgba(255,255,255,.08);
@@ -382,6 +386,7 @@
       .role-badge{display:none !important;}
     }
   </style>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 </head>
 
 <body>
@@ -413,8 +418,8 @@
           <span id="nav-hello-text">Ciao, …</span>
         </span>
 
-        <a class="btn" id="nav-login" href="/api/login">🔐 Login</a>
-        <a class="btn" id="nav-dashboard" href="/dashboard.html">✨ Dashboard</a>
+        <a class="btn" id="nav-login" href="/api/login"><i class="bi bi-box-arrow-in-right ico"></i>Login</a>
+        <a class="btn" id="nav-dashboard" href="/dashboard.html"><i class="bi bi-stars ico"></i>Dashboard</a>
         <a class="btn ghost" id="nav-logout" href="/api/logout" style="display:none;">Logout</a>
 
         <a class="btn primary" href="http://discord.skyfrost.it/" target="_blank" rel="noopener">Discord</a>
@@ -451,7 +456,7 @@
               <div class="k">IP</div>
               <div class="ip-row">
                 <div class="ip-value" id="sf-ip">play.skyfrost.it</div>
-                <button class="btn small" id="copy-ip" type="button">📋 Copia</button>
+                <button class="btn small" id="copy-ip" type="button"><i class="bi bi-clipboard ico"></i>Copia</button>
               </div>
               <div class="copy-note" id="copy-note"></div>
             </div>
@@ -513,19 +518,19 @@
 
     <section class="grid3" style="margin-top:14px;">
       <div class="card" id="wiki">
-        <h3>📚 Wiki</h3>
+        <h3><i class="bi bi-book ico"></i>Wiki</h3>
         <p>Regole, guide e info sul server. Aggiorniamo spesso.</p>
         <a class="link" href="/wiki.html">Apri la Wiki →</a>
       </div>
 
       <div class="card" id="supporto">
-        <h3>🛠️ Supporto</h3>
+        <h3><i class="bi bi-life-preserver ico"></i>Supporto</h3>
         <p>Ticket per bug, ban appeal e assistenza rapida su Discord.</p>
         <a class="link" href="/supporto.html">Apri un Ticket →</a>
       </div>
 
       <div class="card" id="vote">
-        <h3>🗳️ Vote</h3>
+        <h3><i class="bi bi-hand-thumbs-up ico"></i>Vote</h3>
         <p>Vota SkyFrost e ottieni ricompense (in arrivo).</p>
         <a class="link" href="#" onclick="alert('Arriva presto!')">Vai alla pagina Vote →</a>
       </div>
@@ -591,7 +596,7 @@
     copyBtn.addEventListener("click", async () => {
       const ip = ipEl.textContent.trim();
       const ok = await copyText(ip);
-      noteEl.textContent = ok ? "✅ IP copiato negli appunti!" : "❌ Non riesco a copiare. Copia manualmente l'IP.";
+      noteEl.innerHTML = ok ? `<i class="bi bi-check-circle-fill ico"></i>IP copiato negli appunti!` : `<i class="bi bi-x-circle-fill ico"></i>Non riesco a copiare. Copia manualmente l\'IP.`;
       setTimeout(() => (noteEl.textContent = ""), 2500);
     });
 
