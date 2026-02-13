@@ -156,10 +156,27 @@
 }
 
     .packages{
+      display:block;
+      margin-top:12px;
+    }
+    .catSection{margin-top:14px}
+    .catHead{
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:12px;
+      padding:10px 2px 8px;
+    }
+    .catTitle{display:flex;align-items:center;gap:10px}
+    .catTitle h2{margin:0;font-size:16px;letter-spacing:.2px}
+    .catMeta{color:var(--muted);font-weight:900;font-size:12px}
+    .packagesGrid{
       display:grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap:12px;
-      margin-top:12px;
+    }
+    @media (max-width: 720px){
+      .packagesGrid{grid-template-columns:1fr}
     }
     @media (max-width: 720px){
       .packages{grid-template-columns: 1fr}
@@ -373,7 +390,6 @@
 
     // === STATE ===
     let categories = [];
-    let activeCat = "ALL";
     let search = "";
     let cart = loadCart();
 
@@ -416,22 +432,9 @@
   const wrap = el("cats");
   wrap.innerHTML = "";
 
-  // calcola conteggi pacchetti per categoria
-  const counts = new Map();
-  for (const c of categories){
-    const pkgs = Array.isArray(c.packages) ? c.packages : [];
-    counts.set(String(c.id), pkgs.length);
-  }
-
-  const allBtn = document.createElement("button");
-  allBtn.className = "catBtn" + (activeCat === "ALL" ? " active" : "");
-  allBtn.innerHTML = `Tutti <span class="catCount">${packagesFlat().length}</span>`;
-  allBtn.onclick = () => { activeCat = "ALL"; renderAll(); };
-  wrap.appendChild(allBtn);
-
-  // solo categorie non vuote, ordinate
+  // solo categorie non vuote, ordinate (sort_order → name)
   const nonEmpty = categories
-    .filter(c => (counts.get(String(c.id)) || 0) > 0)
+    .filter(c => Array.isArray(c.packages) && c.packages.length > 0)
     .sort((a,b) => {
       const ao = Number(a.sort_order ?? a.order ?? 0);
       const bo = Number(b.sort_order ?? b.order ?? 0);
@@ -439,17 +442,25 @@
       return String(a.name||"").localeCompare(String(b.name||""), "it");
     });
 
+  const topBtn = document.createElement("button");
+  topBtn.className = "catBtn active";
+  topBtn.innerHTML = `Tutte <span class="catCount">${packagesFlat().length}</span>`;
+  topBtn.onclick = () => window.scrollTo({ top: 0, behavior: "smooth" });
+  wrap.appendChild(topBtn);
+
   for (const c of nonEmpty){
     const b = document.createElement("button");
-    b.className = "catBtn" + (activeCat === String(c.id) ? " active" : "");
-    const n = counts.get(String(c.id)) || 0;
-    b.innerHTML = `${c.name || "Categoria"} <span class="catCount">${n}</span>`;
-    b.onclick = () => { activeCat = String(c.id); renderAll(); };
+    b.className = "catBtn";
+    b.innerHTML = `${c.name || "Categoria"} <span class="catCount">${c.packages.length}</span>`;
+    b.onclick = () => {
+      const section = document.getElementById(`cat-${c.id}`);
+      if (section) section.scrollIntoView({ behavior:"smooth", block:"start" });
+    };
     wrap.appendChild(b);
   }
 }
 
-    function packagesFlat(){
+function packagesFlat(){(){
   const out = [];
   for (const c of categories){
     const pkgs = Array.isArray(c.packages) ? c.packages : [];
@@ -472,17 +483,16 @@
   });
 }
 
-    function filteredPackages(){
+
+    function matchesSearch(p){
       const q = (search || "").toLowerCase();
-      return packagesFlat().filter(p => {
-        const catOk = activeCat === "ALL" || String(p.category?.id || p.category_id || "") === activeCat;
-        if (!catOk) return false;
-        if (!q) return true;
-        const name = (p.name || "").toLowerCase();
-        const desc = stripHtml(p.description || "").toLowerCase();
-        return name.includes(q) || desc.includes(q);
-      });
+      if (!q) return true;
+      const name = (p.name || "").toLowerCase();
+      const desc = stripHtml(p.description || "").toLowerCase();
+      return name.includes(q) || desc.includes(q);
     }
+
+
 
     function findPkgById(id){
       return packagesFlat().find(p => String(p.id) === String(id)) || null;
@@ -502,57 +512,104 @@
     }
 
     function renderPackages(){
-      const list = filteredPackages();
-      el("countPill").querySelector("span").textContent = `${list.length} pacchetti`;
-
+      // RENDER “A SEZIONI”: una sezione per categoria (nasconde sezioni vuote e dopo ricerca)
       const wrap = el("packages");
       wrap.innerHTML = "";
 
-      if (!list.length){
+      const nonEmpty = categories
+        .filter(c => Array.isArray(c.packages) && c.packages.length > 0)
+        .sort((a,b) => {
+          const ao = Number(a.sort_order ?? a.order ?? 0);
+          const bo = Number(b.sort_order ?? b.order ?? 0);
+          if (ao !== bo) return ao - bo;
+          return String(a.name||"").localeCompare(String(b.name||""), "it");
+        });
+
+      // calcola quanti pacchetti sono visibili con la ricerca attuale
+      let visibleCount = 0;
+      for (const c of nonEmpty){
+        for (const p of (c.packages||[])){
+          // “attacca” category_id per consistenza
+          const pp = { ...p, category_id: p.category_id ?? c.id, category: p.category ?? { id: c.id, name: c.name } };
+          if (matchesSearch(pp)) visibleCount++;
+        }
+      }
+      el("countPill").querySelector("span").textContent = `${visibleCount} pacchetti`;
+
+      if (!visibleCount){
         const empty = document.createElement("div");
         empty.className = "card";
-        empty.innerHTML = '<div style="font-weight:950;margin-bottom:6px"><i class="bi bi-search ico"></i>Nessun risultato</div><div class="muted">Prova a cambiare ricerca o categoria.</div>';
+        empty.innerHTML = '<div style="font-weight:950;margin-bottom:6px"><i class="bi bi-search ico"></i>Nessun risultato</div><div class="muted">Prova a cambiare ricerca.</div>';
         wrap.appendChild(empty);
         return;
       }
 
-      for (const p of list){
-        const card = document.createElement("div");
-        card.className = "pkg";
+      for (const c of nonEmpty){
+        const pkgsRaw = Array.isArray(c.packages) ? c.packages : [];
+        const pkgs = pkgsRaw
+          .map(p => ({ ...p, category_id: p.category_id ?? c.id, category: p.category ?? { id: c.id, name: c.name } }))
+          .filter(p => matchesSearch(p))
+          .sort((a,b) => String(a.name||"").localeCompare(String(b.name||""), "it"));
 
-        const img = p.image ? `<img src="${p.image}" alt="">` : `<i class="bi bi-box-seam" style="font-size:22px;color:rgba(255,255,255,.7)"></i>`;
+        if (!pkgs.length) continue;
 
-        const desc = stripHtml(p.description || "");
-        const price = money(p.total_price ?? p.base_price, p.currency);
+        const section = document.createElement("section");
+        section.className = "catSection";
+        section.id = `cat-${c.id}`;
 
-        const current = cart.find(x => String(x.id) === String(p.id));
-        const qty = current?.qty || 1;
-
-        card.innerHTML = `
-          <div class="pkgMedia">${img}</div>
-          <div class="pkgMain">
-            <div class="pkgTop">
-              <div class="pkgName" title="${(p.name||"").replaceAll('"',"&quot;")}">${p.name || "Pacchetto"}</div>
-              <div class="price">${price}</div>
-            </div>
-            <div class="pkgDesc">${desc || "—"}</div>
-            <div class="pkgActions">
-              <div class="qty" data-id="${p.id}">
-                <button type="button" data-act="dec" aria-label="Diminuisci">−</button>
-                <span>${qty}</span>
-                <button type="button" data-act="inc" aria-label="Aumenta">+</button>
-              </div>
-              <button class="btn primary" type="button" data-add="${p.id}">
-                <i class="bi bi-cart-plus"></i> Aggiungi
-              </button>
-            </div>
+        const head = document.createElement("div");
+        head.className = "catHead";
+        head.innerHTML = `
+          <div class="catTitle">
+            <i class="bi bi-grid-1x2-fill"></i>
+            <h2>${c.name || "Categoria"}</h2>
           </div>
+          <div class="catMeta"><span class="muted">${pkgs.length} pacchetti</span></div>
         `;
+        section.appendChild(head);
 
-        wrap.appendChild(card);
+        const grid = document.createElement("div");
+        grid.className = "packagesGrid";
+
+        for (const p of pkgs){
+          const card = document.createElement("div");
+          card.className = "pkg";
+
+          const img = p.image ? `<img src="${p.image}" alt="">` : `<i class="bi bi-box-seam" style="font-size:22px;color:rgba(255,255,255,.7)"></i>`;
+          const desc = stripHtml(p.description || "");
+          const price = money(p.total_price ?? p.base_price, p.currency);
+
+          const current = cart.find(x => String(x.id) === String(p.id));
+          const qty = current?.qty || 1;
+
+          card.innerHTML = `
+            <div class="pkgMedia">${img}</div>
+            <div class="pkgMain">
+              <div class="pkgTop">
+                <div class="pkgName" title="${(p.name||"").replaceAll('"',"&quot;")}">${p.name || "Pacchetto"}</div>
+                <div class="price">${price}</div>
+              </div>
+              <div class="pkgDesc">${desc || "—"}</div>
+              <div class="pkgActions">
+                <div class="qty" data-id="${p.id}">
+                  <button type="button" data-act="dec" aria-label="Diminuisci">−</button>
+                  <span>${qty}</span>
+                  <button type="button" data-act="inc" aria-label="Aumenta">+</button>
+                </div>
+                <button class="btn primary" type="button" data-add="${p.id}">
+                  <i class="bi bi-cart-plus"></i> Aggiungi
+                </button>
+              </div>
+            </div>
+          `;
+          grid.appendChild(card);
+        }
+
+        section.appendChild(grid);
+        wrap.appendChild(section);
       }
 
-      // handlers
+      // handlers (delegati)
       wrap.querySelectorAll("[data-add]").forEach(btn => {
         btn.addEventListener("click", () => {
           const id = btn.getAttribute("data-add");
@@ -563,7 +620,6 @@
       });
 
       wrap.querySelectorAll(".qty").forEach(q => {
-        const id = q.getAttribute("data-id");
         q.addEventListener("click", (e) => {
           const act = e.target?.getAttribute?.("data-act");
           if (!act) return;
