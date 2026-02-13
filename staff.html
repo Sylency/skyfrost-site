@@ -169,6 +169,110 @@
     @media (max-width: 560px){
       .members{grid-template-columns:1fr}
     }
+  
+    /* Staff upgrade */
+    .hero-top{
+      display:grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap:18px;
+      align-items:stretch;
+      margin-top: 26px;
+    }
+    .kicker{
+      display:inline-flex;
+      align-items:center;
+      gap:.45rem;
+      padding:8px 12px;
+      border:1px solid var(--border);
+      border-radius:999px;
+      background: rgba(255,255,255,.03);
+      color: var(--muted);
+      font-weight:800;
+      font-size:12px;
+      letter-spacing:.02em;
+    }
+    .hero h1{
+      margin:10px 0 6px;
+      font-size: clamp(28px, 4.2vw, 42px);
+      letter-spacing:-.02em;
+      line-height:1.05;
+    }
+    .sub{margin:0;color:var(--muted);max-width:68ch}
+    .controls{padding:14px; position:sticky; top:16px; height:fit-content}
+    .search{
+      display:flex;align-items:center;gap:10px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.02);
+      border-radius:14px;
+      padding:10px 12px;
+    }
+    .search i{color:var(--muted)}
+    .search input{
+      width:100%;
+      border:none;
+      outline:none;
+      background:transparent;
+      color:var(--txt);
+      font-weight:800;
+      font-size:14px;
+    }
+    .clear{
+      border:none;
+      background: transparent;
+      color: var(--muted);
+      cursor:pointer;
+      padding:6px;
+      border-radius:10px;
+    }
+    .clear:hover{background: rgba(255,255,255,.04); color: var(--txt)}
+    .toggles{display:flex;gap:10px;align-items:center;justify-content:space-between;margin-top:10px;flex-wrap:wrap}
+    .toggle{display:flex;gap:10px;align-items:center;color:var(--muted);font-weight:850;font-size:13px}
+    .toggle input{accent-color:#7dd3fc}
+    .btn.small{padding:9px 10px;border-radius:12px}
+    .tiny{font-size:12px;margin-top:10px}
+    .section{overflow:hidden}
+    .section-head{cursor:pointer; user-select:none}
+    .section-head:hover{background: rgba(255,255,255,.02)}
+    .section[aria-collapsed="true"] .members{display:none}
+    .section[aria-collapsed="true"] .chev{transform: rotate(-90deg)}
+    .role-title{display:flex;align-items:center;gap:10px}
+    .chev{transition: transform .15s ease;color:var(--muted)}
+    .members{padding-top:10px}
+    .member{display:flex;gap:10px;align-items:center}
+    .member .avatar{background: rgba(255,255,255,.04)}
+    .member[hidden]{display:none !important}
+    /* skeleton */
+    .skeleton-dot{
+      width:12px;height:12px;border-radius:999px;
+      background: linear-gradient(90deg, rgba(255,255,255,.04), rgba(255,255,255,.10), rgba(255,255,255,.04));
+      background-size:200% 100%;
+      animation: shimmer 1.3s infinite linear;
+    }
+    .skeleton-title{
+      height:14px;width:160px;border-radius:999px;
+      background: linear-gradient(90deg, rgba(255,255,255,.04), rgba(255,255,255,.10), rgba(255,255,255,.04));
+      background-size:200% 100%;
+      animation: shimmer 1.3s infinite linear;
+      display:inline-block;
+    }
+    .skeleton-count{
+      height:14px;width:90px;border-radius:999px;
+      background: linear-gradient(90deg, rgba(255,255,255,.04), rgba(255,255,255,.10), rgba(255,255,255,.04));
+      background-size:200% 100%;
+      animation: shimmer 1.3s infinite linear;
+    }
+    .skeleton-member{
+      height:56px;border-radius:16px;border:1px solid var(--border);
+      background: linear-gradient(90deg, rgba(255,255,255,.02), rgba(255,255,255,.06), rgba(255,255,255,.02));
+      background-size:200% 100%;
+      animation: shimmer 1.3s infinite linear;
+    }
+    @keyframes shimmer{0%{background-position:0% 0%}100%{background-position:200% 0%}}
+    @media (max-width: 980px){
+      .hero-top{grid-template-columns:1fr}
+      .controls{position:relative; top:auto}
+    }
+
   </style>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 </head>
@@ -192,16 +296,59 @@
   </header>
 
   <main class="container">
-    <section class="hero">
-      <h1>Staff</h1>
-      <p class="sub">
-        Questa pagina si aggiorna automaticamente leggendo i ruoli dal Discord (Owner / Sr. Admin / Admin / Staff).
-      </p>
-      <div class="loading" id="meta">Caricamento staff…</div>
-    </section>
+  <section class="hero">
+    <div class="hero-top">
+      <div>
+        <div class="kicker"><i class="bi bi-people-fill ico"></i>Team</div>
+        <h1>Staff</h1>
+        <p class="sub">
+          Lista aggiornata automaticamente leggendo i ruoli dal Discord (Owner / Sr. Admin / Admin / Staff).
+        </p>
+        <div class="loading" id="meta">Caricamento staff…</div>
+      </div>
 
-    <div class="grid" id="grid"></div>
-  </main>
+      <div class="controls card">
+        <label class="search">
+          <i class="bi bi-search"></i>
+          <input id="q" type="search" placeholder="Cerca per nome o username…" autocomplete="off">
+          <button class="clear" id="clear" type="button" title="Pulisci"><i class="bi bi-x-lg"></i></button>
+        </label>
+
+        <div class="toggles">
+          <label class="toggle">
+            <input id="hideEmpty" type="checkbox" checked>
+            <span>Nascondi ruoli vuoti</span>
+          </label>
+
+          <button class="btn small" id="collapseAll" type="button">
+            <i class="bi bi-arrows-collapse ico"></i>Comprimi tutti
+          </button>
+        </div>
+
+        <div class="muted tiny">
+          Tip: scrivi “@nome” o parte del nickname. Il filtro non fa richieste al server.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="grid" id="grid">
+    <section class="section">
+      <div class="section-head">
+        <div class="role-title">
+          <span class="role-dot skeleton-dot"></span>
+          <span class="skeleton-title"></span>
+        </div>
+        <div class="count skeleton-count"></div>
+      </div>
+      <div class="members">
+        <div class="member skeleton-member"></div>
+        <div class="member skeleton-member"></div>
+        <div class="member skeleton-member"></div>
+      </div>
+    </section>
+  </div>
+</main>
 
   <script>
     function esc(s){
