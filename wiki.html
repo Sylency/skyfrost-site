@@ -5,7 +5,11 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>SkyFrost • Wiki</title>
   <style>
-    :root{
+
+    /* Bootstrap Icons */
+    .bi{vertical-align:-0.125em}
+    .ico{margin-right:.45rem}
+:root{
       --bg:#070a12;
       --panel: rgba(255,255,255,.06);
       --border: rgba(255,255,255,.10);
@@ -111,6 +115,7 @@
       .layout{grid-template-columns:1fr}
     }
   </style>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 </head>
 
 <body>
@@ -139,15 +144,15 @@
 
     <section class="layout">
       <aside class="panel menu">
-        <a href="#regole">📜 Regole</a>
-        <a href="#comandi">⌨️ Comandi</a>
-        <a href="#guide">🧭 Guide</a>
-        <a href="#staff">🛡️ Staff</a>
+        <a href="#regole"><i class="bi bi-journal-text ico"></i>Regole</a>
+        <a href="#comandi"><i class="bi bi-keyboard ico"></i>Comandi</a>
+        <a href="#guide"><i class="bi bi-compass ico"></i>Guide</a>
+        <a href="#staff"><i class="bi bi-shield ico"></i>Staff</a>
       </aside>
 
       <article class="panel article">
         <section id="regole">
-          <h2>📜 Regole</h2>
+          <h2><i class="bi bi-journal-text ico"></i>Regole</h2>
           <div class="meta">Aggiornato: <span id="d1"></span></div>
           <p>Metti qui le regole principali. Esempio:</p>
           <ul>
@@ -163,7 +168,7 @@
         <hr style="border:none;border-top:1px solid rgba(255,255,255,.10);margin:16px 0">
 
         <section id="comandi">
-          <h2>⌨️ Comandi</h2>
+          <h2><i class="bi bi-keyboard ico"></i>Comandi</h2>
           <div class="meta">Aggiornato: <span id="d2"></span></div>
           <p>Scrivi una lista dei comandi utili (se li avrai sul server).</p>
           <ul>
@@ -176,7 +181,7 @@
         <hr style="border:none;border-top:1px solid rgba(255,255,255,.10);margin:16px 0">
 
         <section id="guide">
-          <h2>🧭 Guide</h2>
+          <h2><i class="bi bi-compass ico"></i>Guide</h2>
           <div class="meta">Aggiornato: <span id="d3"></span></div>
           <p>Qui metti guide tipo: “Come iniziare”, “Economia”, “Eventi”.</p>
           <ul>
@@ -189,7 +194,7 @@
         <hr style="border:none;border-top:1px solid rgba(255,255,255,.10);margin:16px 0">
 
         <section id="staff">
-          <h2>🛡️ Staff</h2>
+          <h2><i class="bi bi-shield ico"></i>Staff</h2>
           <div class="meta">Aggiornato: <span id="d4"></span></div>
           <p>Metti ruoli e nomi (anche solo Discord tag).</p>
           <ul>
