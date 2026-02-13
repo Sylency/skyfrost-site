@@ -3,19 +3,25 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>SkyFrost • Profilo</title>
+  <title>SkyFrost • Store</title>
+
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+  <!-- Tebex.js (Web Component / Checkout API) -->
+  <script defer src="https://js.tebex.io/v/1.js"></script>
 
   <style>
-
-    /* Bootstrap Icons */
     .bi{vertical-align:-0.125em}
     .ico{margin-right:.45rem}
-:root{
+    :root{
       --bg:#070a12;
       --border: rgba(255,255,255,.10);
       --border2: rgba(255,255,255,.14);
       --txt:#eaf0ff;
       --muted:#a9b6d3;
+      --card: rgba(255,255,255,.05);
+      --card2: rgba(255,255,255,.07);
     }
     *{box-sizing:border-box}
     body{
@@ -29,7 +35,7 @@
       overflow-x:hidden;
     }
     a{color:inherit;text-decoration:none}
-    .container{max-width:980px;margin:0 auto;padding:22px 16px 70px}
+    .container{max-width:1120px;margin:0 auto;padding:22px 16px 70px}
 
     .topbar{
       position:sticky; top:0; z-index:40;
@@ -38,7 +44,7 @@
       border-bottom: 1px solid var(--border);
     }
     .topbar-inner{
-      max-width:980px; margin:0 auto;
+      max-width:1120px; margin:0 auto;
       padding:14px 16px;
       display:flex; align-items:center; justify-content:space-between; gap:12px;
     }
@@ -51,214 +57,645 @@
       border:1px solid var(--border2);
       overflow:hidden;
       background: rgba(255,255,255,.06);
+      box-shadow: 0 8px 30px rgba(125,211,252,.10);
       display:flex;align-items:center;justify-content:center;
     }
     .brand-badge img{width:100%;height:100%;object-fit:cover;display:block}
 
     .btn{
       border:1px solid var(--border);
-      background: rgba(255,255,255,.04);
-      color:var(--txt);
+      background: rgba(255,255,255,.06);
+      color: var(--txt);
       padding:10px 12px;
       border-radius:12px;
       cursor:pointer;
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      font-weight:900;
+      display:inline-flex; align-items:center; gap:8px;
+      transition: transform .12s ease, background .12s ease, border-color .12s ease;
+      font-weight:700;
+      user-select:none;
     }
+    .btn:hover{transform: translateY(-1px); background: rgba(255,255,255,.08); border-color: var(--border2)}
     .btn.primary{
-      border:none;
-      background: linear-gradient(90deg, #22d3ee, #60a5fa);
-      color:#07101f;
-      font-weight:950;
+      background: linear-gradient(135deg, rgba(125,211,252,.20), rgba(96,165,250,.14));
+      border-color: rgba(125,211,252,.25);
     }
-    .btn.ghost{background: transparent}
-    .right{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+    .right{display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:flex-end}
+
+    h1{font-size:28px;margin:14px 0 6px}
+    .muted{color:var(--muted)}
+    .grid{
+      display:grid;
+      grid-template-columns: 1.3fr .7fr;
+      gap:16px;
+      margin-top:16px;
+      align-items:start;
+    }
+    @media (max-width: 980px){
+      .grid{grid-template-columns: 1fr}
+    }
 
     .card{
-      margin-top:14px;
-      border:1px solid var(--border2);
-      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.04));
-      border-radius:20px;
-      padding:16px;
-      box-shadow: 0 12px 40px rgba(0,0,0,.25);
-    }
-
-    .profile{
-      display:flex; gap:12px; align-items:center;
+      background: var(--card);
+      border:1px solid var(--border);
+      border-radius:16px;
       padding:14px;
-      border-radius:18px;
+      box-shadow: 0 18px 60px rgba(0,0,0,.35);
+    }
+    .card h2{margin:0 0 10px; font-size:16px}
+    .row{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+    .input{
+      width:100%;
       border:1px solid var(--border);
-      background: rgba(0,0,0,.16);
+      background: rgba(0,0,0,.22);
+      color: var(--txt);
+      padding:10px 12px;
+      border-radius:12px;
+      outline:none;
     }
-    .avatar{
-      width:64px;height:64px;border-radius:20px;
-      border:1px solid rgba(255,255,255,.16);
-      background: rgba(255,255,255,.06);
-      object-fit:cover;
+    .input::placeholder{color: rgba(169,182,211,.75)}
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.05);
+      color: var(--muted);
+      font-weight:700;
+      font-size:12px;
+      user-select:none;
     }
-    .name{font-weight:950;font-size:18px}
-    .id{font-size:12px;color:rgba(234,240,255,.60);margin-top:2px;word-break:break-all}
-    .muted{color:rgba(234,240,255,.70);line-height:1.55}
+    .divider{height:1px;background:var(--border);margin:12px 0}
 
-    .row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
-    .box{
+    .cats{display:flex; gap:10px; flex-wrap:wrap}
+    .catBtn{
       border:1px solid var(--border);
-      background: rgba(0,0,0,.12);
+      background: rgba(255,255,255,.05);
+      color: var(--txt);
+      padding:8px 10px;
+      border-radius:999px;
+      cursor:pointer;
+      font-weight:800;
+      font-size:12px;
+      transition: background .12s ease, transform .12s ease, border-color .12s ease;
+      user-select:none;
+    }
+    .catBtn:hover{transform: translateY(-1px); background: rgba(255,255,255,.08); border-color: var(--border2)}
+    .catBtn.active{
+      background: rgba(125,211,252,.16);
+      border-color: rgba(125,211,252,.28);
+    }
+
+    .packages{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap:12px;
+      margin-top:12px;
+    }
+    @media (max-width: 720px){
+      .packages{grid-template-columns: 1fr}
+    }
+    .pkg{
+      background: var(--card2);
+      border:1px solid var(--border);
       border-radius:16px;
       padding:12px;
+      display:flex; gap:12px;
+      min-height:118px;
     }
-    .box h3{margin:0 0 6px;font-size:14px}
-    .pillrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
-    .pill{
+    .pkgMedia{
+      width:72px; height:72px;
+      border-radius:14px;
       border:1px solid var(--border);
-      background: rgba(0,0,0,.14);
-      border-radius:999px;
-      padding:8px 10px;
-      font-weight:900;
-      font-size:13px;
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
+      background: rgba(0,0,0,.18);
+      overflow:hidden;
+      flex:0 0 auto;
+      display:flex; align-items:center; justify-content:center;
     }
-
-    .roles{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-    .role{
+    .pkgMedia img{width:100%;height:100%;object-fit:cover;display:block}
+    .pkgMain{flex:1 1 auto; min-width:0}
+    .pkgTop{display:flex; align-items:flex-start; justify-content:space-between; gap:10px}
+    .pkgName{font-weight:950; letter-spacing:.2px}
+    .price{font-weight:950}
+    .pkgDesc{
+      color: var(--muted);
+      font-size:13px;
+      line-height:1.35;
+      margin-top:6px;
+      display:-webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow:hidden;
+    }
+    .pkgActions{margin-top:10px; display:flex; gap:8px; flex-wrap:wrap; align-items:center}
+    .qty{
+      display:inline-flex; align-items:center; gap:8px;
       border:1px solid var(--border);
-      background: rgba(0,0,0,.14);
-      border-radius:999px;
-      padding:8px 10px;
+      background: rgba(0,0,0,.18);
+      border-radius:12px;
+      padding:6px 8px;
       font-weight:900;
-      font-size:13px;
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      max-width:100%;
+      user-select:none;
     }
-    .role .r-dot{width:9px;height:9px;border-radius:999px;background:rgba(125,211,252,.85);flex:0 0 auto}
-    .role .r-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:360px}
+    .qty button{
+      border:none; background:transparent; color:var(--txt);
+      cursor:pointer; font-size:16px; line-height:1;
+      padding:2px 6px; border-radius:8px;
+    }
+    .qty button:hover{background: rgba(255,255,255,.07)}
+    .small{font-size:12px;color:var(--muted)}
 
-    @media (max-width: 860px){
-      .row{grid-template-columns:1fr}
+    .cartItem{display:flex; justify-content:space-between; gap:12px; padding:10px 0}
+    .cartItem + .cartItem{border-top:1px solid var(--border)}
+    .cartLeft{min-width:0}
+    .cartName{font-weight:900; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+    .cartMeta{color:var(--muted); font-size:12px; margin-top:2px}
+    .cartRight{text-align:right; flex:0 0 auto}
+    .cartRight .smallBtn{
+      margin-top:6px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.05);
+      color: var(--txt);
+      padding:6px 8px;
+      border-radius:10px;
+      cursor:pointer;
+      font-weight:800;
+      font-size:12px;
     }
+    .cartRight .smallBtn:hover{background: rgba(255,255,255,.08); border-color: var(--border2)}
+
+    .skeleton{
+      position:relative; overflow:hidden;
+      background: rgba(255,255,255,.06);
+      border:1px solid var(--border);
+      border-radius:16px;
+      height:120px;
+    }
+    .skeleton::after{
+      content:"";
+      position:absolute; inset:0;
+      transform: translateX(-100%);
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.08), transparent);
+      animation: shimmer 1.2s infinite;
+    }
+    @keyframes shimmer{100%{transform: translateX(100%)}}
+
+    .toast{
+      position:fixed; left:16px; bottom:16px; z-index:99;
+      background: rgba(0,0,0,.55);
+      border:1px solid var(--border);
+      backdrop-filter: blur(12px);
+      padding:10px 12px;
+      border-radius:14px;
+      color: var(--txt);
+      box-shadow: 0 20px 50px rgba(0,0,0,.35);
+      max-width: min(520px, calc(100% - 32px));
+      display:none;
+    }
+    .toast.show{display:block}
   </style>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 </head>
 
 <body>
-  <header class="topbar">
+  <div class="topbar">
     <div class="topbar-inner">
-      <a class="brand" href="/">
-        <span class="brand-badge"><img src="assets/logo.png" alt="SkyFrost"></span>
-        <span>SkyFrost • Profilo</span>
-      </a>
+      <div class="brand">
+        <span class="brand-badge"><img src="assets/icon.png" alt="SkyFrost"></span>
+        <span>SkyFrost</span>
+        <span class="pill"><i class="bi bi-bag-fill ico"></i>Store</span>
+      </div>
 
       <div class="right">
-        <a class="btn" href="/">Home</a>
-        <a class="btn" href="/dashboard.html">Dashboard</a>
-        <a class="btn" href="/supporto.html">Supporto</a>
-        <a class="btn primary" href="http://discord.skyfrost.it/" target="_blank" rel="noopener">Discord</a>
-        <a class="btn ghost" href="/api/logout">Logout</a>
+        <a class="btn" href="/"><i class="bi bi-house-door-fill"></i> Home</a>
+        <a class="btn" href="/dashboard.html"><i class="bi bi-speedometer2"></i> Dashboard</a>
+        <a class="btn" href="/staff.html"><i class="bi bi-people-fill"></i> Staff</a>
+        <a class="btn" href="/supporto.html"><i class="bi bi-life-preserver"></i> Supporto</a>
       </div>
     </div>
-  </header>
+  </div>
 
-  <main class="container">
-    <section class="card">
-      <div class="profile">
-        <img class="avatar" id="avatar" alt="">
-        <div>
-          <div class="name" id="name">Caricamento…</div>
-          <div class="id" id="uid"></div>
-          <div class="muted" style="margin-top:6px">
-            Qui trovi i tuoi ruoli (filtrati) e link utili.
+  <div class="container">
+    <h1>Store</h1>
+    <div class="muted">Sfoglia i pacchetti del server e compra senza uscire dal sito (checkout Tebex integrato).</div>
+
+    <div class="grid">
+      <!-- LISTING -->
+      <div class="card">
+        <div class="row" style="justify-content:space-between">
+          <div style="flex:1 1 380px; min-width: 260px">
+            <input id="search" class="input" placeholder="Cerca pacchetti (nome o descrizione)…" />
           </div>
+          <div class="row" style="gap:8px">
+            <span id="countPill" class="pill"><i class="bi bi-grid-3x3-gap-fill ico"></i><span>—</span></span>
+            <button id="refreshBtn" class="btn" type="button"><i class="bi bi-arrow-clockwise"></i> Aggiorna</button>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div id="cats" class="cats"></div>
+
+        <div id="packages" class="packages" aria-live="polite" style="margin-top:12px">
+          <div class="skeleton"></div>
+          <div class="skeleton"></div>
+          <div class="skeleton"></div>
+          <div class="skeleton"></div>
         </div>
       </div>
 
-      <div class="pillrow" id="badges"></div>
+      <!-- CART -->
+      <div class="card">
+        <h2><i class="bi bi-cart3 ico"></i>Carrello</h2>
+        <div class="small">Il carrello resta salvato nel browser.</div>
 
-      <div class="row">
-        <div class="box">
-          <h3>Ruoli Discord (solo: Owner / Sr. Admin / Admin / Staff / VIP / Utente)</h3>
-          <div class="roles" id="roles">
-            <div class="muted">Caricamento…</div>
-          </div>
+        <div class="divider"></div>
+
+        <label class="small" for="player">Username in‑game (consigliato)</label>
+        <input id="player" class="input" placeholder="Es. Sylency" style="margin-top:6px" />
+
+        <div class="divider"></div>
+
+        <div id="cart"></div>
+
+        <div class="divider"></div>
+
+        <div class="row" style="justify-content:space-between">
+          <div class="muted" style="font-weight:900">Totale stimato</div>
+          <div id="total" style="font-weight:950">—</div>
         </div>
 
-        <div class="box">
-          <h3>Link rapidi</h3>
-          <div class="pillrow">
-            <a class="pill" href="/wiki.html"><i class="bi bi-book ico"></i>Wiki</a>
-            <a class="pill" href="/supporto.html"><i class="bi bi-life-preserver ico"></i>Ticket</a>
-            <a class="pill" href="http://discord.skyfrost.it/" target="_blank" rel="noopener"><i class="bi bi-discord ico"></i>Discord</a>
-          </div>
+        <div class="row" style="margin-top:12px">
+          <button id="checkoutBtn" class="btn primary" type="button" style="flex:1">
+            <i class="bi bi-lock-fill"></i> Checkout
+          </button>
+          <button id="clearBtn" class="btn" type="button" title="Svuota carrello">
+            <i class="bi bi-trash3"></i>
+          </button>
+        </div>
 
-          <div class="muted" style="margin-top:10px;font-size:13px">
-            Se non vedi ruoli, assicurati di essere nel server Discord SkyFrost.
-          </div>
+        <div id="checkoutHint" class="small" style="margin-top:10px">
+          Se il popup viene bloccato, apri il checkout dal pulsante che comparirà.
         </div>
       </div>
-    </section>
-  </main>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
 
   <script>
-    function colorToHex(n){
-      const hex = Number(n || 0).toString(16).padStart(6, "0");
-      return "#" + hex;
+    // === CONFIG (nessun segreto qui) ===
+    // Le chiavi segrete stanno nelle ENV del backend (vedi /api/tebex/*).
+    const API = {
+      listings: "/api/tebex/listings",
+      createBasket: "/api/tebex/basket",
+      addPackage: "/api/tebex/add"
+    };
+
+    // === STATE ===
+    let categories = [];
+    let activeCat = "ALL";
+    let search = "";
+    let cart = loadCart();
+
+    const el = (id) => document.getElementById(id);
+
+    function showToast(msg){
+      const t = el("toast");
+      t.textContent = msg;
+      t.classList.add("show");
+      clearTimeout(showToast._t);
+      showToast._t = setTimeout(()=>t.classList.remove("show"), 2200);
     }
 
-    async function loadMe(){
-      const r = await fetch("/api/me", { cache: "no-store" });
-      const j = await r.json();
-      if(!j.loggedIn){ window.location.href="/api/login"; return; }
-
-      const u = j.user;
-      document.getElementById("name").textContent = u.username || "User";
-      document.getElementById("uid").textContent = "ID: " + (u.id || "-");
-      const av = document.getElementById("avatar");
-      if(u.avatar){ av.src = u.avatar; } else { av.style.display="none"; }
+    function loadCart(){
+      try { return JSON.parse(localStorage.getItem("sf_cart") || "[]"); } catch { return []; }
+    }
+    function saveCart(){
+      localStorage.setItem("sf_cart", JSON.stringify(cart));
     }
 
-    async function loadRoles(){
-      const rolesEl = document.getElementById("roles");
-      const badgesEl = document.getElementById("badges");
+    function money(v, currency){
+      if (v == null) return "—";
+      const n = Number(v);
+      if (Number.isNaN(n)) return String(v);
+      // fallback: v è già "prezzo totale"
+      try {
+        return new Intl.NumberFormat("it-IT", { style:"currency", currency: currency || "EUR" }).format(n);
+      } catch {
+        return n.toFixed(2) + " " + (currency || "");
+      }
+    }
 
-      const r = await fetch("/api/roles", { cache: "no-store" });
-      const j = await r.json();
+    function stripHtml(html){
+      const d = document.createElement("div");
+      d.innerHTML = html || "";
+      return (d.textContent || d.innerText || "").trim();
+    }
 
-      if(!j.ok){
-        rolesEl.innerHTML = `<div class="muted">Non disponibile.</div>`;
+    function renderCats(){
+      const wrap = el("cats");
+      wrap.innerHTML = "";
+      const allBtn = document.createElement("button");
+      allBtn.className = "catBtn" + (activeCat === "ALL" ? " active" : "");
+      allBtn.textContent = "Tutti";
+      allBtn.onclick = () => { activeCat = "ALL"; renderAll(); };
+      wrap.appendChild(allBtn);
+
+      for (const c of categories){
+        const b = document.createElement("button");
+        b.className = "catBtn" + (activeCat === String(c.id) ? " active" : "");
+        b.textContent = c.name || "Categoria";
+        b.onclick = () => { activeCat = String(c.id); renderAll(); };
+        wrap.appendChild(b);
+      }
+    }
+
+    function packagesFlat(){
+      const out = [];
+      for (const c of categories){
+        const pkgs = Array.isArray(c.packages) ? c.packages : [];
+        for (const p of pkgs) out.push(p);
+      }
+      return out;
+    }
+
+    function filteredPackages(){
+      const q = (search || "").toLowerCase();
+      return packagesFlat().filter(p => {
+        const catOk = activeCat === "ALL" || String(p.category?.id || p.category_id || "") === activeCat;
+        if (!catOk) return false;
+        if (!q) return true;
+        const name = (p.name || "").toLowerCase();
+        const desc = stripHtml(p.description || "").toLowerCase();
+        return name.includes(q) || desc.includes(q);
+      });
+    }
+
+    function findPkgById(id){
+      return packagesFlat().find(p => String(p.id) === String(id)) || null;
+    }
+
+    function cartTotal(){
+      let total = 0;
+      let currency = null;
+      for (const it of cart){
+        const pkg = findPkgById(it.id);
+        if (!pkg) continue;
+        const price = Number(pkg.total_price ?? pkg.base_price ?? 0);
+        total += price * (it.qty || 1);
+        currency = currency || pkg.currency;
+      }
+      return { total, currency };
+    }
+
+    function renderPackages(){
+      const list = filteredPackages();
+      el("countPill").querySelector("span").textContent = `${list.length} pacchetti`;
+
+      const wrap = el("packages");
+      wrap.innerHTML = "";
+
+      if (!list.length){
+        const empty = document.createElement("div");
+        empty.className = "card";
+        empty.innerHTML = '<div style="font-weight:950;margin-bottom:6px"><i class="bi bi-search ico"></i>Nessun risultato</div><div class="muted">Prova a cambiare ricerca o categoria.</div>';
+        wrap.appendChild(empty);
         return;
       }
 
-      badgesEl.innerHTML = "";
-      if(j.primaryRole){
-        const c = colorToHex(j.primaryRole.color);
-        badgesEl.innerHTML += `<div class="pill"><span style="display:inline-block;width:10px;height:10px;border-radius:999px;background:${c}"></span>${j.primaryRole.name}</div>`;
-      }
-      if(j.booster){
-        badgesEl.innerHTML += `<div class="pill"><i class="bi bi-rocket-takeoff ico"></i>Booster</div>`;
+      for (const p of list){
+        const card = document.createElement("div");
+        card.className = "pkg";
+
+        const img = p.image ? `<img src="${p.image}" alt="">` : `<i class="bi bi-box-seam" style="font-size:22px;color:rgba(255,255,255,.7)"></i>`;
+
+        const desc = stripHtml(p.description || "");
+        const price = money(p.total_price ?? p.base_price, p.currency);
+
+        const current = cart.find(x => String(x.id) === String(p.id));
+        const qty = current?.qty || 1;
+
+        card.innerHTML = `
+          <div class="pkgMedia">${img}</div>
+          <div class="pkgMain">
+            <div class="pkgTop">
+              <div class="pkgName" title="${(p.name||"").replaceAll('"',"&quot;")}">${p.name || "Pacchetto"}</div>
+              <div class="price">${price}</div>
+            </div>
+            <div class="pkgDesc">${desc || "—"}</div>
+            <div class="pkgActions">
+              <div class="qty" data-id="${p.id}">
+                <button type="button" data-act="dec" aria-label="Diminuisci">−</button>
+                <span>${qty}</span>
+                <button type="button" data-act="inc" aria-label="Aumenta">+</button>
+              </div>
+              <button class="btn primary" type="button" data-add="${p.id}">
+                <i class="bi bi-cart-plus"></i> Aggiungi
+              </button>
+            </div>
+          </div>
+        `;
+
+        wrap.appendChild(card);
       }
 
-      const roles = Array.isArray(j.roles) ? j.roles : [];
-      if(roles.length === 0){
-        rolesEl.innerHTML = `<div class="role"><span class="r-dot"></span><span class="r-name">Nessun ruolo tra quelli mostrati</span></div>`;
-        return;
-      }
+      // handlers
+      wrap.querySelectorAll("[data-add]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const id = btn.getAttribute("data-add");
+          const qtyEl = wrap.querySelector(`.qty[data-id="${id}"] span`);
+          const qty = Number(qtyEl?.textContent || "1") || 1;
+          addToCart(id, qty);
+        });
+      });
 
-      rolesEl.innerHTML = roles.map(rr => {
-        const c = colorToHex(rr.color);
-        return `<div class="role" title="${rr.id}">
-          <span class="r-dot" style="background:${c}"></span>
-          <span class="r-name">${rr.name}</span>
-        </div>`;
-      }).join("");
+      wrap.querySelectorAll(".qty").forEach(q => {
+        const id = q.getAttribute("data-id");
+        q.addEventListener("click", (e) => {
+          const act = e.target?.getAttribute?.("data-act");
+          if (!act) return;
+          const span = q.querySelector("span");
+          let v = Number(span.textContent || "1") || 1;
+          v = act === "inc" ? Math.min(99, v + 1) : Math.max(1, v - 1);
+          span.textContent = String(v);
+        });
+      });
     }
 
-    loadMe();
-    loadRoles();
+    function addToCart(id, qty){
+      id = String(id);
+      qty = Number(qty) || 1;
+      const pkg = findPkgById(id);
+      if (!pkg){ showToast("Pacchetto non trovato"); return; }
+
+      const existing = cart.find(x => String(x.id) === id);
+      if (existing) existing.qty = Math.min(99, (existing.qty || 1) + qty);
+      else cart.push({ id, qty });
+
+      saveCart();
+      renderCart();
+      showToast("Aggiunto al carrello");
+    }
+
+    function removeFromCart(id){
+      cart = cart.filter(x => String(x.id) !== String(id));
+      saveCart();
+      renderCart();
+    }
+
+    function setCartQty(id, qty){
+      const it = cart.find(x => String(x.id) === String(id));
+      if (!it) return;
+      it.qty = Math.max(1, Math.min(99, Number(qty) || 1));
+      saveCart();
+      renderCart();
+    }
+
+    function renderCart(){
+      const wrap = el("cart");
+      wrap.innerHTML = "";
+
+      if (!cart.length){
+        wrap.innerHTML = '<div class="muted"><i class="bi bi-basket3 ico"></i>Carrello vuoto.</div>';
+        el("checkoutBtn").disabled = true;
+        el("checkoutBtn").style.opacity = .6;
+      } else {
+        el("checkoutBtn").disabled = false;
+        el("checkoutBtn").style.opacity = 1;
+
+        for (const it of cart){
+          const pkg = findPkgById(it.id);
+          if (!pkg) continue;
+
+          const row = document.createElement("div");
+          row.className = "cartItem";
+
+          const price = money(pkg.total_price ?? pkg.base_price, pkg.currency);
+          row.innerHTML = `
+            <div class="cartLeft">
+              <div class="cartName">${pkg.name || "Pacchetto"}</div>
+              <div class="cartMeta">${price} • Qty:
+                <span class="qty" style="padding:4px 6px;border-radius:10px" data-q="${it.id}">
+                  <button type="button" data-act="dec">−</button>
+                  <span>${it.qty || 1}</span>
+                  <button type="button" data-act="inc">+</button>
+                </span>
+              </div>
+            </div>
+            <div class="cartRight">
+              <div style="font-weight:950">${money((Number(pkg.total_price ?? pkg.base_price ?? 0) * (it.qty||1)), pkg.currency)}</div>
+              <button class="smallBtn" type="button" data-remove="${it.id}"><i class="bi bi-x-lg"></i> Rimuovi</button>
+            </div>
+          `;
+          wrap.appendChild(row);
+        }
+
+        wrap.querySelectorAll("[data-remove]").forEach(b => {
+          b.addEventListener("click", () => removeFromCart(b.getAttribute("data-remove")));
+        });
+
+        wrap.querySelectorAll("[data-q]").forEach(q => {
+          const id = q.getAttribute("data-q");
+          q.addEventListener("click", (e) => {
+            const act = e.target?.getAttribute?.("data-act");
+            if (!act) return;
+            const span = q.querySelector("span");
+            let v = Number(span.textContent || "1") || 1;
+            v = act === "inc" ? Math.min(99, v + 1) : Math.max(1, v - 1);
+            span.textContent = String(v);
+            setCartQty(id, v);
+          });
+        });
+      }
+
+      const { total, currency } = cartTotal();
+      el("total").textContent = cart.length ? money(total, currency) : "—";
+    }
+
+    async function loadListings(){
+      el("packages").innerHTML = '<div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>';
+      try{
+        const r = await fetch(API.listings, { headers: { "Accept": "application/json" }});
+        if (!r.ok) throw new Error(await r.text());
+        const j = await r.json();
+        categories = Array.isArray(j.data) ? j.data : (Array.isArray(j.categories) ? j.categories : []);
+        renderCats();
+        renderAll();
+      } catch(e){
+        el("packages").innerHTML = `<div class="card"><div style="font-weight:950;margin-bottom:6px"><i class="bi bi-exclamation-triangle ico"></i>Errore store</div><div class="muted">${String(e.message||e)}</div></div>`;
+      }
+    }
+
+    function renderAll(){
+      renderCats();
+      renderPackages();
+      renderCart();
+    }
+
+    async function startCheckout(){
+      if (!cart.length) return;
+
+      const player = (el("player").value || "").trim();
+
+      // crea basket
+      const createBtn = el("checkoutBtn");
+      createBtn.disabled = true;
+      createBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Preparazione…';
+
+      try{
+        const r = await fetch(API.createBasket, {
+          method:"POST",
+          headers:{ "Content-Type":"application/json", "Accept":"application/json" },
+          body: JSON.stringify({ username: player || null })
+        });
+        if (!r.ok) throw new Error(await r.text());
+        const b = await r.json();
+        const basketIdent = b.ident || b.basketIdent || b.data?.ident;
+        if (!basketIdent) throw new Error("Basket ident mancante");
+
+        // aggiungi pacchetti
+        for (const it of cart){
+          const pkg = findPkgById(it.id);
+          if (!pkg) continue;
+          const addRes = await fetch(API.addPackage, {
+            method:"POST",
+            headers:{ "Content-Type":"application/json", "Accept":"application/json" },
+            body: JSON.stringify({ basketIdent, package_id: String(it.id), quantity: Number(it.qty||1) })
+          });
+          if (!addRes.ok) throw new Error(await addRes.text());
+        }
+
+        // Avvia Tebex.js (in click handler => meno popup blocker)
+        if (!window.Tebex || !Tebex.checkout){
+          throw new Error("Tebex.js non caricato (controlla la rete / adblock)");
+        }
+
+        Tebex.checkout.init({
+          ident: basketIdent,
+          theme: "dark",
+          closeOnPaymentComplete: true
+        });
+        Tebex.checkout.launch();
+
+        showToast("Checkout aperto");
+      } catch(e){
+        console.error(e);
+        showToast("Checkout non riuscito");
+        alert("Errore checkout: " + String(e.message||e));
+      } finally {
+        createBtn.disabled = false;
+        createBtn.innerHTML = '<i class="bi bi-lock-fill"></i> Checkout';
+      }
+    }
+
+    // === Wiring ===
+    el("search").addEventListener("input", (e)=>{ search = e.target.value || ""; renderPackages(); });
+    el("refreshBtn").addEventListener("click", loadListings);
+    el("clearBtn").addEventListener("click", ()=>{ cart=[]; saveCart(); renderCart(); showToast("Carrello svuotato"); });
+    el("checkoutBtn").addEventListener("click", startCheckout);
+
+    // init
+    renderCart();
+    loadListings();
   </script>
 </body>
 </html>
