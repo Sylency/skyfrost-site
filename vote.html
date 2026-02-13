@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SkyFrost • Vote</title>
+
+  <style>
+    :root{
+      --bg:#070a12;
+      --border: rgba(255,255,255,.10);
+      --border2: rgba(255,255,255,.14);
+      --txt:#eaf0ff;
+      --muted:#a9b6d3;
+      --shadow: 0 20px 60px rgba(0,0,0,.45);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      color:var(--txt);
+      background:
+        radial-gradient(1200px 600px at 20% 0%, rgba(125,211,252,.16), transparent 55%),
+        radial-gradient(900px 600px at 80% 10%, rgba(96,165,250,.14), transparent 55%),
+        linear-gradient(180deg, #050711, var(--bg));
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      overflow-x:hidden;
+    }
+    a{color:inherit;text-decoration:none}
+    .container{max-width:1120px;margin:0 auto;padding:22px 16px 70px}
+
+    /* topbar */
+    .topbar{
+      position:sticky; top:0; z-index:40;
+      background: rgba(7,10,18,.55);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .topbar-inner{
+      max-width:1120px; margin:0 auto;
+      padding:14px 16px;
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+    }
+    .brand{display:flex;align-items:center;gap:10px;font-weight:950;letter-spacing:.2px}
+    .brand-badge{
+      width:34px;height:34px;border-radius:12px;
+      border:1px solid var(--border2);
+      overflow:hidden;
+      background: rgba(255,255,255,.06);
+      display:flex;align-items:center;justify-content:center;
+      box-shadow: 0 8px 30px rgba(125,211,252,.10);
+    }
+    .brand-badge img{width:100%;height:100%;object-fit:cover;display:block}
+
+    .right{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+
+    .btn{
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.04);
+      color:var(--txt);
+      padding:10px 12px;
+      border-radius:12px;
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      font-weight:900;
+      transition: transform .12s ease, background .12s ease, border-color .12s ease;
+    }
+    .btn:hover{transform: translateY(-1px); border-color: rgba(255,255,255,.16); background: rgba(255,255,255,.06);}
+    .btn.primary{
+      border:none;
+      background: linear-gradient(90deg, #22d3ee, #60a5fa);
+      color:#07101f;
+      font-weight:950;
+      box-shadow: 0 16px 40px rgba(34,211,238,.10);
+    }
+    .btn.small{padding:8px 10px}
+
+    /* user chip + role chip */
+    .chip{
+      display:none;
+      align-items:center;
+      gap:8px;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.14);
+      color:rgba(234,240,255,.85);
+      font-weight:950;
+      font-size:13px;
+      max-width:260px;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+    }
+    .chip img{
+      width:22px;height:22px;border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      display:none;
+    }
+    .rolechip{
+      display:none;
+      align-items:center;
+      gap:8px;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.14);
+      font-weight:950;
+      font-size:13px;
+      max-width:220px;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+    }
+    .role-dot{
+      width:9px;height:9px;border-radius:999px;
+      box-shadow: 0 0 0 3px rgba(255,255,255,.06);
+      background: rgba(125,211,252,.85);
+      flex:0 0 auto;
+    }
+
+    /* hero */
+    .hero{
+      margin-top:14px;
+      position:relative;
+      border:1px solid var(--border2);
+      border-radius:24px;
+      overflow:hidden;
+      box-shadow: var(--shadow);
+    }
+    .hero-bg{
+      position:absolute; inset:0;
+      background: url("assets/banner.jpg") center/cover no-repeat;
+      filter: brightness(.55) saturate(1.05) contrast(1.05);
+      transform: scale(1.03);
+    }
+    .hero-ov{
+      position:absolute; inset:0;
+      background:
+        radial-gradient(900px 420px at 22% 10%, rgba(125,211,252,.30), transparent 65%),
+        radial-gradient(700px 420px at 78% 10%, rgba(96,165,250,.22), transparent 65%),
+        linear-gradient(180deg, rgba(7,10,18,.10), rgba(7,10,18,.68));
+    }
+    .hero-c{
+      position:relative;
+      padding:22px;
+    }
+    h1{margin:0 0 6px;font-size:40px;letter-spacing:-.02em}
+    .sub{margin:0;color:rgba(234,240,255,.76);line-height:1.6;max-width:80ch}
+
+    .row{
+      margin-top:14px;
+      display:grid;
+      grid-template-columns: 1fr 360px;
+      gap:12px;
+      align-items:start;
+    }
+
+    .card{
+      border:1px solid var(--border2);
+      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.04));
+      border-radius:22px;
+      padding:16px;
+      box-shadow: 0 12px 40px rgba(0,0,0,.25);
+    }
+
+    .title{margin:0 0 8px;font-size:18px;letter-spacing:-.01em}
+    .muted{color:rgba(234,240,255,.70);line-height:1.55}
+
+    .ipbox{
+      border:1px solid var(--border);
+      background: rgba(0,0,0,.14);
+      border-radius:18px;
+      padding:12px;
+      margin-top:10px;
+    }
+    .iprow{display:flex;align-items:center;justify-content:space-between;gap:10px}
+    .ip{font-weight:950;letter-spacing:.2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .note{margin-top:6px;font-size:12px;color:rgba(234,240,255,.62);min-height:16px}
+
+    .sites{display:grid;gap:10px;margin-top:10px}
+    .site{
+      border:1px solid var(--border);
+      background: rgba(0,0,0,.12);
+      border-radius:18px;
+      padding:12px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+    }
+    .site .l{min-width:0}
+    .site .n{font-weight:950}
+    .site .d{margin-top:2px;color:rgba(234,240,255,.70);font-size:13px;line-height:1.45}
+
+    .steps{display:grid;gap:10px;margin-top:10px}
+    .step{
+      border:1px solid var(--border);
+      background: rgba(0,0,0,.12);
+      border-radius:18px;
+      padding:12px;
+    }
+    .step b{display:block;margin-bottom:4px}
+
+    @media (max-width: 980px){
+      .row{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="/">
+        <span class="brand-badge"><img src="assets/logo.png" alt="SkyFrost"></span>
+        <span>SkyFrost • Vote</span>
+      </a>
+
+      <div class="right">
+        <span class="rolechip" id="rolechip">
+          <span class="role-dot" id="role-dot"></span>
+          <span id="role-text">Ruolo</span>
+        </span>
+
+        <span class="chip" id="userchip">
+          <img id="userav" alt="">
+          <span id="usertext">Ciao, …</span>
+        </span>
+
+        <a class="btn" href="/">Home</a>
+        <a class="btn" href="/staff.html">Staff</a>
+        <a class="btn" href="/profilo.html">Profilo</a>
+        <a class="btn" href="/supporto.html">Supporto</a>
+        <a class="btn primary" href="http://discord.skyfrost.it/" target="_blank" rel="noopener">Discord</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div class="hero-bg"></div>
+      <div class="hero-ov"></div>
+      <div class="hero-c">
+        <h1>Vota SkyFrost</h1>
+        <p class="sub">
+          Votare aiuta il server a crescere e porta nuovi player.
+          Qui trovi i siti voto e le ricompense (quando il server aprirà).
+        </p>
+
+        <div class="ipbox">
+          <div class="iprow">
+            <div>
+              <div class="muted" style="font-size:12px">IP</div>
+              <div class="ip" id="ip">play.skyfrost.it</div>
+            </div>
+            <button class="btn small" id="copy-ip" type="button">📋 Copia</button>
+          </div>
+          <div class="note" id="note"></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="row">
+      <section class="card">
+        <h2 class="title">Siti voto</h2>
+        <p class="muted" style="margin:0">
+          Metti qui i link reali quando li hai. Per ora sono placeholder.
+        </p>
+
+        <div class="sites">
+          <div class="site">
+            <div class="l">
+              <div class="n">HytaleServers</div>
+              <div class="d">Vota ogni 24h</div>
+            </div>
+            <a class="btn" href="https://example.com" target="_blank" rel="noopener">Vota</a>
+          </div>
+
+          <div class="site">
+            <div class="l">
+              <div class="n">TopHytale</div>
+              <div class="d">Vota ogni 12h</div>
+            </div>
+            <a class="btn" href="https://example.com" target="_blank" rel="noopener">Vota</a>
+          </div>
+
+          <div class="site">
+            <div class="l">
+              <div class="n">ServerList</div>
+              <div class="d">Vota ogni 24h</div>
+            </div>
+            <a class="btn" href="https://example.com" target="_blank" rel="noopener">Vota</a>
+          </div>
+        </div>
+
+        <p class="muted" style="margin:12px 0 0; font-size:12px">
+          Tip: quando hai i link veri, basta cambiare gli <b>href</b>.
+        </p>
+      </section>
+
+      <aside class="card">
+        <h2 class="title">Ricompense</h2>
+        <p class="muted" style="margin:0">
+          Esempio (modifica quando vuoi):
+        </p>
+
+        <div class="steps">
+          <div class="step">
+            <b>🎁 +1 Key Vote</b>
+            1 voto = 1 chiave (usabile in game).
+          </div>
+          <div class="step">
+            <b>💎 Bonus VIP</b>
+            10 voti in settimana = bonus VIP temporaneo.
+          </div>
+          <div class="step">
+            <b>📌 Regole</b>
+            Niente multi-account / niente spam: rischio reset.
+          </div>
+        </div>
+
+        <div class="step" style="margin-top:10px">
+          <b>Come riscuoto?</b>
+          Dopo aver votato, entra in game e usa il comando (esempio):
+          <div class="muted" style="margin-top:6px; font-size:13px">
+            <code style="background:rgba(0,0,0,.20);border:1px solid rgba(255,255,255,.12);padding:4px 8px;border-radius:10px;display:inline-block">
+              /vote claim
+            </code>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <script>
+    // ===== Copia IP =====
+    const SERVER_IP = "play.skyfrost.it";
+    document.getElementById("ip").textContent = SERVER_IP;
+
+    async function copyText(text){
+      try{
+        await navigator.clipboard.writeText(text);
+        return true;
+      }catch{
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        ta.style.position = "fixed";
+        ta.style.left = "-9999px";
+        document.body.appendChild(ta);
+        ta.select();
+        try{
+          const ok = document.execCommand("copy");
+          document.body.removeChild(ta);
+          return ok;
+        }catch{
+          document.body.removeChild(ta);
+          return false;
+        }
+      }
+    }
+
+    document.getElementById("copy-ip").addEventListener("click", async () => {
+      const ok = await copyText(SERVER_IP);
+      const note = document.getElementById("note");
+      note.textContent = ok ? "✅ IP copiato negli appunti!" : "❌ Non riesco a copiare. Copia manualmente.";
+      setTimeout(() => (note.textContent = ""), 2500);
+    });
+
+    // ===== User chip + role chip (se loggato) =====
+    const userchip = document.getElementById("userchip");
+    const usertext = document.getElementById("usertext");
+    const userav = document.getElementById("userav");
+
+    const rolechip = document.getElementById("rolechip");
+    const roledot = document.getElementById("role-dot");
+    const roletext = document.getElementById("role-text");
+
+    function colorToHex(n){
+      const hex = Number(n || 0).toString(16).padStart(6, "0");
+      return "#" + hex;
+    }
+
+    async function loadUser(){
+      try{
+        const r = await fetch("/api/me", { cache: "no-store" });
+        const j = await r.json();
+
+        if(j.loggedIn && j.user){
+          userchip.style.display = "inline-flex";
+          usertext.textContent = `Ciao, ${j.user.username}`;
+          if(j.user.avatar){
+            userav.src = j.user.avatar;
+            userav.style.display = "inline-block";
+          }
+
+          // ruolo più alto (filtrato lato API)
+          try{
+            const rr = await fetch("/api/roles", { cache: "no-store" });
+            const jj = await rr.json();
+            if(jj.ok && jj.primaryRole){
+              rolechip.style.display = "inline-flex";
+              roletext.textContent = jj.primaryRole.name;
+              roledot.style.background = colorToHex(jj.primaryRole.color);
+            }
+          }catch{}
+        }
+      }catch{}
+    }
+    loadUser();
+  </script>
+</body>
+</html>
