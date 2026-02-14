@@ -2,169 +2,433 @@
 <html lang="it">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Staff • SkyFrost</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SkyFrost • Staff</title>
+
+  <style>
+
+    /* Bootstrap Icons */
+    .bi{vertical-align:-0.125em}
+    .ico{margin-right:.45rem}
+:root{
+      --bg:#070a12;
+      --border: rgba(255,255,255,.10);
+      --border2: rgba(255,255,255,.14);
+      --txt:#eaf0ff;
+      --muted:#a9b6d3;
+      --shadow: 0 20px 60px rgba(0,0,0,.45);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      color:var(--txt);
+      background:
+        radial-gradient(1100px 620px at 20% 0%, rgba(125,211,252,.14), transparent 55%),
+        radial-gradient(900px 600px at 80% 10%, rgba(96,165,250,.12), transparent 55%),
+        linear-gradient(180deg, #050711, var(--bg));
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      overflow-x:hidden;
+    }
+    a{color:inherit;text-decoration:none}
+    .container{max-width:1120px;margin:0 auto;padding:22px 16px 70px}
+
+    .topbar{
+      position:sticky; top:0; z-index:40;
+      background: rgba(7,10,18,.55);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .topbar-inner{
+      max-width:1120px; margin:0 auto;
+      padding:14px 16px;
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:10px;
+      font-weight:950; letter-spacing:.2px;
+    }
+    .brand-badge{
+      width:34px;height:34px;border-radius:12px;
+      border:1px solid var(--border2);
+      overflow:hidden;
+      background: rgba(255,255,255,.06);
+      box-shadow: 0 8px 30px rgba(125,211,252,.10);
+      display:flex;align-items:center;justify-content:center;
+    }
+    .brand-badge img{width:100%;height:100%;object-fit:cover;display:block}
+
+    .right{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+
+    .btn{
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.04);
+      color:var(--txt);
+      padding:10px 12px;
+      border-radius:12px;
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      font-weight:900;
+      transition: transform .12s ease, background .12s ease, border-color .12s ease;
+    }
+    .btn:hover{transform: translateY(-1px); border-color: rgba(255,255,255,.16); background: rgba(255,255,255,.06);}
+    .btn.primary{
+      border:none;
+      background: linear-gradient(90deg, #22d3ee, #60a5fa);
+      color:#07101f;
+      font-weight:950;
+      box-shadow: 0 16px 40px rgba(34,211,238,.10);
+    }
+    .btn.ghost{background: transparent}
+
+    .hero{
+      margin-top:14px;
+      border:1px solid var(--border2);
+      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.04));
+      border-radius:22px;
+      padding:18px;
+      box-shadow: var(--shadow);
+    }
+    h1{margin:0 0 6px;font-size:34px;letter-spacing:-.02em}
+    .sub{margin:0;color:rgba(234,240,255,.72);line-height:1.6}
+
+    .grid{
+      margin-top:12px;
+      display:grid;
+      grid-template-columns:1fr;
+      gap:12px;
+    }
+
+    .section{
+      border:1px solid var(--border2);
+      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.04));
+      border-radius:22px;
+      padding:16px;
+      box-shadow: 0 12px 40px rgba(0,0,0,.25);
+    }
+
+    .section-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom:10px;
+    }
+    .role-title{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-weight:950;
+      font-size:16px;
+    }
+    .role-dot{
+      width:10px;height:10px;border-radius:999px;
+      box-shadow: 0 0 0 3px rgba(255,255,255,.06);
+      background: rgba(125,211,252,.85);
+    }
+    .count{color:rgba(234,240,255,.70);font-weight:900;font-size:13px}
+
+    .members{
+      display:grid;
+      grid-template-columns:repeat(4, 1fr);
+      gap:10px;
+    }
+    .member{
+      border:1px solid var(--border);
+      background: rgba(0,0,0,.12);
+      border-radius:18px;
+      padding:12px;
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
+    .avatar{
+      width:40px;height:40px;border-radius:14px;
+      border:1px solid rgba(255,255,255,.16);
+      object-fit:cover;
+      background: rgba(255,255,255,.06);
+      flex:0 0 auto;
+    }
+    .mname{font-weight:950;line-height:1.2}
+    .muser{color:rgba(234,240,255,.62);font-size:12px;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+    .loading{
+      margin-top:12px;
+      color:rgba(234,240,255,.72);
+      border:1px dashed rgba(255,255,255,.16);
+      border-radius:18px;
+      padding:12px;
+      background: rgba(0,0,0,.10);
+    }
+
+    @media (max-width: 1000px){
+      .members{grid-template-columns:repeat(2, 1fr)}
+    }
+    @media (max-width: 560px){
+      .members{grid-template-columns:1fr}
+    }
+  
+    /* Staff upgrade */
+    .hero-top{
+      display:grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap:18px;
+      align-items:stretch;
+      margin-top: 26px;
+    }
+    .kicker{
+      display:inline-flex;
+      align-items:center;
+      gap:.45rem;
+      padding:8px 12px;
+      border:1px solid var(--border);
+      border-radius:999px;
+      background: rgba(255,255,255,.03);
+      color: var(--muted);
+      font-weight:800;
+      font-size:12px;
+      letter-spacing:.02em;
+    }
+    .hero h1{
+      margin:10px 0 6px;
+      font-size: clamp(28px, 4.2vw, 42px);
+      letter-spacing:-.02em;
+      line-height:1.05;
+    }
+    .sub{margin:0;color:var(--muted);max-width:68ch}
+    .controls{padding:14px; position:sticky; top:16px; height:fit-content}
+    .search{
+      display:flex;align-items:center;gap:10px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.02);
+      border-radius:14px;
+      padding:10px 12px;
+    }
+    .search i{color:var(--muted)}
+    .search input{
+      width:100%;
+      border:none;
+      outline:none;
+      background:transparent;
+      color:var(--txt);
+      font-weight:800;
+      font-size:14px;
+    }
+    .clear{
+      border:none;
+      background: transparent;
+      color: var(--muted);
+      cursor:pointer;
+      padding:6px;
+      border-radius:10px;
+    }
+    .clear:hover{background: rgba(255,255,255,.04); color: var(--txt)}
+    .toggles{display:flex;gap:10px;align-items:center;justify-content:space-between;margin-top:10px;flex-wrap:wrap}
+    .toggle{display:flex;gap:10px;align-items:center;color:var(--muted);font-weight:850;font-size:13px}
+    .toggle input{accent-color:#7dd3fc}
+    .btn.small{padding:9px 10px;border-radius:12px}
+    .tiny{font-size:12px;margin-top:10px}
+    .section{overflow:hidden}
+    .section-head{cursor:pointer; user-select:none}
+    .section-head:hover{background: rgba(255,255,255,.02)}
+    .section[aria-collapsed="true"] .members{display:none}
+    .section[aria-collapsed="true"] .chev{transform: rotate(-90deg)}
+    .role-title{display:flex;align-items:center;gap:10px}
+    .chev{transition: transform .15s ease;color:var(--muted)}
+    .members{padding-top:10px}
+    .member{display:flex;gap:10px;align-items:center}
+    .member .avatar{background: rgba(255,255,255,.04)}
+    .member[hidden]{display:none !important}
+    /* skeleton */
+    .skeleton-dot{
+      width:12px;height:12px;border-radius:999px;
+      background: linear-gradient(90deg, rgba(255,255,255,.04), rgba(255,255,255,.10), rgba(255,255,255,.04));
+      background-size:200% 100%;
+      animation: shimmer 1.3s infinite linear;
+    }
+    .skeleton-title{
+      height:14px;width:160px;border-radius:999px;
+      background: linear-gradient(90deg, rgba(255,255,255,.04), rgba(255,255,255,.10), rgba(255,255,255,.04));
+      background-size:200% 100%;
+      animation: shimmer 1.3s infinite linear;
+      display:inline-block;
+    }
+    .skeleton-count{
+      height:14px;width:90px;border-radius:999px;
+      background: linear-gradient(90deg, rgba(255,255,255,.04), rgba(255,255,255,.10), rgba(255,255,255,.04));
+      background-size:200% 100%;
+      animation: shimmer 1.3s infinite linear;
+    }
+    .skeleton-member{
+      height:56px;border-radius:16px;border:1px solid var(--border);
+      background: linear-gradient(90deg, rgba(255,255,255,.02), rgba(255,255,255,.06), rgba(255,255,255,.02));
+      background-size:200% 100%;
+      animation: shimmer 1.3s infinite linear;
+    }
+    @keyframes shimmer{0%{background-position:0% 0%}100%{background-position:200% 0%}}
+    @media (max-width: 980px){
+      .hero-top{grid-template-columns:1fr}
+      .controls{position:relative; top:auto}
+    }
+
+    .brand-badge{position:relative}
+  .brandFallback{
+    position:absolute; inset:0;
+    display:none;
+    align-items:center; justify-content:center;
+    font-weight:1000;
+    color: rgba(255,255,255,.85);
+    letter-spacing:.4px;
+    font-size:12px;
+    background: rgba(0,0,0,.18);
+  }
+</style>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-  <link rel="stylesheet" href="assets/ui.css">
 </head>
+
 <body>
-  <div class="topbar">
-    <div class="inner">
-      <a class="brand" href="index.html">
-        <div class="brand-badge">
-          <img id="brandLogo" alt="SkyFrost" src="assets/logo.png">
-          <div class="fallback" id="brandFallback">SF</div>
-        </div>
-        <div>SkyFrost</div>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="/">
+        <span class="brand-badge"><img src="assets/logo.png" alt="SkyFrost" loading="eager" onerror="if(!this.dataset.f){this.dataset.f=1;this.src='assets/icon.png';}else{this.style.display='none';this.nextElementSibling.style.display='flex';}"><span class="brandFallback" aria-hidden="true">SF</span></span>
+        <span>SkyFrost • Staff</span>
       </a>
-      <nav class="nav">
-        <a href="dashboard.html"><i class="bi bi-speedometer2"></i> Dashboard</a>
-        <a href="profilo.html"><i class="bi bi-bag-fill"></i> Store</a>
-        <a class="active" href="staff.html"><i class="bi bi-people-fill"></i> Staff</a>
-        <a href="vote.html"><i class="bi bi-hand-thumbs-up-fill"></i> Vote</a>
-      </nav>
-    </div>
-  </div>
 
-  <div class="container">
-    <h1>Staff</h1>
-    <p class="sub">Lista staff raggruppata per ruolo. Cerca un membro e filtra le sezioni.</p>
-
-    <div class="panel">
-      <div class="pad">
-        <div class="row">
-          <div class="search">
-            <i class="bi bi-search"></i>
-            <input id="q" placeholder="Cerca per nome…" autocomplete="off" />
-          </div>
-          <button class="btn" id="toggleEmpty"><i class="bi bi-eye-slash"></i> Nascondi vuoti</button>
-          <button class="btn" id="expandAll"><i class="bi bi-arrows-expand"></i> Espandi</button>
-          <button class="btn primary" id="refresh"><i class="bi bi-arrow-clockwise"></i> Aggiorna</button>
-        </div>
-        <div class="line"></div>
-        <div id="status" class="small">Caricamento…</div>
+      <div class="right">
+        <a class="btn" href="/">Home</a>
+        <a class="btn" href="/dashboard.html">Dashboard</a>
+        <a class="btn" href="/profilo.html">Store</a>
+        <a class="btn" href="/supporto.html">Supporto</a>
+        <a class="btn primary" href="http://discord.skyfrost.it/" target="_blank" rel="noopener">Discord</a>
       </div>
     </div>
+  </header>
 
-    <div style="height:14px"></div>
+  <main class="container">
+  <section class="hero">
+    <div class="hero-top">
+      <div>
+        <div class="kicker"><i class="bi bi-people-fill ico"></i>Team</div>
+        <h1>Staff</h1>
+        <p class="sub">
+          Lista aggiornata automaticamente leggendo i ruoli dal Discord (Owner / Sr. Admin / Admin / Staff).
+        </p>
+        <div class="loading" id="meta">Caricamento staff…</div>
+      </div>
 
-    <div id="list"></div>
-  </div>
+      <div class="controls card">
+        <label class="search">
+          <i class="bi bi-search"></i>
+          <input id="q" type="search" placeholder="Cerca per nome o username…" autocomplete="off">
+          <button class="clear" id="clear" type="button" title="Pulisci"><i class="bi bi-x-lg"></i></button>
+        </label>
 
-  <script src="assets/ui.js"></script>
-  <script>
-    const $ = (id) => document.getElementById(id);
-    let raw = null;
-    let hideEmpty = false;
-    let expanded = true;
+        <div class="toggles">
+          <label class="toggle">
+            <input id="hideEmpty" type="checkbox" checked>
+            <span>Nascondi ruoli vuoti</span>
+          </label>
 
-    function esc(s){ return String(s ?? "").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-
-    function normalize(data){
-      if (!data) return [];
-      // forma reale del tuo endpoint: { ok:true, sections:[...] }
-      if (Array.isArray(data.sections)) return data.sections;
-      if (Array.isArray(data.groups)) return data.groups;
-      if (Array.isArray(data.staff)) return data.staff;
-      if (Array.isArray(data.data)) return data.data;
-      if (Array.isArray(data)) return data;
-      return [];
-    }
-
-    function memberRow(m){
-      const name = m?.display || m?.display_name || m?.nick || m?.username || "Membro";
-      const handle = m?.username || "";
-      const avatar = m?.avatar || m?.avatar_url || null;
-      return `
-        <div class="item">
-          <div class="brand-badge" style="width:36px; height:36px; border-radius:14px; background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.10)">
-            ${avatar ? `<img alt="" src="${esc(avatar)}">` : `<div class="fallback" style="display:grid">U</div>`}
-          </div>
-          <div>
-            <div style="font-weight:900">${esc(name)}</div>
-            <div class="small">${esc(handle)}</div>
-          </div>
+          <button class="btn small" id="collapseAll" type="button">
+            <i class="bi bi-arrows-collapse ico"></i>Comprimi tutti
+          </button>
         </div>
-      `;
+
+        <div class="muted tiny">
+          Tip: scrivi “@nome” o parte del nickname. Il filtro non fa richieste al server.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="grid" id="grid">
+    <section class="section">
+      <div class="section-head">
+        <div class="role-title">
+          <span class="role-dot skeleton-dot"></span>
+          <span class="skeleton-title"></span>
+        </div>
+        <div class="count skeleton-count"></div>
+      </div>
+      <div class="members">
+        <div class="member skeleton-member"></div>
+        <div class="member skeleton-member"></div>
+        <div class="member skeleton-member"></div>
+      </div>
+    </section>
+  </div>
+</main>
+
+  <script>
+    function esc(s){
+      return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+    }
+    function colorToHex(n){
+      const hex = Number(n || 0).toString(16).padStart(6, "0");
+      return "#" + hex;
     }
 
-    function render(){
-      const q = $("q").value.trim().toLowerCase();
-      const groups = normalize(raw);
-      const out = [];
+    async function loadStaff(){
+      const meta = document.getElementById("meta");
+      const grid = document.getElementById("grid");
 
-      for (const g of groups){
-        const roleName = g?.role?.name || g?.role || g?.name || "Ruolo";
-        const members = Array.isArray(g?.members) ? g.members : (Array.isArray(g?.users) ? g.users : []);
-
-        const filtered = members.filter(m => {
-          if (!q) return true;
-          const s = `${m?.display||""} ${m?.display_name||""} ${m?.nick||""} ${m?.username||""}`.toLowerCase();
-          return s.includes(q);
-        });
-
-        if (hideEmpty && filtered.length === 0) continue;
-
-        out.push(`
-          <details ${expanded ? "open" : ""}>
-            <summary>
-              <i class="bi bi-person-lines-fill" style="color:rgba(125,211,252,.9)"></i>
-              ${esc(roleName)}
-              <span class="badge" style="margin-left:auto"><i class="bi bi-people"></i> ${filtered.length}</span>
-            </summary>
-            <div class="details-body">
-              ${filtered.length ? `<div class="list">${filtered.map(memberRow).join("")}</div>` : `<div class="empty">Nessun membro in questa sezione.</div>`}
-            </div>
-          </details>
-        `);
-      }
-
-      $("list").innerHTML = out.length
-        ? out.join('<div style="height:12px"></div>')
-        : `<div class="panel"><div class="pad"><div class="empty">Nessun risultato.</div></div></div>`;
-    }
-
-    async function load(){
-      $("status").textContent = "Caricamento…";
-      $("list").innerHTML = `
-        <div class="panel"><div class="pad"><div class="skeleton"></div></div></div>
-        <div style="height:10px"></div>
-        <div class="panel"><div class="pad"><div class="skeleton"></div></div></div>
-      `;
       try{
-        const r = await fetch("/api/staff", { cache:"no-store" });
-        if (!r.ok){
+        const r = await fetch("/api/staff", { cache: "no-store" });
+        if(!r.ok){
           const t = await r.text().catch(()=> "");
-          throw new Error(`${r.status} ${r.statusText} ${t ? "— " + t.slice(0,140) : ""}`);
+          throw new Error(t || "Errore staff");
         }
-        raw = await r.json();
-        const groups = normalize(raw);
-        const fetched = raw?.fetched_members ?? null;
-        $("status").textContent = fetched != null
-          ? `Caricato: ${groups.length} sezioni • membri letti: ${fetched}`
-          : `Caricato: ${groups.length} sezioni.`;
-        render();
+        const j = await r.json();
+        if(!j.ok) throw new Error("Staff non disponibile");
+
+        meta.textContent = `Staff caricato • Membri letti: ${j.fetched_members}`;
+
+        const sections = Array.isArray(j.sections) ? j.sections : [];
+        if(sections.length === 0){
+          grid.innerHTML = `<div class="loading">Nessun ruolo staff trovato (controlla i nomi dei ruoli).</div>`;
+          return;
+        }
+
+        grid.innerHTML = sections.map(sec => {
+          const roleName = sec.role?.name || "Ruolo";
+          const roleColor = colorToHex(sec.role?.color || 0);
+          const members = Array.isArray(sec.members) ? sec.members : [];
+
+          const memHtml = members.length
+            ? members.map(m => `
+                <div class="member">
+                  <img class="avatar" src="${esc(m.avatar || "")}" alt="">
+                  <div style="min-width:0">
+                    <div class="mname">${esc(m.display || m.username || "User")}</div>
+                    <div class="muser">@${esc(m.username || "")}</div>
+                  </div>
+                </div>
+              `).join("")
+            : `<div class="loading" style="margin-top:0">Nessun membro con questo ruolo.</div>`;
+
+          return `
+            <section class="section">
+              <div class="section-head">
+                <div class="role-title">
+                  <span class="role-dot" style="background:${roleColor}"></span>
+                  <span>${esc(roleName)}</span>
+                </div>
+                <div class="count">${members.length} membri</div>
+              </div>
+              <div class="members">${memHtml}</div>
+            </section>
+          `;
+        }).join("");
       }catch(e){
-        console.error(e);
-        $("status").textContent = "Errore nel caricamento staff.";
-        $("list").innerHTML = `<div class="panel"><div class="pad"><div class="errbox show">Non riesco a caricare lo staff. (${esc(e.message)})</div></div></div>`;
+        meta.textContent = "Errore caricamento staff.";
+        document.getElementById("grid").innerHTML =
+          `<div class="loading">Controlla che il bot sia nel server e che su Vercel ci siano DISCORD_BOT_TOKEN e DISCORD_GUILD_ID.</div>`;
       }
     }
 
-    $("q").addEventListener("input", render);
-    $("toggleEmpty").addEventListener("click", () => {
-      hideEmpty = !hideEmpty;
-      $("toggleEmpty").innerHTML = hideEmpty ? `<i class="bi bi-eye"></i> Mostra vuoti` : `<i class="bi bi-eye-slash"></i> Nascondi vuoti`;
-      render();
-    });
-    $("expandAll").addEventListener("click", () => {
-      expanded = !expanded;
-      $("expandAll").innerHTML = expanded ? `<i class="bi bi-arrows-collapse"></i> Comprimi` : `<i class="bi bi-arrows-expand"></i> Espandi`;
-      render();
-    });
-    $("refresh").addEventListener("click", load);
-
-    load();
+    loadStaff();
   </script>
 </body>
 </html>

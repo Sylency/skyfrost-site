@@ -2,852 +2,810 @@
 <html lang="it">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Store • SkyFrost</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SkyFrost • Store</title>
 
+  <!-- Bootstrap Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-  <link rel="stylesheet" href="assets/ui.css">
+
+  <!-- Tebex.js (Web Component / Checkout API) -->
+  <script defer src="https://js.tebex.io/v/1.js"></script>
+
   <style>
+    .bi{vertical-align:-0.125em}
+    .ico{margin-right:.45rem}
     :root{
-      --bg0:#05070b;
-      --bg1:#0b1220;
-      --card:rgba(255,255,255,.06);
-      --card2:rgba(255,255,255,.08);
-      --border:rgba(255,255,255,.10);
-      --text:#e9eef7;
-      --muted:rgba(233,238,247,.72);
-      --accent:#7dd3fc;
-      --good:#34d399;
-      --warn:#fbbf24;
-      --bad:#fb7185;
-      --shadow:0 18px 60px rgba(0,0,0,.55);
-      --r:18px;
+      --bg:#070a12;
+      --border: rgba(255,255,255,.10);
+      --border2: rgba(255,255,255,.14);
+      --txt:#eaf0ff;
+      --muted:#a9b6d3;
+      --card: rgba(255,255,255,.05);
+      --card2: rgba(255,255,255,.07);
     }
     *{box-sizing:border-box}
     body{
       margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
-      color:var(--text);
+      color:var(--txt);
       background:
-        radial-gradient(1100px 600px at 18% 12%, rgba(125,211,252,.18), transparent 60%),
-        radial-gradient(900px 520px at 85% 18%, rgba(56,189,248,.12), transparent 55%),
-        radial-gradient(900px 700px at 55% 92%, rgba(167,139,250,.10), transparent 55%),
-        linear-gradient(180deg, var(--bg0), var(--bg1));
-      min-height:100vh;
+        radial-gradient(1000px 550px at 20% 0%, rgba(125,211,252,.14), transparent 55%),
+        radial-gradient(900px 550px at 80% 10%, rgba(96,165,250,.12), transparent 55%),
+        linear-gradient(180deg, #050711, var(--bg));
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      overflow-x:hidden;
     }
+    a{color:inherit;text-decoration:none}
+    .container{max-width:1120px;margin:0 auto;padding:22px 16px 70px}
 
-    /* header minimal, non dipende da file esterni */
     .topbar{
       position:sticky; top:0; z-index:40;
-      backdrop-filter: blur(14px);
-      background: rgba(5,7,11,.55);
-      border-bottom:1px solid rgba(255,255,255,.06);
+      background: rgba(7,10,18,.55);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
     }
-    .topbar .inner{
-      max-width:1180px; margin:0 auto;
-      padding:14px 18px;
-      display:flex; align-items:center; gap:14px;
+    .topbar-inner{
+      max-width:1120px; margin:0 auto;
+      padding:14px 16px;
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
     }
     .brand{
       display:flex; align-items:center; gap:10px;
-      text-decoration:none; color:var(--text); font-weight:800; letter-spacing:.2px;
+      font-weight:950; letter-spacing:.2px;
     }
     .brand-badge{
-      width:34px; height:34px; border-radius:12px;
-      display:grid; place-items:center;
-      background: rgba(125,211,252,.14);
-      border:1px solid rgba(125,211,252,.22);
+      width:34px;height:34px;border-radius:12px;
+      border:1px solid var(--border2);
       overflow:hidden;
+      background: rgba(255,255,255,.06);
+      box-shadow: 0 8px 30px rgba(125,211,252,.10);
+      display:flex;align-items:center;justify-content:center;
     }
-    .brand-badge img{width:100%; height:100%; object-fit:cover; display:block}
-    .brand-badge .fallback{font-weight:900; color:var(--accent)}
-    .nav{
-      margin-left:auto;
-      display:flex; gap:10px; flex-wrap:wrap;
-    }
-    .nav a{
-      text-decoration:none; color:var(--muted);
-      padding:8px 10px; border-radius:12px;
-      border:1px solid transparent;
-    }
-    .nav a:hover{color:var(--text); border-color:rgba(255,255,255,.10); background:rgba(255,255,255,.04)}
-    .nav a.active{color:var(--text); border-color:rgba(125,211,252,.24); background:rgba(125,211,252,.10)}
+    .brand-badge img{width:100%;height:100%;object-fit:cover;display:block}
 
-    .wrap{max-width:1180px; margin:0 auto; padding:26px 18px 60px}
-    h1{margin:0 0 6px; font-size:32px}
-    .sub{margin:0 0 18px; color:var(--muted); max-width:72ch}
+    .btn{
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.06);
+      color: var(--txt);
+      padding:10px 12px;
+      border-radius:12px;
+      cursor:pointer;
+      display:inline-flex; align-items:center; gap:8px;
+      transition: transform .12s ease, background .12s ease, border-color .12s ease;
+      font-weight:700;
+      user-select:none;
+    }
+    .btn:hover{transform: translateY(-1px); background: rgba(255,255,255,.08); border-color: var(--border2)}
+    .btn.primary{
+      background: linear-gradient(135deg, rgba(125,211,252,.20), rgba(96,165,250,.14));
+      border-color: rgba(125,211,252,.25);
+    }
+    .right{display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:flex-end}
 
+    h1{font-size:28px;margin:14px 0 6px}
+    .muted{color:var(--muted)}
     .grid{
       display:grid;
       grid-template-columns: 1.3fr .7fr;
-      gap:18px;
+      gap:16px;
+      margin-top:16px;
       align-items:start;
     }
     @media (max-width: 980px){
-      .grid{grid-template-columns:1fr}
+      .grid{grid-template-columns: 1fr}
     }
-
-    .panel{
-      background: var(--card);
-      border:1px solid var(--border);
-      border-radius: var(--r);
-      box-shadow: var(--shadow);
-      overflow:hidden;
-    }
-    .panel .pad{padding:14px}
-    .toolbar{
-      display:flex; gap:10px; align-items:center; flex-wrap:wrap;
-    }
-    .search{
-      flex:1;
-      min-width: 240px;
-      display:flex; align-items:center; gap:10px;
-      background: rgba(0,0,0,.25);
-      border:1px solid rgba(255,255,255,.10);
-      border-radius: 14px;
-      padding:10px 12px;
-    }
-    .search i{color:rgba(233,238,247,.55)}
-    .search input{
-      width:100%;
-      background:transparent;
-      border:0; outline:0;
-      color:var(--text);
-      font-size:14px;
-    }
-    .btn{
-      cursor:pointer;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.06);
-      color:var(--text);
-      padding:10px 12px;
-      border-radius:14px;
-      display:inline-flex; align-items:center; gap:8px;
-      font-weight:700;
-    }
-    .btn:hover{background: rgba(255,255,255,.09)}
-    .btn.primary{
-      border-color: rgba(125,211,252,.24);
-      background: rgba(125,211,252,.14);
-    }
-    .pillrow{
-      display:flex; gap:8px; flex-wrap:wrap;
-      padding:0 14px 14px;
-      border-top:1px solid rgba(255,255,255,.06);
-      background: rgba(255,255,255,.02);
-    }
-    .pill{
-      cursor:pointer;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.05);
-      color:var(--muted);
-      padding:8px 10px;
-      border-radius:999px;
-      font-weight:700;
-      font-size:12px;
-      display:inline-flex; align-items:center; gap:8px;
-    }
-    .pill:hover{color:var(--text); background:rgba(255,255,255,.08)}
-    .pill .count{
-      display:inline-grid; place-items:center;
-      min-width:22px; height:18px;
-      padding:0 6px;
-      border-radius:999px;
-      background: rgba(0,0,0,.28);
-      border:1px solid rgba(255,255,255,.10);
-      color:rgba(233,238,247,.78);
-      font-weight:800;
-      font-size:11px;
-    }
-
-    .content{padding:14px}
-    .section{
-      padding:14px;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.04);
-      border-radius: 18px;
-      margin-bottom: 14px;
-    }
-    .section-header{
-      display:flex; align-items:baseline; gap:10px; flex-wrap:wrap;
-      margin:0 0 10px;
-    }
-    .section-header h2{margin:0; font-size:18px}
-    .section-header .meta{color:var(--muted); font-size:12px}
-    .subcat{
-      margin-top: 12px;
-      padding-top: 12px;
-      border-top: 1px dashed rgba(255,255,255,.10);
-    }
-    .subcat:first-of-type{border-top:0; padding-top:0; margin-top:0}
-    .subcat h3{
-      margin:0 0 10px;
-      font-size:14px;
-      color: rgba(233,238,247,.92);
-      display:flex; align-items:center; gap:8px;
-    }
-    .cards{
-      display:grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap:10px;
-    }
-    @media (max-width: 980px){ .cards{grid-template-columns: repeat(2, minmax(0,1fr));} }
-    @media (max-width: 520px){ .cards{grid-template-columns: 1fr;} }
 
     .card{
-      background: rgba(0,0,0,.22);
-      border:1px solid rgba(255,255,255,.10);
-      border-radius: 16px;
-      overflow:hidden;
-      display:flex; flex-direction:column;
-      min-height: 170px;
+      background: var(--card);
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:14px;
+      box-shadow: 0 18px 60px rgba(0,0,0,.35);
     }
-    .card .img{
-      height: 110px;
-      background: rgba(255,255,255,.05);
-      border-bottom:1px solid rgba(255,255,255,.08);
-      display:flex; align-items:center; justify-content:center;
-      overflow:hidden;
-    }
-    .card .img img{width:100%; height:100%; object-fit:cover; display:block}
-    .card .body{padding:12px; display:flex; flex-direction:column; gap:8px; flex:1}
-    .card .title{font-weight:900}
-    .price{display:flex; align-items:center; gap:8px; color:rgba(233,238,247,.90); font-weight:900}
-    .price small{color:var(--muted); font-weight:700}
-    .actions{margin-top:auto; display:flex; gap:8px}
-    .actions .btn{flex:1; justify-content:center}
-    .btn.danger{border-color: rgba(251,113,133,.25); background: rgba(251,113,133,.10)}
-    .btn.danger:hover{background: rgba(251,113,133,.14)}
-
-    .skeleton{
-      border-radius: 16px;
-      height: 170px;
-      background: linear-gradient(90deg, rgba(255,255,255,.05), rgba(255,255,255,.10), rgba(255,255,255,.05));
-      background-size: 200% 100%;
-      animation: shimmer 1.2s infinite;
-      border:1px solid rgba(255,255,255,.08);
-    }
-    @keyframes shimmer{0%{background-position:0% 0}100%{background-position:-200% 0}}
-
-    .cart h3{margin:0; font-size:16px; display:flex; align-items:center; gap:10px}
-    .cart p{margin:8px 0 0; color:var(--muted); font-size:13px}
-    .field{margin-top:12px}
-    .field label{display:block; color:rgba(233,238,247,.80); font-size:12px; margin-bottom:6px; font-weight:800}
-    .field input{
+    .card h2{margin:0 0 10px; font-size:16px}
+    .row{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+    .input{
       width:100%;
+      border:1px solid var(--border);
       background: rgba(0,0,0,.22);
-      border:1px solid rgba(255,255,255,.10);
-      border-radius: 14px;
+      color: var(--txt);
       padding:10px 12px;
-      color:var(--text);
+      border-radius:12px;
       outline:none;
     }
-    .line{height:1px; background:rgba(255,255,255,.08); margin:14px 0}
-    .cart-items{display:flex; flex-direction:column; gap:10px}
-    .cart-item{
-      display:flex; gap:10px; align-items:flex-start;
-      padding:10px;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(0,0,0,.18);
-      border-radius: 14px;
+    .input::placeholder{color: rgba(169,182,211,.75)}
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.05);
+      color: var(--muted);
+      font-weight:700;
+      font-size:12px;
+      user-select:none;
     }
-    .cart-item .name{font-weight:900; font-size:13px}
-    .cart-item .meta{color:var(--muted); font-size:12px}
-    .cart-item .right{margin-left:auto; text-align:right}
-    .cart-item .qty{display:flex; align-items:center; justify-content:flex-end; gap:6px; margin-top:6px}
-    .cart-item button{
-      width:28px; height:28px; border-radius:10px;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.06);
-      color:var(--text);
+    .divider{height:1px;background:var(--border);margin:12px 0}
+
+    .cats{display:flex; gap:10px; flex-wrap:wrap}
+    .catBtn{
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.05);
+      color: var(--txt);
+      padding:8px 10px;
+      border-radius:999px;
       cursor:pointer;
+      font-weight:800;
+      font-size:12px;
+      transition: background .12s ease, transform .12s ease, border-color .12s ease;
+      user-select:none;
     }
-    .cart-item button:hover{background: rgba(255,255,255,.10)}
-    .empty{color:var(--muted); padding:10px 0; font-size:13px}
-    .total{display:flex; align-items:center; justify-content:space-between; font-weight:900}
+    .catBtn:hover{transform: translateY(-1px); background: rgba(255,255,255,.08); border-color: var(--border2)}
+    .catBtn.active{
+      background: rgba(125,211,252,.16);
+      border-color: rgba(125,211,252,.28);
+    }
+.catCount{
+  margin-left:8px;
+  padding:2px 7px;
+  border-radius:999px;
+  border:1px solid var(--border);
+  background: rgba(0,0,0,.22);
+  color: var(--muted);
+  font-weight:900;
+  font-size:11px;
+}
+
+    .packages{
+      display:block;
+      margin-top:12px;
+    }
+    .catSection{margin-top:14px}
+    .catHead{
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:12px;
+      padding:10px 2px 8px;
+    }
+    .catTitle{display:flex;align-items:center;gap:10px}
+    .catTitle h2{margin:0;font-size:16px;letter-spacing:.2px}
+    .catMeta{color:var(--muted);font-weight:900;font-size:12px}
+    .packagesGrid{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap:12px;
+    }
+    @media (max-width: 720px){
+      .packagesGrid{grid-template-columns:1fr}
+    }
+    @media (max-width: 720px){
+      .packages{grid-template-columns: 1fr}
+    }
+    .pkg{
+      background: var(--card2);
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:12px;
+      display:flex; gap:12px;
+      min-height:118px;
+    }
+    .pkgMedia{
+      width:72px; height:72px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background: rgba(0,0,0,.18);
+      overflow:hidden;
+      flex:0 0 auto;
+      display:flex; align-items:center; justify-content:center;
+    }
+    .pkgMedia img{width:100%;height:100%;object-fit:cover;display:block}
+    .pkgMain{flex:1 1 auto; min-width:0}
+    .pkgTop{display:flex; align-items:flex-start; justify-content:space-between; gap:10px}
+    .pkgName{font-weight:950; letter-spacing:.2px}
+    .price{font-weight:950}
+    .pkgDesc{
+      color: var(--muted);
+      font-size:13px;
+      line-height:1.35;
+      margin-top:6px;
+      display:-webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow:hidden;
+    }
+    .pkgActions{margin-top:10px; display:flex; gap:8px; flex-wrap:wrap; align-items:center}
+    .qty{
+      display:inline-flex; align-items:center; gap:8px;
+      border:1px solid var(--border);
+      background: rgba(0,0,0,.18);
+      border-radius:12px;
+      padding:6px 8px;
+      font-weight:900;
+      user-select:none;
+    }
+    .qty button{
+      border:none; background:transparent; color:var(--txt);
+      cursor:pointer; font-size:16px; line-height:1;
+      padding:2px 6px; border-radius:8px;
+    }
+    .qty button:hover{background: rgba(255,255,255,.07)}
+    .small{font-size:12px;color:var(--muted)}
+
+    .cartItem{display:flex; justify-content:space-between; gap:12px; padding:10px 0}
+    .cartItem + .cartItem{border-top:1px solid var(--border)}
+    .cartLeft{min-width:0}
+    .cartName{font-weight:900; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+    .cartMeta{color:var(--muted); font-size:12px; margin-top:2px}
+    .cartRight{text-align:right; flex:0 0 auto}
+    .cartRight .smallBtn{
+      margin-top:6px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.05);
+      color: var(--txt);
+      padding:6px 8px;
+      border-radius:10px;
+      cursor:pointer;
+      font-weight:800;
+      font-size:12px;
+    }
+    .cartRight .smallBtn:hover{background: rgba(255,255,255,.08); border-color: var(--border2)}
+
+    .skeleton{
+      position:relative; overflow:hidden;
+      background: rgba(255,255,255,.06);
+      border:1px solid var(--border);
+      border-radius:16px;
+      height:120px;
+    }
+    .skeleton::after{
+      content:"";
+      position:absolute; inset:0;
+      transform: translateX(-100%);
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.08), transparent);
+      animation: shimmer 1.2s infinite;
+    }
+    @keyframes shimmer{100%{transform: translateX(100%)}}
+
     .toast{
-      position: fixed;
-      right: 14px;
-      bottom: 14px;
-      background: rgba(0,0,0,.75);
-      border:1px solid rgba(255,255,255,.12);
-      border-radius: 14px;
+      position:fixed; left:16px; bottom:16px; z-index:99;
+      background: rgba(0,0,0,.55);
+      border:1px solid var(--border);
+      backdrop-filter: blur(12px);
       padding:10px 12px;
-      box-shadow: var(--shadow);
-      color: var(--text);
-      z-index:100;
-      max-width: 360px;
+      border-radius:14px;
+      color: var(--txt);
+      box-shadow: 0 20px 50px rgba(0,0,0,.35);
+      max-width: min(520px, calc(100% - 32px));
       display:none;
     }
     .toast.show{display:block}
-    .toast .t{font-weight:900; margin:0 0 2px}
-    .toast .m{margin:0; color:var(--muted); font-size:13px}
-    .smallnote{color:var(--muted); font-size:12px; margin-top:10px; line-height:1.35}
-    .errbox{
-      margin-top: 12px;
-      padding: 10px 12px;
-      border-radius: 14px;
-      border: 1px solid rgba(251,113,133,.22);
-      background: rgba(251,113,133,.10);
-      color: rgba(255,255,255,.90);
-      display:none;
-      font-size: 13px;
-    }
-    .errbox.show{display:block}
-  </style>
+    .brand-badge{position:relative}
+  .brandFallback{
+    position:absolute; inset:0;
+    display:none;
+    align-items:center; justify-content:center;
+    font-weight:1000;
+    color: rgba(255,255,255,.85);
+    letter-spacing:.4px;
+    font-size:12px;
+    background: rgba(0,0,0,.18);
+  }
+</style>
 </head>
+
 <body>
   <div class="topbar">
-    <div class="inner">
-      <a class="brand" href="index.html">
-        <div class="brand-badge" id="brandBadge">
-          <img id="brandLogo" alt="SkyFrost" src="assets/logo.png">
-          <div class="fallback" id="brandFallback" style="display:none">SF</div>
-        </div>
-        <div>SkyFrost</div>
-      </a>
-      <nav class="nav">
-        <a href="dashboard.html"><i class="bi bi-speedometer2"></i> Dashboard</a>
-        <a class="active" href="profilo.html"><i class="bi bi-bag-fill"></i> Store</a>
-        <a href="staff.html"><i class="bi bi-people-fill"></i> Staff</a>
-        <a href="vote.html"><i class="bi bi-hand-thumbs-up-fill"></i> Vote</a>
-      </nav>
+    <div class="topbar-inner">
+      <div class="brand">
+        <span class="brand-badge"><img src="assets/logo.png" alt="SkyFrost" loading="eager" onerror="if(!this.dataset.f){this.dataset.f=1;this.src='assets/icon.png';}else{this.style.display='none';this.nextElementSibling.style.display='flex';}"><span class="brandFallback" aria-hidden="true">SF</span></span>
+        <span>SkyFrost</span>
+        <span class="pill"><i class="bi bi-bag-fill ico"></i>Store</span>
+      </div>
+
+      <div class="right">
+        <a class="btn" href="/"><i class="bi bi-house-door-fill"></i> Home</a>
+        <a class="btn" href="/dashboard.html"><i class="bi bi-speedometer2"></i> Dashboard</a>
+        <a class="btn" href="/staff.html"><i class="bi bi-people-fill"></i> Staff</a>
+        <a class="btn" href="/supporto.html"><i class="bi bi-life-preserver"></i> Supporto</a>
+      </div>
     </div>
   </div>
 
-  <div class="wrap reveal">
+  <div class="container">
     <h1>Store</h1>
-    <p class="sub">Sfoglia i pacchetti del server e compra senza uscire dal sito (checkout Tebex integrato).</p>
+    <div class="muted">Sfoglia i pacchetti del server e compra senza uscire dal sito (checkout Tebex integrato).</div>
 
     <div class="grid">
-      <div class="panel">
-        <div class="pad">
-          <div class="toolbar">
-            <div class="search">
-              <i class="bi bi-search"></i>
-              <input id="q" placeholder="Cerca pacchetti (nome o descrizione)…" autocomplete="off" />
-            </div>
-            <button class="btn" id="viewTop">
-              <i class="bi bi-grid-3x3-gap-fill"></i>
-              <span>Sezioni</span>
-            </button>
-            <button class="btn primary" id="refreshBtn">
-              <i class="bi bi-arrow-clockwise"></i>
-              <span>Aggiorna</span>
-            </button>
+      <!-- LISTING -->
+      <div class="card">
+        <div class="row" style="justify-content:space-between">
+          <div style="flex:1 1 380px; min-width: 260px">
+            <input id="search" class="input" placeholder="Cerca pacchetti (nome o descrizione)…" />
           </div>
-          <div class="errbox" id="errBox"></div>
+          <div class="row" style="gap:8px">
+            <span id="countPill" class="pill"><i class="bi bi-grid-3x3-gap-fill ico"></i><span>—</span></span>
+            <button id="refreshBtn" class="btn" type="button"><i class="bi bi-arrow-clockwise"></i> Aggiorna</button>
+          </div>
         </div>
-        <div class="pillrow" id="jumpPills"></div>
-        <div class="content" id="content"></div>
+
+        <div class="divider"></div>
+
+        <div id="cats" class="cats"></div>
+
+        <div id="packages" class="packages" aria-live="polite" style="margin-top:12px">
+          <div class="skeleton"></div>
+          <div class="skeleton"></div>
+          <div class="skeleton"></div>
+          <div class="skeleton"></div>
+        </div>
       </div>
 
-      <div class="panel cart">
-        <div class="pad">
-          <h3><i class="bi bi-cart3"></i> Carrello</h3>
-          <p>Il carrello resta salvato nel browser.</p>
+      <!-- CART -->
+      <div class="card">
+        <h2><i class="bi bi-cart3 ico"></i>Carrello</h2>
+        <div class="small">Il carrello resta salvato nel browser.</div>
 
-          <div class="field">
-            <label for="username">Username in-game (consigliato)</label>
-            <input id="username" placeholder="Es. Sylency" />
-          </div>
+        <div class="divider"></div>
 
-          <div class="line"></div>
-          <div class="cart-items" id="cartItems"></div>
-          <div class="line"></div>
+        <label class="small" for="player">Username in‑game (consigliato)</label>
+        <input id="player" class="input" placeholder="Es. Sylency" style="margin-top:6px" />
 
-          <div class="total">
-            <div>Totale stimato</div>
-            <div id="total">—</div>
-          </div>
+        <div class="divider"></div>
 
-          <div style="display:flex; gap:10px; margin-top:12px">
-            <button class="btn primary" style="flex:1; justify-content:center" id="checkoutBtn">
-              <i class="bi bi-lock-fill"></i> Checkout
-            </button>
-            <button class="btn danger" title="Svuota carrello" id="clearBtn">
-              <i class="bi bi-trash3-fill"></i>
-            </button>
-          </div>
+        <div id="cart"></div>
 
-          <div class="smallnote">
-            Se il popup viene bloccato, apri il checkout dal pulsante che comparirà.
-          </div>
+        <div class="divider"></div>
+
+        <div class="row" style="justify-content:space-between">
+          <div class="muted" style="font-weight:900">Totale stimato</div>
+          <div id="total" style="font-weight:950">—</div>
+        </div>
+
+        <div class="row" style="margin-top:12px">
+          <button id="checkoutBtn" class="btn primary" type="button" style="flex:1">
+            <i class="bi bi-lock-fill"></i> Checkout
+          </button>
+          <button id="clearBtn" class="btn" type="button" title="Svuota carrello">
+            <i class="bi bi-trash3"></i>
+          </button>
+        </div>
+
+        <div id="checkoutHint" class="small" style="margin-top:10px">
+          Se il popup viene bloccato, apri il checkout dal pulsante che comparirà.
         </div>
       </div>
     </div>
   </div>
 
-  <div class="toast" id="toast">
-    <p class="t" id="toastT"></p>
-    <p class="m" id="toastM"></p>
-  </div>
-
-  <!-- Tebex.js -->
-  <script src="https://js.tebex.io/v/1.js"></script>
+  <div id="toast" class="toast"></div>
 
   <script>
-    // --- logo fallback (risolve il "bugga e non carica") ---
-    (function(){
-      const img = document.getElementById('brandLogo');
-      const fb = document.getElementById('brandFallback');
-      const candidates = ["assets/logo.png", "assets/icon.png", "assets/favicon.png"];
-      let i = 0;
-      img.addEventListener('error', () => {
-        i++;
-        if (i < candidates.length) img.src = candidates[i];
-        else { img.style.display='none'; fb.style.display='grid'; }
-      });
-    })();
-
-    // --- state ---
-    const state = {
-      raw: null,
-      sections: [],
-      cart: loadCart(),
+    // === CONFIG (nessun segreto qui) ===
+    // Le chiavi segrete stanno nelle ENV del backend (vedi /api/tebex/*).
+    const API = {
+      listings: "/api/tebex/listings",
+      createBasket: "/api/tebex/basket",
+      addPackage: "/api/tebex/add"
     };
+
+    // === STATE ===
+    let categories = [];
+    let search = "";
+    let cart = loadCart();
 
     const el = (id) => document.getElementById(id);
 
-    function toast(t, m){
-      el('toastT').textContent = t;
-      el('toastM').textContent = m;
-      const box = el('toast');
-      box.classList.add('show');
-      clearTimeout(window.__toastTimer);
-      window.__toastTimer = setTimeout(() => box.classList.remove('show'), 2600);
+    function showToast(msg){
+      const t = el("toast");
+      t.textContent = msg;
+      t.classList.add("show");
+      clearTimeout(showToast._t);
+      showToast._t = setTimeout(()=>t.classList.remove("show"), 2200);
     }
 
-    function setError(msg){
-      const b = el('errBox');
-      if (!msg){ b.classList.remove('show'); b.textContent=""; return; }
-      b.textContent = msg;
-      b.classList.add('show');
-    }
-
-    // --- cart persistence ---
     function loadCart(){
-      try{
-        const v = JSON.parse(localStorage.getItem('sf_cart') || '[]');
-        if (Array.isArray(v)) return v;
-      }catch(e){}
-      return [];
+      try { return JSON.parse(localStorage.getItem("sf_cart") || "[]"); } catch { return []; }
     }
     function saveCart(){
-      localStorage.setItem('sf_cart', JSON.stringify(state.cart));
+      localStorage.setItem("sf_cart", JSON.stringify(cart));
     }
 
-    function formatEUR(v){
-      try{
-        return new Intl.NumberFormat('it-IT', {style:'currency', currency:'EUR'}).format(v);
-      }catch(e){
-        return (Math.round(v*100)/100).toFixed(2) + " €";
+    function money(v, currency){
+      if (v == null) return "—";
+      const n = Number(v);
+      if (Number.isNaN(n)) return String(v);
+      // fallback: v è già "prezzo totale"
+      try {
+        return new Intl.NumberFormat("it-IT", { style:"currency", currency: currency || "EUR" }).format(n);
+      } catch {
+        return n.toFixed(2) + " " + (currency || "");
       }
     }
 
-    // --- Tebex listings parsing (FIX per il tuo JSON) ---
-    // Tebex ti sta tornando:
-    // { data: [ categoryOrSubcategory, ... ] }
-    // dove molte voci sono "subcategorie" con parent + packages[]
-    // mentre le categorie top-level (Survival, KitPvP) spesso hanno packages []
-    function buildSectionsFromTebex(resp){
-      const list = resp && (resp.data || resp.categories || resp);
-      if (!Array.isArray(list)) return [];
-
-      const items = list.map(c => ({
-        id: c.id,
-        name: c.name || 'Senza nome',
-        order: (typeof c.order === 'number' ? c.order : 9999),
-        parent: c.parent ? { id: c.parent.id, name: c.parent.name, order: (typeof c.parent.order === 'number' ? c.parent.order : 9999) } : null,
-        image_url: c.image_url || (c.parent && c.parent.image_url) || null,
-        packages: Array.isArray(c.packages) ? c.packages : [],
-        raw: c
-      }));
-
-      // map top-level categories
-      const topById = new Map();
-      for (const it of items){
-        if (!it.parent){
-          topById.set(it.id, { id: it.id, name: it.name, order: it.order, image_url: it.image_url, subcats: [] });
-        }
-      }
-
-      // Ensure parents exist even if top-level not present in list
-      function ensureTop(parent){
-        if (!parent) return null;
-        if (!topById.has(parent.id)){
-          topById.set(parent.id, { id: parent.id, name: parent.name, order: parent.order ?? 9999, image_url: parent.image_url || null, subcats: [] });
-        }
-        return topById.get(parent.id);
-      }
-
-      // Attach subcats (and also treat orphan categories w/ packages as subcat of itself)
-      for (const it of items){
-        if (it.parent){
-          const top = ensureTop(it.parent);
-          if (!top) continue;
-          top.subcats.push({
-            id: it.id,
-            name: it.name,
-            order: it.order,
-            image_url: it.image_url || null,
-            packages: it.packages.slice()
-          });
-        } else if (it.packages && it.packages.length){
-          // Some stores put packages on top-level category
-          const top = ensureTop(it);
-          top.subcats.push({
-            id: it.id,
-            name: it.name,
-            order: it.order,
-            image_url: it.image_url || null,
-            packages: it.packages.slice()
-          });
-        }
-      }
-
-      // Remove empty subcats, sort everything
-      const sections = [...topById.values()]
-        .map(s => {
-          s.subcats = s.subcats
-            .filter(sc => Array.isArray(sc.packages) && sc.packages.length > 0)
-            .sort((a,b) => (a.order - b.order) || a.name.localeCompare(b.name));
-          return s;
-        })
-        .filter(s => s.subcats.length > 0)
-        .sort((a,b) => (a.order - b.order) || a.name.localeCompare(b.name));
-
-      // Sort packages inside each subcat (order then name)
-      for (const s of sections){
-        for (const sc of s.subcats){
-          sc.packages.sort((a,b) => ((a.order ?? 9999) - (b.order ?? 9999)) || (a.name||'').localeCompare(b.name||''));
-        }
-      }
-
-      return sections;
+    function stripHtml(html){
+      const d = document.createElement("div");
+      d.innerHTML = html || "";
+      return (d.textContent || d.innerText || "").trim();
     }
 
-    // --- UI rendering ---
-    function renderSkeleton(){
-      const c = el('content');
-      c.innerHTML = `
-        <div class="skeleton" style="margin-bottom:10px"></div>
-        <div class="skeleton" style="margin-bottom:10px"></div>
-        <div class="skeleton" style="margin-bottom:10px"></div>
-        <div class="skeleton"></div>
-      `;
-      el('jumpPills').innerHTML = '';
+    function renderCats(){
+  const wrap = el("cats");
+  wrap.innerHTML = "";
+
+  // solo categorie non vuote, ordinate (sort_order → name)
+  const nonEmpty = categories
+    .filter(c => Array.isArray(c.packages) && c.packages.length > 0)
+    .sort((a,b) => {
+      const ao = Number(a.sort_order ?? a.order ?? 0);
+      const bo = Number(b.sort_order ?? b.order ?? 0);
+      if (ao !== bo) return ao - bo;
+      return String(a.name||"").localeCompare(String(b.name||""), "it");
+    });
+
+  const topBtn = document.createElement("button");
+  topBtn.className = "catBtn active";
+  topBtn.innerHTML = `Tutte <span class="catCount">${packagesFlat().length}</span>`;
+  topBtn.onclick = () => window.scrollTo({ top: 0, behavior: "smooth" });
+  wrap.appendChild(topBtn);
+
+  for (const c of nonEmpty){
+    const b = document.createElement("button");
+    b.className = "catBtn";
+    b.innerHTML = `${c.name || "Categoria"} <span class="catCount">${c.packages.length}</span>`;
+    b.onclick = () => {
+      const section = document.getElementById(`cat-${c.id}`);
+      if (section) section.scrollIntoView({ behavior:"smooth", block:"start" });
+    };
+    wrap.appendChild(b);
+  }
+}
+
+function packagesFlat(){(){
+  const out = [];
+  for (const c of categories){
+    const pkgs = Array.isArray(c.packages) ? c.packages : [];
+    for (const p of pkgs){
+      // alcuni payload Tebex non includono category_id dentro il package:
+      // lo “attacchiamo” noi per poter filtrare correttamente.
+      out.push({
+        ...p,
+        category_id: p.category_id ?? c.id,
+        category: p.category ?? { id: c.id, name: c.name }
+      });
+    }
+  }
+  // ordina in modo stabile: prima per categoria (ordine), poi per nome
+  return out.sort((a,b) => {
+    const ac = String(a.category_id ?? "");
+    const bc = String(b.category_id ?? "");
+    if (ac !== bc) return ac.localeCompare(bc, "en");
+    return String(a.name||"").localeCompare(String(b.name||""), "it");
+  });
+}
+
+
+    function matchesSearch(p){
+      const q = (search || "").toLowerCase();
+      if (!q) return true;
+      const name = (p.name || "").toLowerCase();
+      const desc = stripHtml(p.description || "").toLowerCase();
+      return name.includes(q) || desc.includes(q);
     }
 
-    function renderPills(sections){
-      const row = el('jumpPills');
-      row.innerHTML = '';
-      for (const s of sections){
-        const count = s.subcats.reduce((acc,sc) => acc + sc.packages.length, 0);
-        const b = document.createElement('button');
-        b.className = 'pill';
-        b.innerHTML = `<i class="bi bi-bookmark-star-fill" style="color:rgba(125,211,252,.9)"></i> ${escapeHtml(s.name)} <span class="count">${count}</span>`;
-        b.addEventListener('click', () => {
-          const target = document.querySelector(`[data-sec="${cssEsc(String(s.id))}"]`);
-          if (target) target.scrollIntoView({behavior:'smooth', block:'start'});
+
+
+    function findPkgById(id){
+      return packagesFlat().find(p => String(p.id) === String(id)) || null;
+    }
+
+    function cartTotal(){
+      let total = 0;
+      let currency = null;
+      for (const it of cart){
+        const pkg = findPkgById(it.id);
+        if (!pkg) continue;
+        const price = Number(pkg.total_price ?? pkg.base_price ?? 0);
+        total += price * (it.qty || 1);
+        currency = currency || pkg.currency;
+      }
+      return { total, currency };
+    }
+
+    function renderPackages(){
+      // RENDER “A SEZIONI”: una sezione per categoria (nasconde sezioni vuote e dopo ricerca)
+      const wrap = el("packages");
+      wrap.innerHTML = "";
+
+      const nonEmpty = categories
+        .filter(c => Array.isArray(c.packages) && c.packages.length > 0)
+        .sort((a,b) => {
+          const ao = Number(a.sort_order ?? a.order ?? 0);
+          const bo = Number(b.sort_order ?? b.order ?? 0);
+          if (ao !== bo) return ao - bo;
+          return String(a.name||"").localeCompare(String(b.name||""), "it");
         });
-        row.appendChild(b);
+
+      // calcola quanti pacchetti sono visibili con la ricerca attuale
+      let visibleCount = 0;
+      for (const c of nonEmpty){
+        for (const p of (c.packages||[])){
+          // “attacca” category_id per consistenza
+          const pp = { ...p, category_id: p.category_id ?? c.id, category: p.category ?? { id: c.id, name: c.name } };
+          if (matchesSearch(pp)) visibleCount++;
+        }
       }
-    }
+      el("countPill").querySelector("span").textContent = `${visibleCount} pacchetti`;
 
-    function escapeHtml(str){
-      return String(str).replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));
-    }
-    function cssEsc(s){
-      return s.replace(/"/g, '\\"');
-    }
-
-    function packageCard(p){
-      const img = (p.image || (p.media && p.media[0] && p.media[0].url)) || '';
-      const desc = (p.description || '').replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim();
-      const price = typeof p.total_price === 'number' ? p.total_price : (p.base_price ?? 0);
-      const currency = p.currency || 'EUR';
-      return `
-        <div class="card">
-          <div class="img">${img ? `<img src="${escapeHtml(img)}" alt="">` : `<div style="color:rgba(233,238,247,.55); font-weight:900"><i class="bi bi-image"></i></div>`}</div>
-          <div class="body">
-            <div class="title">${escapeHtml(p.name || 'Pacchetto')}</div>
-            <div style="color:var(--muted); font-size:12px; line-height:1.35; min-height: 32px">
-              ${escapeHtml(desc ? (desc.length > 90 ? desc.slice(0,90)+'…' : desc) : '—')}
-            </div>
-            <div class="price">
-              ${formatEUR(price)}
-              <small>${escapeHtml(currency)}</small>
-            </div>
-            <div class="actions">
-              <button class="btn primary" onclick="addToCart(${Number(p.id)}, ${JSON.stringify(p.name||'Pacchetto')}, ${Number(price||0)}, ${JSON.stringify((p.category && p.category.name) || '')})">
-                <i class="bi bi-bag-plus-fill"></i> Aggiungi
-              </button>
-              <button class="btn" onclick="openDetails(${Number(p.id)})" title="Dettagli">
-                <i class="bi bi-info-circle"></i>
-              </button>
-            </div>
-          </div>
-        </div>
-      `;
-    }
-
-    function renderSections(sections, query){
-      const q = (query || '').trim().toLowerCase();
-      const c = el('content');
-      if (!sections.length){
-        c.innerHTML = `<div class="empty">Nessun pacchetto trovato.</div>`;
+      if (!visibleCount){
+        const empty = document.createElement("div");
+        empty.className = "card";
+        empty.innerHTML = '<div style="font-weight:950;margin-bottom:6px"><i class="bi bi-search ico"></i>Nessun risultato</div><div class="muted">Prova a cambiare ricerca.</div>';
+        wrap.appendChild(empty);
         return;
       }
 
-      let html = '';
-      for (const s of sections){
-        // Filter subcats/packages by search
-        const visibleSubcats = [];
-        for (const sc of s.subcats){
-          const pk = sc.packages.filter(p => {
-            if (!q) return true;
-            const name = (p.name||'').toLowerCase();
-            const desc = (p.description||'').toLowerCase();
-            return name.includes(q) || desc.includes(q);
-          });
-          if (pk.length) visibleSubcats.push({...sc, packages: pk});
-        }
-        if (!visibleSubcats.length) continue;
+      for (const c of nonEmpty){
+        const pkgsRaw = Array.isArray(c.packages) ? c.packages : [];
+        const pkgs = pkgsRaw
+          .map(p => ({ ...p, category_id: p.category_id ?? c.id, category: p.category ?? { id: c.id, name: c.name } }))
+          .filter(p => matchesSearch(p))
+          .sort((a,b) => String(a.name||"").localeCompare(String(b.name||""), "it"));
 
-        const total = visibleSubcats.reduce((acc,sc)=>acc+sc.packages.length,0);
-        html += `
-          <div class="section" data-sec="${escapeHtml(String(s.id))}">
-            <div class="section-header">
-              <h2><i class="bi bi-collection-fill" style="color:rgba(125,211,252,.9)"></i> ${escapeHtml(s.name)}</h2>
-              <div class="meta">${total} pacchetti</div>
-            </div>
+        if (!pkgs.length) continue;
+
+        const section = document.createElement("section");
+        section.className = "catSection";
+        section.id = `cat-${c.id}`;
+
+        const head = document.createElement("div");
+        head.className = "catHead";
+        head.innerHTML = `
+          <div class="catTitle">
+            <i class="bi bi-grid-1x2-fill"></i>
+            <h2>${c.name || "Categoria"}</h2>
+          </div>
+          <div class="catMeta"><span class="muted">${pkgs.length} pacchetti</span></div>
         `;
+        section.appendChild(head);
 
-        for (const sc of visibleSubcats){
-          html += `
-            <div class="subcat">
-              <h3><i class="bi bi-folder-fill" style="color:rgba(233,238,247,.75)"></i> ${escapeHtml(sc.name)} <span style="color:var(--muted); font-size:12px">(${sc.packages.length})</span></h3>
-              <div class="cards">
-                ${sc.packages.map(packageCard).join('')}
+        const grid = document.createElement("div");
+        grid.className = "packagesGrid";
+
+        for (const p of pkgs){
+          const card = document.createElement("div");
+          card.className = "pkg";
+
+          const img = p.image ? `<img src="${p.image}" alt="">` : `<i class="bi bi-box-seam" style="font-size:22px;color:rgba(255,255,255,.7)"></i>`;
+          const desc = stripHtml(p.description || "");
+          const price = money(p.total_price ?? p.base_price, p.currency);
+
+          const current = cart.find(x => String(x.id) === String(p.id));
+          const qty = current?.qty || 1;
+
+          card.innerHTML = `
+            <div class="pkgMedia">${img}</div>
+            <div class="pkgMain">
+              <div class="pkgTop">
+                <div class="pkgName" title="${(p.name||"").replaceAll('"',"&quot;")}">${p.name || "Pacchetto"}</div>
+                <div class="price">${price}</div>
+              </div>
+              <div class="pkgDesc">${desc || "—"}</div>
+              <div class="pkgActions">
+                <div class="qty" data-id="${p.id}">
+                  <button type="button" data-act="dec" aria-label="Diminuisci">−</button>
+                  <span>${qty}</span>
+                  <button type="button" data-act="inc" aria-label="Aumenta">+</button>
+                </div>
+                <button class="btn primary" type="button" data-add="${p.id}">
+                  <i class="bi bi-cart-plus"></i> Aggiungi
+                </button>
               </div>
             </div>
           `;
+          grid.appendChild(card);
         }
 
-        html += `</div>`;
+        section.appendChild(grid);
+        wrap.appendChild(section);
       }
 
-      c.innerHTML = html || `<div class="empty">Nessun risultato per la ricerca.</div>`;
+      // handlers (delegati)
+      wrap.querySelectorAll("[data-add]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const id = btn.getAttribute("data-add");
+          const qtyEl = wrap.querySelector(`.qty[data-id="${id}"] span`);
+          const qty = Number(qtyEl?.textContent || "1") || 1;
+          addToCart(id, qty);
+        });
+      });
+
+      wrap.querySelectorAll(".qty").forEach(q => {
+        q.addEventListener("click", (e) => {
+          const act = e.target?.getAttribute?.("data-act");
+          if (!act) return;
+          const span = q.querySelector("span");
+          let v = Number(span.textContent || "1") || 1;
+          v = act === "inc" ? Math.min(99, v + 1) : Math.max(1, v - 1);
+          span.textContent = String(v);
+        });
+      });
     }
 
-    // --- Data loading ---
-    async function loadListings(){
-      setError('');
-      renderSkeleton();
-      try{
-        const r = await fetch('/api/tebex/listings', {cache:'no-store'});
-        if (!r.ok){
-          const t = await r.text().catch(()=>'');
-          throw new Error(`API listings: ${r.status} ${r.statusText} ${t ? '— ' + t.slice(0,180) : ''}`);
-        }
-        const resp = await r.json();
-        state.raw = resp;
-        state.sections = buildSectionsFromTebex(resp);
-        renderPills(state.sections);
-        renderSections(state.sections, el('q').value);
-      }catch(e){
-        console.error(e);
-        setError("Non riesco a caricare i pacchetti. Apri F12 → Console/Network per dettagli. (" + (e && e.message ? e.message : "errore") + ")");
-        el('content').innerHTML = `<div class="empty">Errore nel caricamento pacchetti.</div>`;
-      }
+    function addToCart(id, qty){
+      id = String(id);
+      qty = Number(qty) || 1;
+      const pkg = findPkgById(id);
+      if (!pkg){ showToast("Pacchetto non trovato"); return; }
+
+      const existing = cart.find(x => String(x.id) === id);
+      if (existing) existing.qty = Math.min(99, (existing.qty || 1) + qty);
+      else cart.push({ id, qty });
+
+      saveCart();
+      renderCart();
+      showToast("Aggiunto al carrello");
     }
 
-    // --- Details modal (light) ---
-    function openDetails(id){
-      // troviamo il pacchetto nel raw data
-      let pkg = null;
-      for (const s of state.sections){
-        for (const sc of s.subcats){
-          pkg = sc.packages.find(p => Number(p.id) === Number(id));
-          if (pkg) break;
-        }
-        if (pkg) break;
-      }
-      if (!pkg){ toast("Dettagli", "Pacchetto non trovato."); return; }
-
-      const title = pkg.name || 'Pacchetto';
-      const desc = (pkg.description || '').replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi,'').trim();
-      const price = typeof pkg.total_price === 'number' ? pkg.total_price : (pkg.base_price ?? 0);
-
-      // quick and safe-ish dialog
-      const dlg = document.createElement('dialog');
-      dlg.style.border='1px solid rgba(255,255,255,.12)';
-      dlg.style.borderRadius='18px';
-      dlg.style.padding='0';
-      dlg.style.background='rgba(5,7,11,.95)';
-      dlg.style.color='var(--text)';
-      dlg.style.maxWidth='720px';
-      dlg.style.width='calc(100% - 24px)';
-      dlg.innerHTML = `
-        <div style="padding:14px 14px 0; display:flex; gap:10px; align-items:flex-start; border-bottom:1px solid rgba(255,255,255,.10)">
-          <div style="font-weight:900; font-size:16px; flex:1">${escapeHtml(title)}</div>
-          <button class="btn" style="border-radius:12px" id="closeDlg"><i class="bi bi-x-lg"></i></button>
-        </div>
-        <div style="padding:14px; display:flex; flex-direction:column; gap:10px">
-          <div style="color:rgba(233,238,247,.85); font-weight:900">${formatEUR(price)} <span style="color:var(--muted); font-weight:700; font-size:12px">${escapeHtml(pkg.currency||'EUR')}</span></div>
-          <div style="color:var(--muted); font-size:13px; line-height:1.5">${desc || '<em>Nessuna descrizione.</em>'}</div>
-          <div style="display:flex; gap:10px; justify-content:flex-end">
-            <button class="btn primary" id="addDlg"><i class="bi bi-bag-plus-fill"></i> Aggiungi al carrello</button>
-          </div>
-        </div>
-      `;
-      document.body.appendChild(dlg);
-      dlg.showModal();
-      dlg.querySelector('#closeDlg').onclick = () => { dlg.close(); dlg.remove(); };
-      dlg.addEventListener('click', (ev)=>{ if (ev.target === dlg){ dlg.close(); dlg.remove(); } });
-      dlg.querySelector('#addDlg').onclick = () => {
-        addToCart(Number(pkg.id), pkg.name||'Pacchetto', Number(price||0), (pkg.category && pkg.category.name) || '');
-        dlg.close(); dlg.remove();
-      };
+    function removeFromCart(id){
+      cart = cart.filter(x => String(x.id) !== String(id));
+      saveCart();
+      renderCart();
     }
 
-    // --- Cart UI ---
+    function setCartQty(id, qty){
+      const it = cart.find(x => String(x.id) === String(id));
+      if (!it) return;
+      it.qty = Math.max(1, Math.min(99, Number(qty) || 1));
+      saveCart();
+      renderCart();
+    }
+
     function renderCart(){
-      const box = el('cartItems');
-      if (!state.cart.length){
-        box.innerHTML = `<div class="empty">Carrello vuoto.</div>`;
-        el('total').textContent = '—';
-        return;
-      }
+      const wrap = el("cart");
+      wrap.innerHTML = "";
 
-      let total = 0;
-      box.innerHTML = state.cart.map(item => {
-        total += item.price * item.qty;
-        return `
-          <div class="cart-item">
-            <div>
-              <div class="name">${escapeHtml(item.name)}</div>
-              <div class="meta">${escapeHtml(item.category || '')}</div>
-              <div class="qty">
-                <button onclick="decQty(${item.id})" title="Meno"><i class="bi bi-dash"></i></button>
-                <div style="min-width:22px; text-align:center; font-weight:900">${item.qty}</div>
-                <button onclick="incQty(${item.id})" title="Più"><i class="bi bi-plus"></i></button>
+      if (!cart.length){
+        wrap.innerHTML = '<div class="muted"><i class="bi bi-basket3 ico"></i>Carrello vuoto.</div>';
+        el("checkoutBtn").disabled = true;
+        el("checkoutBtn").style.opacity = .6;
+      } else {
+        el("checkoutBtn").disabled = false;
+        el("checkoutBtn").style.opacity = 1;
+
+        for (const it of cart){
+          const pkg = findPkgById(it.id);
+          if (!pkg) continue;
+
+          const row = document.createElement("div");
+          row.className = "cartItem";
+
+          const price = money(pkg.total_price ?? pkg.base_price, pkg.currency);
+          row.innerHTML = `
+            <div class="cartLeft">
+              <div class="cartName">${pkg.name || "Pacchetto"}</div>
+              <div class="cartMeta">${price} • Qty:
+                <span class="qty" style="padding:4px 6px;border-radius:10px" data-q="${it.id}">
+                  <button type="button" data-act="dec">−</button>
+                  <span>${it.qty || 1}</span>
+                  <button type="button" data-act="inc">+</button>
+                </span>
               </div>
             </div>
-            <div class="right">
-              <div style="font-weight:900">${formatEUR(item.price)}</div>
-              <div class="meta">x ${item.qty}</div>
-              <button class="btn danger" style="margin-top:8px; padding:8px 10px" onclick="removeItem(${item.id})"><i class="bi bi-trash3-fill"></i></button>
+            <div class="cartRight">
+              <div style="font-weight:950">${money((Number(pkg.total_price ?? pkg.base_price ?? 0) * (it.qty||1)), pkg.currency)}</div>
+              <button class="smallBtn" type="button" data-remove="${it.id}"><i class="bi bi-x-lg"></i> Rimuovi</button>
             </div>
-          </div>
-        `;
-      }).join('');
+          `;
+          wrap.appendChild(row);
+        }
 
-      el('total').textContent = formatEUR(total);
-    }
+        wrap.querySelectorAll("[data-remove]").forEach(b => {
+          b.addEventListener("click", () => removeFromCart(b.getAttribute("data-remove")));
+        });
 
-    // cart ops (global for onclick)
-    window.addToCart = function(id, name, price, category){
-      id = Number(id);
-      const ex = state.cart.find(x => x.id === id);
-      if (ex) ex.qty += 1;
-      else state.cart.push({id, name, price: Number(price||0), category, qty:1});
-      saveCart();
-      renderCart();
-      toast("Aggiunto", name);
-    }
-    window.incQty = function(id){
-      const it = state.cart.find(x => x.id === Number(id));
-      if (!it) return;
-      it.qty += 1;
-      saveCart(); renderCart();
-    }
-    window.decQty = function(id){
-      const it = state.cart.find(x => x.id === Number(id));
-      if (!it) return;
-      it.qty -= 1;
-      if (it.qty <= 0) state.cart = state.cart.filter(x => x.id !== Number(id));
-      saveCart(); renderCart();
-    }
-    window.removeItem = function(id){
-      state.cart = state.cart.filter(x => x.id !== Number(id));
-      saveCart(); renderCart();
-    }
-
-    el('clearBtn').addEventListener('click', () => {
-      state.cart = [];
-      saveCart();
-      renderCart();
-      toast("Carrello", "Svuotato.");
-    });
-
-    el('q').addEventListener('input', () => {
-      renderSections(state.sections, el('q').value);
-    });
-
-    el('refreshBtn').addEventListener('click', () => loadListings());
-
-    // --- Checkout integration (Tebex.js) ---
-    async function checkout(){
-      setError('');
-      if (!state.cart.length){
-        toast("Checkout", "Aggiungi almeno un pacchetto.");
-        return;
+        wrap.querySelectorAll("[data-q]").forEach(q => {
+          const id = q.getAttribute("data-q");
+          q.addEventListener("click", (e) => {
+            const act = e.target?.getAttribute?.("data-act");
+            if (!act) return;
+            const span = q.querySelector("span");
+            let v = Number(span.textContent || "1") || 1;
+            v = act === "inc" ? Math.min(99, v + 1) : Math.max(1, v - 1);
+            span.textContent = String(v);
+            setCartQty(id, v);
+          });
+        });
       }
-      const username = el('username').value.trim();
+
+      const { total, currency } = cartTotal();
+      el("total").textContent = cart.length ? money(total, currency) : "—";
+    }
+
+    async function loadListings(){
+      el("packages").innerHTML = '<div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>';
+      try{
+        const r = await fetch(API.listings, { headers: { "Accept": "application/json" }});
+        if (!r.ok) throw new Error(await r.text());
+        const j = await r.json();
+        categories = Array.isArray(j.data) ? j.data : (Array.isArray(j.categories) ? j.categories : []);
+        renderCats();
+        renderAll();
+      } catch(e){
+        el("packages").innerHTML = `<div class="card"><div style="font-weight:950;margin-bottom:6px"><i class="bi bi-exclamation-triangle ico"></i>Errore store</div><div class="muted">${String(e.message||e)}</div></div>`;
+      }
+    }
+
+    function renderAll(){
+      renderCats();
+      renderPackages();
+      renderCart();
+    }
+
+    async function startCheckout(){
+      if (!cart.length) return;
+
+      const player = (el("player").value || "").trim();
+
+      // crea basket
+      const createBtn = el("checkoutBtn");
+      createBtn.disabled = true;
+      createBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Preparazione…';
 
       try{
-        // 1) create basket
-        const r1 = await fetch('/api/tebex/basket', {
-          method:'POST',
-          headers:{'content-type':'application/json'},
-          body: JSON.stringify({ username })
+        const r = await fetch(API.createBasket, {
+          method:"POST",
+          headers:{ "Content-Type":"application/json", "Accept":"application/json" },
+          body: JSON.stringify({ username: player || null })
         });
-        if (!r1.ok) throw new Error('Basket: ' + r1.status);
-        const b = await r1.json();
+        if (!r.ok) throw new Error(await r.text());
+        const b = await r.json();
+        const basketIdent = b.ident || b.basketIdent || b.data?.ident;
+        if (!basketIdent) throw new Error("Basket ident mancante");
 
-        const basketIdent = b && (b.ident || (b.data && b.data.ident));
-        if (!basketIdent) throw new Error('Basket ident mancante');
-
-        // 2) add packages
-        for (const item of state.cart){
-          const r2 = await fetch('/api/tebex/add', {
-            method:'POST',
-            headers:{'content-type':'application/json'},
-            body: JSON.stringify({ basketIdent, packageId: item.id, quantity: item.qty })
+        // aggiungi pacchetti
+        for (const it of cart){
+          const pkg = findPkgById(it.id);
+          if (!pkg) continue;
+          const addRes = await fetch(API.addPackage, {
+            method:"POST",
+            headers:{ "Content-Type":"application/json", "Accept":"application/json" },
+            body: JSON.stringify({ basketIdent, package_id: String(it.id), quantity: Number(it.qty||1) })
           });
-          if (!r2.ok){
-            const t = await r2.text().catch(()=>'');
-            throw new Error(`Add ${item.id}: ${r2.status} ${t ? '— ' + t.slice(0,120) : ''}`);
-          }
+          if (!addRes.ok) throw new Error(await addRes.text());
         }
 
-        // 3) Tebex.js checkout
-        if (!window.Tebex || !window.Tebex.checkout){
-          throw new Error('Tebex.js non caricato');
+        // Avvia Tebex.js (in click handler => meno popup blocker)
+        if (!window.Tebex || !Tebex.checkout){
+          throw new Error("Tebex.js non caricato (controlla la rete / adblock)");
         }
 
-        window.Tebex.checkout.init({
+        Tebex.checkout.init({
           ident: basketIdent,
-          theme: "dark"
+          theme: "dark",
+          closeOnPaymentComplete: true
         });
+        Tebex.checkout.launch();
 
-        window.Tebex.checkout.launch();
-        toast("Checkout", "Apro il checkout Tebex…");
-
-      }catch(e){
+        showToast("Checkout aperto");
+      } catch(e){
         console.error(e);
-        setError("Errore checkout: " + (e && e.message ? e.message : "errore"));
+        showToast("Checkout non riuscito");
+        alert("Errore checkout: " + String(e.message||e));
+      } finally {
+        createBtn.disabled = false;
+        createBtn.innerHTML = '<i class="bi bi-lock-fill"></i> Checkout';
       }
     }
 
-    el('checkoutBtn').addEventListener('click', checkout);
+    // === Wiring ===
+    el("search").addEventListener("input", (e)=>{ search = e.target.value || ""; renderPackages(); });
+    el("refreshBtn").addEventListener("click", loadListings);
+    el("clearBtn").addEventListener("click", ()=>{ cart=[]; saveCart(); renderCart(); showToast("Carrello svuotato"); });
+    el("checkoutBtn").addEventListener("click", startCheckout);
 
     // init
     renderCart();
     loadListings();
   </script>
-  <script src="assets/ui.js"></script>
 </body>
 </html>
