@@ -28,17 +28,92 @@
   </div>
 
   <div class="container">
-    <h1>Benvenuto su SkyFrost</h1>
-    <p class="sub">Tema unificato applicato. L'animazione neve può restare qui sotto.</p>
-
-    <div class="panel">
+    <section class="hero reveal">
       <div class="pad">
-        <p>Lascia qui il tuo script della neve (non è stato toccato).</p>
+        <div class="hero-grid">
+          <div>
+            <div class="badge"><i class="bi bi-snow2"></i> Hytale • Survival • KitPvP</div>
+            <h1 class="h-title">Benvenuto su <span style="color:var(--accent)">SkyFrost</span></h1>
+            <p class="h-sub">
+              Entra nel server, sblocca kit e perks, supporta il progetto e resta aggiornato su eventi e novità.
+            </p>
+
+            <div class="hero-actions">
+              <a class="btn primary" href="dashboard.html"><i class="bi bi-speedometer2"></i> Apri Dashboard</a>
+              <a class="btn" href="profilo.html"><i class="bi bi-bag-fill"></i> Apri Store</a>
+              <a class="btn" href="supporto.html"><i class="bi bi-life-preserver"></i> Supporto</a>
+            </div>
+
+            <div class="line"></div>
+
+            <div class="row">
+              <span class="badge good"><i class="bi bi-lightning-charge-fill"></i> Online & Performance</span>
+              <span class="badge"><i class="bi bi-shield-check"></i> Anti‑cheat</span>
+              <span class="badge"><i class="bi bi-stars"></i> Eventi</span>
+            </div>
+          </div>
+
+          <div class="hero-right">
+            <div class="card">
+              <div class="body">
+                <div class="title"><i class="bi bi-broadcast"></i> IP Server</div>
+                <div class="muted">Clicca per copiare</div>
+                <div class="row" style="margin-top:6px">
+                  <button class="btn primary" data-copy="play.skyfrost.example"><i class="bi bi-clipboard"></i> play.skyfrost.example</button>
+                </div>
+                <div class="small">Sostituisci con il tuo IP reale.</div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="body">
+                <div class="title"><i class="bi bi-bag-check-fill"></i> Store integrato</div>
+                <div class="muted">Checkout Tebex dentro il sito.</div>
+                <div class="row" style="margin-top:6px">
+                  <a class="btn primary" href="profilo.html"><i class="bi bi-bag-fill"></i> Vai allo Store</a>
+                </div>
+              </div>
+            </div>
+            <div class="card" style="grid-column: 1 / -1;">
+              <div class="body">
+                <div class="title"><i class="bi bi-people-fill"></i> Staff</div>
+                <div class="muted">Contatta i membri giusti per supporto e segnalazioni.</div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
+    </section>
+
+    <div style="height:18px"></div>
+
+    <section class="panel reveal">
+      <div class="pad">
+        <div class="row">
+          <div style="font-weight:900; font-size:16px"><i class="bi bi-grid-1x2-fill"></i> Sezioni</div>
+          <div class="spacer"></div>
+          <a class="btn" href="wiki.html"><i class="bi bi-journal-bookmark-fill"></i> Wiki</a>
+        </div>
+        <div class="line"></div>
+        <div class="cards">
+          <a class="card" href="dashboard.html" style="text-decoration:none"><div class="body">
+            <div class="title"><i class="bi bi-person-badge-fill"></i> Dashboard</div>
+            <div class="muted">Login Discord, ruoli e link rapidi.</div>
+          </div></a>
+          <a class="card" href="staff.html" style="text-decoration:none"><div class="body">
+            <div class="title"><i class="bi bi-people-fill"></i> Staff</div>
+            <div class="muted">Organizzato per ruolo, con ricerca.</div>
+          </div></a>
+          <a class="card" href="profilo.html" style="text-decoration:none"><div class="body">
+            <div class="title"><i class="bi bi-bag-fill"></i> Store</div>
+            <div class="muted">Categorie → pacchetti → checkout.</div>
+          </div></a>
+        </div>
+      </div>
+    </section>
   </div>
 
-  <!-- QUI resta il tuo script neve originale -->
+  <!-- ✅ QUI SOTTO lascia/incolla il TUO script neve originale (non modificato). -->
+  <!-- Esempio: <script src="...snow.js"></script> oppure il tuo <script>...</script> -->
 
   <script src="assets/ui.js"></script>
 </body>
