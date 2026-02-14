@@ -48,17 +48,12 @@
 
     <div style="height:14px"></div>
 
-    <div id="list">
-      <div class="panel"><div class="pad"><div class="skeleton"></div></div></div>
-      <div style="height:10px"></div>
-      <div class="panel"><div class="pad"><div class="skeleton"></div></div></div>
-    </div>
+    <div id="list"></div>
   </div>
 
   <script src="assets/ui.js"></script>
   <script>
     const $ = (id) => document.getElementById(id);
-
     let raw = null;
     let hideEmpty = false;
     let expanded = true;
@@ -66,19 +61,20 @@
     function esc(s){ return String(s ?? "").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
     function normalize(data){
-      // Supporta varie forme: {groups:[{role,members}]}, {staff:[...]}, array diretto
       if (!data) return [];
-      if (Array.isArray(data)) return data;
+      // forma reale del tuo endpoint: { ok:true, sections:[...] }
+      if (Array.isArray(data.sections)) return data.sections;
       if (Array.isArray(data.groups)) return data.groups;
       if (Array.isArray(data.staff)) return data.staff;
       if (Array.isArray(data.data)) return data.data;
+      if (Array.isArray(data)) return data;
       return [];
     }
 
     function memberRow(m){
-      const name = m?.display_name || m?.nick || m?.username || m?.name || "Membro";
-      const handle = m?.username && m?.discriminator && m.discriminator !== "0" ? `${m.username}#${m.discriminator}` : (m?.username || "");
-      const avatar = m?.avatar_url || m?.avatar || null;
+      const name = m?.display || m?.display_name || m?.nick || m?.username || "Membro";
+      const handle = m?.username || "";
+      const avatar = m?.avatar || m?.avatar_url || null;
       return `
         <div class="item">
           <div class="brand-badge" style="width:36px; height:36px; border-radius:14px; background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.10)">
@@ -98,23 +94,22 @@
       const out = [];
 
       for (const g of groups){
-        const role = g?.role?.name || g?.role || g?.name || "Ruolo";
+        const roleName = g?.role?.name || g?.role || g?.name || "Ruolo";
         const members = Array.isArray(g?.members) ? g.members : (Array.isArray(g?.users) ? g.users : []);
 
         const filtered = members.filter(m => {
           if (!q) return true;
-          const s = `${m?.display_name||""} ${m?.nick||""} ${m?.username||""}`.toLowerCase();
+          const s = `${m?.display||""} ${m?.display_name||""} ${m?.nick||""} ${m?.username||""}`.toLowerCase();
           return s.includes(q);
         });
 
         if (hideEmpty && filtered.length === 0) continue;
 
-        const openAttr = expanded ? "open" : "";
         out.push(`
-          <details ${openAttr} data-role="${esc(role)}">
+          <details ${expanded ? "open" : ""}>
             <summary>
               <i class="bi bi-person-lines-fill" style="color:rgba(125,211,252,.9)"></i>
-              ${esc(role)}
+              ${esc(roleName)}
               <span class="badge" style="margin-left:auto"><i class="bi bi-people"></i> ${filtered.length}</span>
             </summary>
             <div class="details-body">
@@ -124,7 +119,9 @@
         `);
       }
 
-      $("list").innerHTML = out.length ? out.join('<div style="height:12px"></div>') : `<div class="panel"><div class="pad"><div class="empty">Nessun risultato.</div></div></div>`;
+      $("list").innerHTML = out.length
+        ? out.join('<div style="height:12px"></div>')
+        : `<div class="panel"><div class="pad"><div class="empty">Nessun risultato.</div></div></div>`;
     }
 
     async function load(){
@@ -142,7 +139,10 @@
         }
         raw = await r.json();
         const groups = normalize(raw);
-        $("status").textContent = `Caricato: ${groups.length} sezioni.`;
+        const fetched = raw?.fetched_members ?? null;
+        $("status").textContent = fetched != null
+          ? `Caricato: ${groups.length} sezioni • membri letti: ${fetched}`
+          : `Caricato: ${groups.length} sezioni.`;
         render();
       }catch(e){
         console.error(e);

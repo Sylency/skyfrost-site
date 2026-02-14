@@ -28,7 +28,7 @@
 
   <div class="container">
     <h1>Dashboard</h1>
-    <p class="sub">Panoramica rapida del tuo account e accesso veloce alle sezioni principali.</p>
+    <p class="sub">Panoramica rapida e accesso veloce alle sezioni principali.</p>
 
     <div class="grid two">
       <div class="panel">
@@ -37,7 +37,7 @@
             <div>
               <div class="badge good" id="statusBadge"><i class="bi bi-arrow-repeat"></i> Caricamento…</div>
               <div style="margin-top:10px; font-weight:900; font-size:18px" id="hello">Ciao!</div>
-              <div class="small" id="helloSub">Controllo sessione e ruoli Discord…</div>
+              <div class="small" id="helloSub">Controllo sessione e ruoli…</div>
             </div>
             <div class="spacer"></div>
             <a class="btn primary" href="profilo.html"><i class="bi bi-bag-fill"></i> Vai allo Store</a>
@@ -77,10 +77,10 @@
       <div class="panel">
         <div class="pad">
           <div class="row">
-            <div style="font-weight:900"><i class="bi bi-person-badge-fill"></i> Account</div>
+            <div style="font-weight:900"><i class="bi bi-person-badge-fill"></i> Sessione</div>
             <div class="spacer"></div>
             <a class="btn" id="loginBtn" href="/api/login" style="display:none"><i class="bi bi-discord"></i> Login Discord</a>
-            <button class="btn danger" id="logoutBtn" style="display:none"><i class="bi bi-box-arrow-right"></i> Logout</button>
+            <a class="btn danger" id="logoutBtn" href="/api/logout" style="display:none"><i class="bi bi-box-arrow-right"></i> Logout</a>
           </div>
 
           <div class="line"></div>
@@ -101,7 +101,6 @@
   <script src="assets/ui.js"></script>
   <script>
     const $ = (id) => document.getElementById(id);
-
     function esc(s){ return String(s ?? "").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
     function setStatus(ok, text){
@@ -112,91 +111,70 @@
         : `<i class="bi bi-exclamation-circle"></i> ${esc(text)}`;
     }
 
-    async function loadRoles(){
-      // endpoint principale già nel tuo progetto: /api/roles
-      const r = await fetch("/api/roles", { credentials: "include", cache: "no-store" });
-      if (!r.ok){
-        // 401/403: non loggato o non autorizzato
-        return { ok:false, status:r.status, text: await r.text().catch(()=> "") };
-      }
-      const j = await r.json();
-      return { ok:true, data:j };
+    function renderLoggedOut(reason){
+      setStatus(false, reason === "not_in_guild" ? "Non nel server" : "Non loggato");
+      $("hello").textContent = "Ciao!";
+      $("helloSub").textContent = "Fai login con Discord per vedere ruoli e badge.";
+      $("accountBox").innerHTML = `<div class="empty">Non sei loggato. Premi “Login Discord”.</div>`;
+      $("rolesBox").innerHTML = `<div class="empty">—</div>`;
+      $("loginBtn").style.display = "inline-flex";
+      $("logoutBtn").style.display = "none";
     }
 
-    function renderAccount(user){
-      const name = user?.global_name || user?.username || "utente";
-      const discr = user?.discriminator && user.discriminator !== "0" ? ("#" + user.discriminator) : "";
-      const avatar = user?.avatar_url || user?.avatar || null;
+    function renderRoles(payload){
+      const roles = Array.isArray(payload?.roles) ? payload.roles : [];
+      const primary = payload?.primaryRole?.name || null;
 
-      $("hello").textContent = `Ciao, ${name}${discr}`;
-      $("helloSub").textContent = "Sessione attiva. Qui sotto trovi i tuoi ruoli visibili nel server.";
+      $("hello").textContent = primary ? `Ruolo principale: ${primary}` : "Ruolo principale: —";
+      $("helloSub").textContent = payload?.booster ? "Nitro Booster attivo ✅" : "—";
 
       $("accountBox").innerHTML = `
         <div class="item">
-          <div class="brand-badge" style="width:44px; height:44px; border-radius:14px; background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.10)">
-            ${avatar ? `<img alt="" src="${esc(avatar)}">` : `<div class="fallback" style="display:grid">U</div>`}
-          </div>
           <div>
-            <div style="font-weight:900">${esc(name)}${esc(discr)}</div>
-            <div class="small">${esc(user?.id || "")}</div>
+            <div style="font-weight:900">Sessione Discord</div>
+            <div class="small">Ruoli mostrati: ${roles.length}</div>
           </div>
           <div class="right">
-            <div class="badge"><i class="bi bi-shield-check"></i> Discord</div>
+            ${primary ? `<span class="badge good"><i class="bi bi-award-fill"></i> ${esc(primary)}</span>` : `<span class="badge"><i class="bi bi-person"></i> Utente</span>`}
           </div>
         </div>
       `;
-    }
 
-    function renderRoles(roles){
-      if (!Array.isArray(roles) || roles.length === 0){
-        $("rolesBox").innerHTML = `<div class="empty">Nessun ruolo disponibile.</div>`;
+      if (!roles.length){
+        $("rolesBox").innerHTML = `<div class="empty">Nessun ruolo allowlist trovato.</div>`;
         return;
       }
-      // supporta sia stringhe che oggetti {name,color}
-      const chips = roles.map(r => {
-        const name = (typeof r === "string") ? r : (r?.name ?? "");
-        return `<span class="chip">${esc(name)}</span>`;
-      }).join("");
-      $("rolesBox").innerHTML = `<div class="chips">${chips}</div>`;
+      $("rolesBox").innerHTML = `<div class="chips">${roles.map(r => `<span class="chip">${esc(r.name)}</span>`).join("")}</div>`;
     }
 
     async function init(){
       try{
         setStatus(false, "Caricamento…");
-        const res = await loadRoles();
+        const r = await fetch("/api/roles", { credentials:"include", cache:"no-store" });
+        if (!r.ok){
+          // questo endpoint di solito risponde 200, ma gestiamo comunque
+          throw new Error(`${r.status} ${r.statusText}`);
+        }
+        const j = await r.json();
 
-        if (!res.ok){
-          setStatus(false, res.status === 401 ? "Non loggato" : "Accesso negato / errore API");
-          $("accountBox").innerHTML = `<div class="empty">Per vedere i ruoli devi fare login con Discord.</div>`;
-          $("rolesBox").innerHTML = `<div class="empty">—</div>`;
-          $("loginBtn").style.display = "inline-flex";
+        if (!j?.ok){
+          renderLoggedOut(j?.reason || "not_logged_in");
           return;
         }
 
-        // best-effort parsing (non rompiamo se la forma cambia)
-        const data = res.data || {};
-        const user = data.user || data.me || data.discord_user || data.account || null;
-        const roles = data.roles || data.allowedRoles || data.user_roles || data.memberRoles || [];
-
         setStatus(true, "Pronto");
+        $("loginBtn").style.display = "none";
         $("logoutBtn").style.display = "inline-flex";
-        renderAccount(user);
-        renderRoles(roles);
+        renderRoles(j);
       }catch(e){
         console.error(e);
-        setStatus(false, "Errore");
-        $("accountBox").innerHTML = `<div class="empty">Errore nel caricamento.</div>`;
+        setStatus(false, "Errore API");
+        $("accountBox").innerHTML = `<div class="errbox show">Errore nel caricamento. (${esc(e.message)})</div>`;
         $("rolesBox").innerHTML = `<div class="empty">—</div>`;
         $("loginBtn").style.display = "inline-flex";
+        $("logoutBtn").style.display = "none";
       }
     }
-
-    $("logoutBtn").addEventListener("click", async () => {
-      try{
-        await fetch("/api/logout", { method:"POST", credentials:"include" });
-      }catch(e){}
-      location.reload();
-    });
 
     init();
   </script>
