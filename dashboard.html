@@ -2,471 +2,203 @@
 <html lang="it">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>SkyFrost • Dashboard</title>
-
-  <style>
-
-    /* Bootstrap Icons */
-    .bi{vertical-align:-0.125em}
-    .ico{margin-right:.45rem}
-:root{
-      --bg:#070a12;
-      --border: rgba(255,255,255,.10);
-      --border2: rgba(255,255,255,.14);
-      --txt:#eaf0ff;
-      --muted:#a9b6d3;
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      color:var(--txt);
-      background:
-        radial-gradient(1000px 550px at 20% 0%, rgba(125,211,252,.14), transparent 55%),
-        radial-gradient(900px 550px at 80% 10%, rgba(96,165,250,.12), transparent 55%),
-        linear-gradient(180deg, #050711, var(--bg));
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
-      overflow-x:hidden;
-    }
-    a{color:inherit;text-decoration:none}
-    .container{max-width:1120px;margin:0 auto;padding:22px 16px 70px}
-
-    .topbar{
-      position:sticky; top:0; z-index:40;
-      background: rgba(7,10,18,.55);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-    }
-    .topbar-inner{
-      max-width:1120px; margin:0 auto;
-      padding:14px 16px;
-      display:flex; align-items:center; justify-content:space-between; gap:12px;
-    }
-    .brand{
-      display:flex; align-items:center; gap:10px;
-      font-weight:950; letter-spacing:.2px;
-    }
-    .brand-badge{
-      width:34px;height:34px;border-radius:12px;
-      border:1px solid var(--border2);
-      overflow:hidden;
-      background: rgba(255,255,255,.06);
-      box-shadow: 0 8px 30px rgba(125,211,252,.10);
-      display:flex;align-items:center;justify-content:center;
-    }
-    .brand-badge img{width:100%;height:100%;object-fit:cover;display:block}
-
-    .btn{
-      border:1px solid var(--border);
-      background: rgba(255,255,255,.04);
-      color:var(--txt);
-      padding:10px 12px;
-      border-radius:12px;
-      cursor:pointer;
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      font-weight:900;
-      transition: transform .12s ease, background .12s ease, border-color .12s ease;
-    }
-    .btn:hover{transform: translateY(-1px); border-color: rgba(255,255,255,.16); background: rgba(255,255,255,.06);}
-    .btn.primary{
-      border:none;
-      background: linear-gradient(90deg, #22d3ee, #60a5fa);
-      color:#07101f;
-      font-weight:950;
-      box-shadow: 0 16px 40px rgba(34,211,238,.10);
-    }
-    .btn.ghost{background: transparent}
-    .right{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-
-    .grid{
-      margin-top:14px;
-      display:grid;
-      grid-template-columns: 340px 1fr;
-      gap:12px;
-      align-items:start;
-    }
-
-    .card{
-      border:1px solid var(--border2);
-      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.04));
-      border-radius:20px;
-      padding:16px;
-      box-shadow: 0 12px 40px rgba(0,0,0,.25);
-    }
-
-    .title{margin:0 0 10px;font-size:18px;letter-spacing:-.01em}
-    .muted{color:rgba(234,240,255,.70);line-height:1.55}
-
-    .profile{
-      display:flex; gap:12px; align-items:center;
-      padding:14px;
-      border-radius:18px;
-      border:1px solid var(--border);
-      background: rgba(0,0,0,.16);
-    }
-    .avatar{
-      width:56px;height:56px;border-radius:18px;
-      border:1px solid rgba(255,255,255,.16);
-      background: rgba(255,255,255,.06);
-      object-fit:cover;
-    }
-    .name{font-weight:950;font-size:16px}
-    .id{font-size:12px;color:rgba(234,240,255,.60);margin-top:2px;word-break:break-all}
-
-    .pillrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-    .pill{
-      border:1px solid var(--border);
-      background: rgba(0,0,0,.14);
-      border-radius:999px;
-      padding:8px 10px;
-      font-weight:900;
-      font-size:13px;
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-    }
-
-    .roles{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-    .role{
-      border:1px solid var(--border);
-      background: rgba(0,0,0,.14);
-      border-radius:999px;
-      padding:8px 10px;
-      font-weight:900;
-      font-size:13px;
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      max-width:100%;
-    }
-    .role .r-dot{width:9px;height:9px;border-radius:999px;background:rgba(125,211,252,.85);flex:0 0 auto}
-    .role .r-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:260px}
-
-    .action{
-      border:1px solid var(--border);
-      background: rgba(0,0,0,.12);
-      border-radius:16px;
-      padding:12px;
-      display:flex;justify-content:space-between;align-items:center;gap:10px;
-      margin-top:10px;
-    }
-
-    @media (max-width: 980px){
-      .grid{grid-template-columns:1fr}
-    }
-  
-    /* Dashboard upgrade */
-    .hero{
-      display:grid;
-      grid-template-columns: 1.35fr .85fr;
-      gap:18px;
-      margin: 26px auto 18px;
-      align-items:stretch;
-    }
-    .kicker{
-      display:inline-flex;
-      align-items:center;
-      gap:.45rem;
-      padding:8px 12px;
-      border:1px solid var(--border);
-      border-radius:999px;
-      background: rgba(255,255,255,.03);
-      color: var(--muted);
-      font-weight:800;
-      font-size:12px;
-      letter-spacing:.02em;
-    }
-    .hero h1{
-      margin:10px 0 6px;
-      font-size: clamp(26px, 4vw, 38px);
-      line-height:1.1;
-      letter-spacing:-.02em;
-    }
-    .sub{margin:0 0 14px;color:var(--muted);max-width:60ch}
-    .quick{display:flex;flex-wrap:wrap;gap:10px}
-    .qbtn{
-      display:inline-flex;align-items:center;gap:.45rem;
-      padding:10px 12px;border-radius:12px;
-      border:1px solid var(--border);
-      background: rgba(255,255,255,.02);
-      color: var(--txt); text-decoration:none; font-weight:850;
-      transition: transform .15s ease, background .15s ease, border-color .15s ease;
-    }
-    .qbtn:hover{transform: translateY(-1px); background: rgba(255,255,255,.04); border-color: var(--border2)}
-    .hero-right{padding:16px}
-    .minirow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
-    .mini{
-      border:1px solid var(--border);
-      border-radius:14px;
-      padding:12px;
-      background: rgba(255,255,255,.02);
-    }
-    .mini-top{color:var(--muted);font-weight:850;font-size:12px;display:flex;align-items:center}
-    .mini-val{font-weight:950;font-size:14px;margin-top:6px}
-    .grid2{display:grid;grid-template-columns: 1.25fr .75fr; gap:18px; margin: 18px auto 40px}
-    .card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
-    .chips{display:flex;flex-wrap:wrap;gap:10px}
-    .chip{
-      display:inline-flex;align-items:center;gap:.5rem;
-      padding:10px 12px;border-radius:999px;
-      border:1px solid var(--border);
-      background: rgba(255,255,255,.02);
-      font-weight:850;
-    }
-    .chip .dot{width:10px;height:10px;border-radius:999px;background: rgba(255,255,255,.35)}
-    .hint{
-      margin-top:14px;
-      padding:12px 12px;
-      border-radius:14px;
-      border:1px dashed rgba(255,255,255,.14);
-      color: var(--muted);
-      display:flex;align-items:flex-start;
-      gap:.5rem;
-      background: rgba(255,255,255,.015);
-      font-size:13px;
-    }
-    .actions{display:flex;flex-direction:column;gap:10px;margin-top:8px}
-    .action-card{
-      display:grid;
-      grid-template-columns: 44px 1fr auto;
-      gap:12px;
-      align-items:center;
-      padding:12px;
-      border-radius:16px;
-      border:1px solid var(--border);
-      background: rgba(255,255,255,.02);
-      color: var(--txt);
-      text-decoration:none;
-      transition: transform .15s ease, background .15s ease, border-color .15s ease;
-    }
-    .action-card:hover{transform: translateY(-1px); background: rgba(255,255,255,.04); border-color: var(--border2)}
-    .ac-ico{
-      width:44px;height:44px;border-radius:14px;
-      display:grid;place-items:center;
-      background: rgba(125,211,252,.10);
-      border:1px solid rgba(125,211,252,.20);
-      font-size:18px;
-    }
-    .ac-title{font-weight:950}
-    .skeleton-line{
-      height:38px;border-radius:999px;
-      border:1px solid var(--border);
-      background: linear-gradient(90deg, rgba(255,255,255,.02), rgba(255,255,255,.06), rgba(255,255,255,.02));
-      background-size: 200% 100%;
-      animation: shimmer 1.3s infinite linear;
-      width: min(320px, 100%);
-    }
-    @keyframes shimmer{0%{background-position:0% 0%}100%{background-position:200% 0%}}
-    @media (max-width: 980px){
-      .hero{grid-template-columns:1fr}
-      .grid2{grid-template-columns:1fr}
-    }
-
-    .brand-badge{position:relative}
-  .brandFallback{
-    position:absolute; inset:0;
-    display:none;
-    align-items:center; justify-content:center;
-    font-weight:1000;
-    color: rgba(255,255,255,.85);
-    letter-spacing:.4px;
-    font-size:12px;
-    background: rgba(0,0,0,.18);
-  }
-</style>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard • SkyFrost</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="assets/ui.css">
 </head>
-
 <body>
-  <header class="topbar">
-    <div class="topbar-inner">
-      <a class="brand" href="/">
-        <span class="brand-badge"><img src="assets/logo.png" alt="SkyFrost" loading="eager" onerror="if(!this.dataset.f){this.dataset.f=1;this.src='assets/icon.png';}else{this.style.display='none';this.nextElementSibling.style.display='flex';}"><span class="brandFallback" aria-hidden="true">SF</span></span>
-        <span>SkyFrost • Dashboard</span>
+  <div class="topbar">
+    <div class="inner">
+      <a class="brand" href="index.html">
+        <div class="brand-badge">
+          <img id="brandLogo" alt="SkyFrost" src="assets/logo.png">
+          <div class="fallback" id="brandFallback">SF</div>
+        </div>
+        <div>SkyFrost</div>
       </a>
-
-      <div class="right">
-        <a class="btn" href="/">Home</a>
-        <a class="btn" href="/profilo.html">Store</a>
-        <a class="btn" href="/wiki.html">Wiki</a>
-        <a class="btn" href="/supporto.html">Supporto</a>
-        <a class="btn primary" href="http://discord.skyfrost.it/" target="_blank" rel="noopener">Discord</a>
-        <a class="btn ghost" href="/api/logout">Logout</a>
-      </div>
+      <nav class="nav">
+        <a class="active" href="dashboard.html"><i class="bi bi-speedometer2"></i> Dashboard</a>
+        <a href="profilo.html"><i class="bi bi-bag-fill"></i> Store</a>
+        <a href="staff.html"><i class="bi bi-people-fill"></i> Staff</a>
+        <a href="vote.html"><i class="bi bi-hand-thumbs-up-fill"></i> Vote</a>
+      </nav>
     </div>
-  </header>
-
-  <main class="container">
-  <section class="hero">
-    <div class="hero-left">
-      <div class="kicker"><i class="bi bi-grid-1x2-fill ico"></i>Dashboard</div>
-      <h1 id="greeting">Bentornato</h1>
-      <p class="sub">Gestisci profilo, ruoli e link rapidi in un’unica schermata.</p>
-
-      <div class="quick">
-        <a class="qbtn" href="/profilo.html"><i class="bi bi-person-badge ico"></i>Store</a>
-        <a class="qbtn" href="/staff.html"><i class="bi bi-people-fill ico"></i>Staff</a>
-        <a class="qbtn" href="/vote.html"><i class="bi bi-hand-thumbs-up-fill ico"></i>Vote</a>
-        <a class="qbtn" href="/wiki.html"><i class="bi bi-book-half ico"></i>Wiki</a>
-        <a class="qbtn" href="/supporto.html"><i class="bi bi-life-preserver ico"></i>Supporto</a>
-      </div>
-    </div>
-
-    <div class="hero-right card">
-      <div class="profile">
-        <img class="avatar" id="avatar" alt="">
-        <div style="min-width:0">
-          <div class="name" id="name">Caricamento…</div>
-          <div class="id" id="uid"></div>
-          <div class="pillrow" id="badges" style="margin-top:10px"></div>
-        </div>
-      </div>
-
-      <div class="minirow">
-        <div class="mini">
-          <div class="mini-top"><i class="bi bi-shield-check ico"></i>Sessione</div>
-          <div class="mini-val" id="sess">Verifica…</div>
-        </div>
-        <div class="mini">
-          <div class="mini-top"><i class="bi bi-collection ico"></i>Ruoli</div>
-          <div class="mini-val" id="roleCount">—</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <div class="grid2">
-    <section class="card">
-      <div class="card-head">
-        <h2 class="title" style="margin:0"><i class="bi bi-tags-fill ico"></i>Ruoli Discord</h2>
-        <div class="muted" id="rolesMeta">Filtrati automaticamente</div>
-      </div>
-
-      <div class="roles chips" id="roles" style="margin-top:12px">
-        <div class="skeleton-line"></div>
-        <div class="skeleton-line"></div>
-        <div class="skeleton-line"></div>
-      </div>
-
-      <div class="hint">
-        <i class="bi bi-info-circle ico"></i>
-        Se manca un ruolo, controlla la whitelist nel backend (`DISCORD_ALLOWED_ROLE_IDS`).
-      </div>
-    </section>
-
-    <aside class="card">
-      <h2 class="title" style="margin:0 0 10px 0"><i class="bi bi-lightning-charge-fill ico"></i>Azioni rapide</h2>
-
-      <div class="actions">
-        <a class="action-card" href="http://discord.skyfrost.it/" target="_blank" rel="noopener">
-          <div class="ac-ico"><i class="bi bi-discord"></i></div>
-          <div>
-            <div class="ac-title">Apri Discord</div>
-            <div class="muted">Entra nel server e contatta lo staff.</div>
-          </div>
-          <i class="bi bi-arrow-up-right"></i>
-        </a>
-
-        <a class="action-card" href="/supporto.html">
-          <div class="ac-ico"><i class="bi bi-chat-dots-fill"></i></div>
-          <div>
-            <div class="ac-title">Apri supporto</div>
-            <div class="muted">Problemi? Trovi canali e link utili.</div>
-          </div>
-          <i class="bi bi-chevron-right"></i>
-        </a>
-
-        <a class="action-card" href="/staff.html">
-          <div class="ac-ico"><i class="bi bi-people-fill"></i></div>
-          <div>
-            <div class="ac-title">Vedi lo staff</div>
-            <div class="muted">Lista aggiornata automaticamente.</div>
-          </div>
-          <i class="bi bi-chevron-right"></i>
-        </a>
-
-        <a class="action-card" href="/api/logout">
-          <div class="ac-ico"><i class="bi bi-box-arrow-right"></i></div>
-          <div>
-            <div class="ac-title">Logout</div>
-            <div class="muted">Disconnetti la sessione corrente.</div>
-          </div>
-          <i class="bi bi-chevron-right"></i>
-        </a>
-      </div>
-    </aside>
   </div>
-</main>
 
+  <div class="container">
+    <h1>Dashboard</h1>
+    <p class="sub">Panoramica rapida del tuo account e accesso veloce alle sezioni principali.</p>
+
+    <div class="grid two">
+      <div class="panel">
+        <div class="pad">
+          <div class="row">
+            <div>
+              <div class="badge good" id="statusBadge"><i class="bi bi-arrow-repeat"></i> Caricamento…</div>
+              <div style="margin-top:10px; font-weight:900; font-size:18px" id="hello">Ciao!</div>
+              <div class="small" id="helloSub">Controllo sessione e ruoli Discord…</div>
+            </div>
+            <div class="spacer"></div>
+            <a class="btn primary" href="profilo.html"><i class="bi bi-bag-fill"></i> Vai allo Store</a>
+          </div>
+
+          <div class="line"></div>
+
+          <div class="cards" style="grid-template-columns: repeat(4, minmax(0, 1fr));">
+            <a class="card" href="staff.html" style="text-decoration:none">
+              <div class="body">
+                <div class="title"><i class="bi bi-people-fill"></i> Staff</div>
+                <div class="muted">Vedi ruoli e membri staff.</div>
+              </div>
+            </a>
+            <a class="card" href="vote.html" style="text-decoration:none">
+              <div class="body">
+                <div class="title"><i class="bi bi-hand-thumbs-up-fill"></i> Vote</div>
+                <div class="muted">Supporta il server con un voto.</div>
+              </div>
+            </a>
+            <a class="card" href="wiki.html" style="text-decoration:none">
+              <div class="body">
+                <div class="title"><i class="bi bi-journal-bookmark-fill"></i> Wiki</div>
+                <div class="muted">Guide e informazioni utili.</div>
+              </div>
+            </a>
+            <a class="card" href="supporto.html" style="text-decoration:none">
+              <div class="body">
+                <div class="title"><i class="bi bi-life-preserver"></i> Supporto</div>
+                <div class="muted">Apri ticket o contattaci.</div>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="pad">
+          <div class="row">
+            <div style="font-weight:900"><i class="bi bi-person-badge-fill"></i> Account</div>
+            <div class="spacer"></div>
+            <a class="btn" id="loginBtn" href="/api/login" style="display:none"><i class="bi bi-discord"></i> Login Discord</a>
+            <button class="btn danger" id="logoutBtn" style="display:none"><i class="bi bi-box-arrow-right"></i> Logout</button>
+          </div>
+
+          <div class="line"></div>
+
+          <div id="accountBox">
+            <div class="skeleton"></div>
+          </div>
+
+          <div class="line"></div>
+
+          <div style="font-weight:900; margin-bottom:8px"><i class="bi bi-tags-fill"></i> Ruoli</div>
+          <div id="rolesBox"><div class="skeleton" style="height:80px"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/ui.js"></script>
   <script>
-    function colorToHex(n){
-      const hex = Number(n || 0).toString(16).padStart(6, "0");
-      return "#" + hex;
-    }
+    const $ = (id) => document.getElementById(id);
 
-    async function loadMe(){
-      try{
-      const r = await fetch("/api/me", { cache: "no-store" });
-      const j = await r.json();
-      if(!j.loggedIn){ window.location.href="/api/login"; return; }
+    function esc(s){ return String(s ?? "").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
-      const u = j.user || {};
-      document.getElementById("name").textContent = u.username || "User";
-      document.getElementById("greeting").textContent = `Ciao, ${u.username || "User"}`;
-      document.getElementById("uid").textContent = "ID: " + (u.id || "-");
-      document.getElementById("sess").textContent = "Attiva";
-
-      const av = document.getElementById("avatar");
-      if(u.avatar){ av.src = u.avatar; } else { av.style.display="none"; }
-      }catch(e){
-        document.getElementById("sess").textContent = "Errore";
-      }
+    function setStatus(ok, text){
+      const b = $("statusBadge");
+      b.className = ok ? "badge good" : "badge";
+      b.innerHTML = ok
+        ? `<i class="bi bi-check2-circle"></i> ${esc(text)}`
+        : `<i class="bi bi-exclamation-circle"></i> ${esc(text)}`;
     }
 
     async function loadRoles(){
-      const rolesEl = document.getElementById("roles");
-      const badgesEl = document.getElementById("badges");
-      const rolesMeta = document.getElementById("rolesMeta");
-
-      const r = await fetch("/api/roles", { cache: "no-store" });
+      // endpoint principale già nel tuo progetto: /api/roles
+      const r = await fetch("/api/roles", { credentials: "include", cache: "no-store" });
+      if (!r.ok){
+        // 401/403: non loggato o non autorizzato
+        return { ok:false, status:r.status, text: await r.text().catch(()=> "") };
+      }
       const j = await r.json();
-
-      if(!j.ok){
-        if(rolesMeta) rolesMeta.textContent = "Non disponibile";
-        document.getElementById("roleCount").textContent = "—";
-        rolesEl.innerHTML = `<div class="muted">Non disponibile.</div>`;
-        return;
-      }
-
-      // badges
-      badgesEl.innerHTML = "";
-      if(j.primaryRole){
-        const c = colorToHex(j.primaryRole.color);
-        badgesEl.innerHTML += `<div class="pill"><span style="display:inline-block;width:10px;height:10px;border-radius:999px;background:${c}"></span>${j.primaryRole.name}</div>`;
-      }
-      if(j.booster){
-        badgesEl.innerHTML += `<div class="pill"><i class="bi bi-rocket-takeoff ico"></i>Booster</div>`;
-      }
-
-      const roles = Array.isArray(j.roles) ? j.roles : [];
-      if(rolesMeta) rolesMeta.textContent = `Ruoli mostrati: ${roles.length}`;
-      if(roles.length === 0){
-        document.getElementById("roleCount").textContent = "0";
-        rolesEl.innerHTML = `<div class="muted">Nessun ruolo tra quelli mostrati</div>`;
-        return;
-      }
-
-      document.getElementById("roleCount").textContent = String(roles.length);
-      rolesEl.innerHTML = roles.map(rr => {
-        const c = colorToHex(rr.color);
-        return `<div class="chip" title="${rr.id}"><span class="dot" style="background:${c}"></span>${rr.name}</div>`;
-      }).join("");
+      return { ok:true, data:j };
     }
 
-    loadMe();
-    loadRoles();
+    function renderAccount(user){
+      const name = user?.global_name || user?.username || "utente";
+      const discr = user?.discriminator && user.discriminator !== "0" ? ("#" + user.discriminator) : "";
+      const avatar = user?.avatar_url || user?.avatar || null;
+
+      $("hello").textContent = `Ciao, ${name}${discr}`;
+      $("helloSub").textContent = "Sessione attiva. Qui sotto trovi i tuoi ruoli visibili nel server.";
+
+      $("accountBox").innerHTML = `
+        <div class="item">
+          <div class="brand-badge" style="width:44px; height:44px; border-radius:14px; background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.10)">
+            ${avatar ? `<img alt="" src="${esc(avatar)}">` : `<div class="fallback" style="display:grid">U</div>`}
+          </div>
+          <div>
+            <div style="font-weight:900">${esc(name)}${esc(discr)}</div>
+            <div class="small">${esc(user?.id || "")}</div>
+          </div>
+          <div class="right">
+            <div class="badge"><i class="bi bi-shield-check"></i> Discord</div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderRoles(roles){
+      if (!Array.isArray(roles) || roles.length === 0){
+        $("rolesBox").innerHTML = `<div class="empty">Nessun ruolo disponibile.</div>`;
+        return;
+      }
+      // supporta sia stringhe che oggetti {name,color}
+      const chips = roles.map(r => {
+        const name = (typeof r === "string") ? r : (r?.name ?? "");
+        return `<span class="chip">${esc(name)}</span>`;
+      }).join("");
+      $("rolesBox").innerHTML = `<div class="chips">${chips}</div>`;
+    }
+
+    async function init(){
+      try{
+        setStatus(false, "Caricamento…");
+        const res = await loadRoles();
+
+        if (!res.ok){
+          setStatus(false, res.status === 401 ? "Non loggato" : "Accesso negato / errore API");
+          $("accountBox").innerHTML = `<div class="empty">Per vedere i ruoli devi fare login con Discord.</div>`;
+          $("rolesBox").innerHTML = `<div class="empty">—</div>`;
+          $("loginBtn").style.display = "inline-flex";
+          return;
+        }
+
+        // best-effort parsing (non rompiamo se la forma cambia)
+        const data = res.data || {};
+        const user = data.user || data.me || data.discord_user || data.account || null;
+        const roles = data.roles || data.allowedRoles || data.user_roles || data.memberRoles || [];
+
+        setStatus(true, "Pronto");
+        $("logoutBtn").style.display = "inline-flex";
+        renderAccount(user);
+        renderRoles(roles);
+      }catch(e){
+        console.error(e);
+        setStatus(false, "Errore");
+        $("accountBox").innerHTML = `<div class="empty">Errore nel caricamento.</div>`;
+        $("rolesBox").innerHTML = `<div class="empty">—</div>`;
+        $("loginBtn").style.display = "inline-flex";
+      }
+    }
+
+    $("logoutBtn").addEventListener("click", async () => {
+      try{
+        await fetch("/api/logout", { method:"POST", credentials:"include" });
+      }catch(e){}
+      location.reload();
+    });
+
+    init();
   </script>
 </body>
 </html>
