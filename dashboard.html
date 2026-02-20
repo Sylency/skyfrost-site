@@ -1,189 +1,76 @@
-<!DOCTYPE html>
-
+<!doctype html>
 <html lang="it">
 <head>
-<link rel=\"icon\" href=\"assets/logo.png\"/>
-<meta charset="utf-8"/>
-<meta content="width=device-width,initial-scale=1" name="viewport"/>
-<title>SkyFrost • Dashboard</title>
-
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet"/>
-<link href="assets/ui.css" rel="stylesheet"/></head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>{BRAND} • Dashboard</title>
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
 <body>
-<header class="topbar">
-<link rel=\"icon\" href=\"assets/logo.png\"/>
-<div class="topbar-inner">
-<a class="brand" href="/">
-<span class="brand-badge"><img alt="SkyFrost" loading="eager" onerror="if(!this.dataset.f){this.dataset.f=1;this.src='assets/logo.png';}else{this.style.display='none';this.nextElementSibling.style.display='flex';}" src="assets/logo.png"/><span aria-hidden="true" class="brandFallback">SF</span></span>
-<span>SkyFrost • Dashboard</span>
-</a>
-<div class="right">
-<a class="btn" href="/">Home</a>
-<a class="btn" href="/profilo.html">Store</a>
-<a class="btn" href="/wiki.html">Wiki</a>
-<a class="btn" href="/supporto.html">Supporto</a>
-<a class="btn primary" href="http://discord.skyfrost.it/" rel="noopener" target="_blank">Discord</a>
-<a class="btn ghost" href="/api/logout">Logout</a>
-</div>
-</div>
-</header>
-<main class="container">
-<section class="hero">
-<div class="hero-left">
-<div class="kicker"><i class="bi bi-grid-1x2-fill ico"></i>Dashboard</div>
-<h1 id="greeting">Bentornato</h1>
-<p class="sub">Gestisci profilo, ruoli e link rapidi in un’unica schermata.</p>
-<div class="quick">
-<a class="qbtn" href="/profilo.html"><i class="bi bi-person-badge ico"></i>Store</a>
-<a class="qbtn" href="/staff.html"><i class="bi bi-people-fill ico"></i>Staff</a>
-<a class="qbtn" href="/vote.html"><i class="bi bi-hand-thumbs-up-fill ico"></i>Vote</a>
-<a class="qbtn" href="/wiki.html"><i class="bi bi-book-half ico"></i>Wiki</a>
-<a class="qbtn" href="/supporto.html"><i class="bi bi-life-preserver ico"></i>Supporto</a>
-</div>
-</div>
-<div class="hero-right card">
-<div class="profile">
-<img alt="" class="avatar" id="avatar"/>
-<div>
-<div class="name" id="name">Caricamento…</div>
-<div class="id" id="uid"></div>
-<div class="pillrow" id="badges"></div>
-</div>
-</div>
-<div class="minirow">
-<div class="mini">
-<div class="mini-top"><i class="bi bi-shield-check ico"></i>Sessione</div>
-<div class="mini-val" id="sess">Verifica…</div>
-</div>
-<div class="mini">
-<div class="mini-top"><i class="bi bi-collection ico"></i>Ruoli</div>
-<div class="mini-val" id="roleCount">—</div>
-</div>
-</div>
-</div>
-</section>
-<div class="grid2">
-<section class="card">
-<div class="card-head">
-<h2 class="title"><i class="bi bi-tags-fill ico"></i>Ruoli Discord</h2>
-<div class="muted" id="rolesMeta">Filtrati automaticamente</div>
-</div>
-<div class="roles chips" id="roles">
-<div class="skeleton-line"></div>
-<div class="skeleton-line"></div>
-<div class="skeleton-line"></div>
-</div>
-<div class="hint">
-<i class="bi bi-info-circle ico"></i>
-        Se manca un ruolo, controlla la whitelist nel backend (`DISCORD_ALLOWED_ROLE_IDS`).
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="index.html">
+        <span class="brand-badge" aria-hidden="true"></span>
+        <span>Hytale Server</span>
+      </a>
+      <nav class="nav" data-nav></nav>
+      <div class="actions">
+        <button class="btn" data-logout>Logout</button>
       </div>
-</section>
-<aside class="card">
-<h2 class="title"><i class="bi bi-lightning-charge-fill ico"></i>Azioni rapide</h2>
-<div class="actions">
-<a class="action-card" href="http://discord.skyfrost.it/" rel="noopener" target="_blank">
-<div class="ac-ico"><i class="bi bi-discord"></i></div>
-<div>
-<div class="ac-title">Apri Discord</div>
-<div class="muted">Entra nel server e contatta lo staff.</div>
-</div>
-<i class="bi bi-arrow-up-right"></i>
-</a>
-<a class="action-card" href="/supporto.html">
-<div class="ac-ico"><i class="bi bi-chat-dots-fill"></i></div>
-<div>
-<div class="ac-title">Apri supporto</div>
-<div class="muted">Problemi? Trovi canali e link utili.</div>
-</div>
-<i class="bi bi-chevron-right"></i>
-</a>
-<a class="action-card" href="/staff.html">
-<div class="ac-ico"><i class="bi bi-people-fill"></i></div>
-<div>
-<div class="ac-title">Vedi lo staff</div>
-<div class="muted">Lista aggiornata automaticamente.</div>
-</div>
-<i class="bi bi-chevron-right"></i>
-</a>
-<a class="action-card" href="/api/logout">
-<div class="ac-ico"><i class="bi bi-box-arrow-right"></i></div>
-<div>
-<div class="ac-title">Logout</div>
-<div class="muted">Disconnetti la sessione corrente.</div>
-</div>
-<i class="bi bi-chevron-right"></i>
-</a>
-</div>
-</aside>
-</div>
-</main>
-<script>
-    function colorToHex(n){
-      const hex = Number(n || 0).toString(16).padStart(6, "0");
-      return "#" + hex;
-    }
+    </div>
+  </header>
 
-    async function loadMe(){
-      try{
-      const r = await fetch("/api/me", { cache: "no-store" });
-      const j = await r.json();
-      if(!j.loggedIn){ window.location.href="/api/login"; return; }
+  <section class="hero">
+    <div class="container">
+      <div class="hero-card">
+        <div class="hero-inner">
+          <div class="hero-left">
+            <div class="kicker">Dashboard</div>
+            <h1 class="title">Pannello</h1>
+            <p class="subtitle">Demo con protezione “fake”. In produzione: sessione vera (Discord OAuth) + controllo ruoli.</p>
+          </div>
+          <div class="stats">
+            <div class="stat" data-server-stat>
+              <div class="stat-top"><span>Server</span><span class="pill" data-pill>—</span></div>
+              <div class="stat-val" data-val>-/- players online</div>
+              <div class="stat-sub" data-sub>—</div>
+            </div>
+            <div class="stat" data-discord-stat>
+              <div class="stat-top"><span>Discord</span><span class="pill" data-pill>—</span></div>
+              <div class="stat-val" data-val>-/- members online</div>
+              <div class="stat-sub" data-sub>—</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-      const u = j.user || {};
-      document.getElementById("name").textContent = u.username || "User";
-      document.getElementById("greeting").textContent = `Ciao, ${u.username || "User"}`;
-      document.getElementById("uid").textContent = "ID: " + (u.id || "-");
-      document.getElementById("sess").textContent = "Attiva";
+  <main class="main">
+    <div class="container">
+      <div class="card">
+        <div class="card-h">
+          <h3>Overview</h3>
+          <span class="badge">Admin</span>
+        </div>
+        <div class="card-b" data-dashboard-box>
+          <div class="notice">Loading…</div>
+        </div>
+      </div>
+    </div>
+  </main>
 
-      const av = document.getElementById("avatar");
-      if(u.avatar){ av.src = u.avatar; } else { av.style.display="none"; }
-      }catch(e){
-        document.getElementById("sess").textContent = "Errore";
-      }
-    }
+  <footer class="footer">
+    <div class="container copy">
+      <span>All rights reserved. © 2026</span>
+      <span>Dashboard</span>
+    </div>
+  </footer>
 
-    async function loadRoles(){
-      const rolesEl = document.getElementById("roles");
-      const badgesEl = document.getElementById("badges");
-      const rolesMeta = document.getElementById("rolesMeta");
-
-      const r = await fetch("/api/roles", { cache: "no-store" });
-      const j = await r.json();
-
-      if(!j.ok){
-        if(rolesMeta) rolesMeta.textContent = "Non disponibile";
-        document.getElementById("roleCount").textContent = "—";
-        rolesEl.innerHTML = `<div class="muted">Non disponibile.</div>`;
-        return;
-      }
-
-      // badges
-      badgesEl.innerHTML = "";
-      if(j.primaryRole){
-        const c = colorToHex(j.primaryRole.color);
-        badgesEl.innerHTML += `<div class="pill"><span></span>${j.primaryRole.name}</div>`;
-      }
-      if(j.booster){
-        badgesEl.innerHTML += `<div class="pill"><i class="bi bi-rocket-takeoff ico"></i>Booster</div>`;
-      }
-
-      const roles = Array.isArray(j.roles) ? j.roles : [];
-      if(rolesMeta) rolesMeta.textContent = `Ruoli mostrati: ${roles.length}`;
-      if(roles.length === 0){
-        document.getElementById("roleCount").textContent = "0";
-        rolesEl.innerHTML = `<div class="muted">Nessun ruolo tra quelli mostrati</div>`;
-        return;
-      }
-
-      document.getElementById("roleCount").textContent = String(roles.length);
-      rolesEl.innerHTML = roles.map(rr => {
-        const c = colorToHex(rr.color);
-        return `<div class="chip" title="${rr.id}"><span class="dot"></span>${rr.name}</div>`;
-      }).join("");
-    }
-
-    loadMe();
-    loadRoles();
-  </script>
-<script src="assets/ui.js"></script></body>
+  <script src="assets/js/config.js"></script>
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/app.js"></script>
+  <script src="assets/js/auth.js"></script>
+  <script src="assets/js/dashboard.js"></script>
+</body>
 </html>

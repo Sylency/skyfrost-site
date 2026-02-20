@@ -1,350 +1,188 @@
-<!DOCTYPE html>
-
+<!doctype html>
 <html lang="it">
 <head>
-<link rel=\"icon\" href=\"assets/logo.png\"/>
-<meta charset="utf-8"/>
-<meta content="width=device-width,initial-scale=1" name="viewport"/>
-<title>SkyFrost • Server Hytale ITA</title>
-
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet"/>
-<link href="assets/ui.css" rel="stylesheet"/></head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>{BRAND} • Home</title>
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
 <body>
-<canvas id="snow"></canvas>
-<header class="nav">
-<link rel=\"icon\" href=\"assets/logo.png\"/>
-<div class="nav-inner">
-<a class="brand" href="/">
-<span class="brand-badge"><img alt="SkyFrost" loading="eager" onerror="if(!this.dataset.f){this.dataset.f=1;this.src='assets/logo.png';}else{this.style.display='none';this.nextElementSibling.style.display='flex';}" src="assets/logo.png"/><span aria-hidden="true" class="brandFallback">SF</span></span>
-<span>SkyFrost</span>
-</a>
-<nav class="links">
-<a href="/wiki.html">Wiki</a>
-<a href="/supporto.html">Supporto</a>
-<a href="/staff.html">Staff</a>
-<a href="/profilo.html">Store</a>
-<a href="/vote.html">Vote</a>
-</nav>
-<div class="auth">
-<span class="role-badge" id="nav-role">
-<span class="role-dot" id="nav-role-dot"></span>
-<span id="nav-role-text">Ruolo</span>
-</span>
-<span class="hello" id="nav-hello">
-<img alt="" id="nav-avatar"/>
-<span id="nav-hello-text">Ciao, …</span>
-</span>
-<a class="btn" href="/api/login" id="nav-login"><i class="bi bi-box-arrow-in-right ico"></i>Login</a>
-<a class="btn" href="/dashboard.html" id="nav-dashboard"><i class="bi bi-stars ico"></i>Dashboard</a>
-<a class="btn ghost is-hidden" href="/api/logout" id="nav-logout">Logout</a>
-<a class="btn primary" href="http://discord.skyfrost.it/" rel="noopener" target="_blank">Discord</a>
-</div>
-</div>
-</header>
-<main class="container">
-<section class="hero">
-<div class="hero-wrap">
-<div class="hero-banner"></div>
-<div class="hero-overlay"></div>
-<div class="hero-shimmer"></div>
-<div class="hero-content">
-<span class="badge"><span class="badge-dot"></span> Hytale Server • ITA</span>
-<h1>SkyFrost</h1>
-<p class="subtitle">
-            Un server Hytale italiano con progressione, eventi e community. Entra su Discord e resta aggiornato su apertura e patch.
-          </p>
-<div class="cta">
-<a class="btn primary" href="http://discord.skyfrost.it/" rel="noopener" target="_blank">Unisciti al Discord</a>
-<a class="btn" href="/wiki.html">Guarda la Wiki</a>
-<a class="btn" href="/supporto.html">Apri un Ticket</a>
-<a class="btn" href="/staff.html">Staff</a>
-<a class="btn" href="/profilo.html">Store</a>
-<a class="btn" href="/dashboard.html" id="hero-dashboard">Dashboard</a>
-</div>
-<div class="quick">
-<div class="quick-item">
-<div class="k">IP</div>
-<div class="ip-row">
-<div class="ip-value" id="sf-ip">play.skyfrost.it</div>
-<button class="btn small" id="copy-ip" type="button"><i class="bi bi-clipboard ico"></i>Copia</button>
-</div>
-<div class="copy-note" id="copy-note"></div>
-</div>
-<div class="quick-item">
-<div class="k">Discord</div>
-<div class="v">discord.skyfrost.it</div>
-</div>
-<div class="quick-item">
-<div class="k">Status</div>
-<div class="status-pill" id="sf-status-pill">
-<span class="dot dev" id="sf-status-dot"></span>
-<span id="sf-status-text">In sviluppo</span>
-</div>
-<div class="status-sub" id="sf-status-sub">Aggiornato manualmente dallo staff</div>
-</div>
-</div>
-</div>
-</div>
-</section>
-<h3 class="section-title">Modalità di gioco</h3>
-<p class="section-sub">Una preview di cosa troverai su SkyFrost (puoi cambiare questi testi quando vuoi).</p>
-<section class="modes">
-<div class="mode">
-<div class="mode-top">
-<div class="mode-ico">
-<i class="bi bi-compass"></i>
-</div>
-<h4>Survival RPG</h4>
-</div>
-<p>Progressione, esplorazione e sviluppo del personaggio in un mondo persistente</p>
-</div>
-<div class="mode">
-<div class="mode-top">
-<div class="mode-ico">
-<i class="bi bi-flag"></i>
-</div>
-<h4>Factions</h4>
-</div>
-<p>Crea o unisciti a una fazione, conquista territori e combatti con il tuo team</p>
-</div>
-<div class="mode">
-<div class="mode-top">
-<div class="mode-ico">
-<i class="bi bi-lightning-charge"></i>
-</div>
-<h4>KitPvP</h4>
-</div>
-<p>Combattimenti rapidi e competitivi basati su abilità e strategia</p>
-</div>
-</section>
-<section class="grid3">
-<div class="card" id="wiki">
-<h3><i class="bi bi-book ico"></i>Wiki</h3>
-<p>Regole, guide e info sul server. Aggiorniamo spesso.</p>
-<a class="link" href="/wiki.html">Apri la Wiki →</a>
-</div>
-<div class="card" id="supporto">
-<h3><i class="bi bi-life-preserver ico"></i>Supporto</h3>
-<p>Ticket per bug, ban appeal e assistenza rapida su Discord.</p>
-<a class="link" href="/supporto.html">Apri un Ticket →</a>
-</div>
-<div class="card" id="vote">
-<h3><i class="bi bi-hand-thumbs-up ico"></i>Vote</h3>
-<p>Vota SkyFrost e ottieni ricompense (in arrivo).</p>
-<a class="link" href="#" onclick="alert('Arriva presto!')">Vai alla pagina Vote →</a>
-</div>
-</section>
-<div class="footer">
-      © <span id="y"></span> SkyFrost — Tutti i diritti riservati.
+  <canvas id="snow"></canvas>
+
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="index.html">
+        <span class="brand-badge" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2l9 5v10l-9 5-9-5V7l9-5Z" stroke="currentColor" stroke-width="2" opacity=".9"/>
+            <path d="M12 7l6 3.5V17l-6 3.5L6 17v-6.5L12 7Z" stroke="currentColor" stroke-width="2" opacity=".6"/>
+          </svg>
+        </span>
+        <span data-brand>Hytale Server</span>
+      </a>
+
+      <nav class="nav" data-nav></nav>
+
+      <div class="actions">
+        <a class="btn" href="login.html">Login</a>
+        <a class="btn primary" href="register.html">Register</a>
+      </div>
     </div>
-</main>
-<script>
-    document.getElementById("y").textContent = new Date().getFullYear();
+  </header>
 
-    // ====== STATUS MANUALE ======
-    // valori: "online" | "offline" | "maintenance" | "dev"
-    const SKYFROST_STATUS = "online";
+  <section class="hero">
+    <div class="container">
+      <div class="hero-card">
+        <div class="hero-inner">
+          <div class="hero-left">
+            <div class="kicker">Welcome</div>
+            <h1 class="title">Community • Store • Staff</h1>
+            <p class="subtitle">
+              Un sito pulito e veloce in stile LeaderOS: news a sinistra, box utili a destra, e contatori live server/Discord.
+            </p>
+            <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
+              <a class="btn primary" href="store.html">Open Store</a>
+              <a class="btn" href="staff.html">View Staff</a>
+              <a class="btn good" href="vote.html">Vote</a>
+            </div>
+          </div>
 
-    (function applyStatus(){
-      const dot = document.getElementById("sf-status-dot");
-      const text = document.getElementById("sf-status-text");
-      const sub = document.getElementById("sf-status-sub");
+          <div class="stats">
+            <div class="stat" data-server-stat>
+              <div class="stat-top">
+                <span>Server</span>
+                <span class="pill" data-pill>—</span>
+              </div>
+              <div class="stat-val" data-val>-/- players online</div>
+              <div class="stat-sub" data-sub>—</div>
+            </div>
 
-      const map = {
-        online: { cls: "online", label: "Online", sub: "Server attivo" },
-        offline: { cls: "offline", label: "Offline", sub: "Server non disponibile" },
-        maintenance: { cls: "maintenance", label: "Manutenzione", sub: "Stiamo aggiornando il server" },
-        dev: { cls: "dev", label: "In sviluppo", sub: "Apertura presto — entra su Discord" },
-      };
+            <div class="stat" data-discord-stat>
+              <div class="stat-top">
+                <span>Discord</span>
+                <span class="pill" data-pill>—</span>
+              </div>
+              <div class="stat-val" data-val>-/- members online</div>
+              <div class="stat-sub" data-sub>—</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-      const s = map[SKYFROST_STATUS] || map.dev;
-      dot.className = "dot " + s.cls;
-      text.textContent = s.label;
-      sub.textContent = s.sub;
-    })();
+  <main class="main">
+    <div class="container">
+      <div class="row">
+        <section class="col">
+          <div class="card">
+            <div class="card-h">
+              <h3>Blog</h3>
+              <span class="badge">Updates</span>
+            </div>
+            <div class="card-b">
+              <div class="list">
+                <article class="item">
+                  <div class="meta">Updates • Feb 20, 2026</div>
+                  <h4>Benvenuto sul nuovo sito</h4>
+                  <p>Questa è una news di esempio. Puoi collegare qui un vero feed (API / database) quando vuoi.</p>
+                  <a class="more" href="javascript:void(0)">Read More →</a>
+                </article>
+                <article class="item">
+                  <div class="meta">Updates • Feb 18, 2026</div>
+                  <h4>Patch notes</h4>
+                  <p>Altra news di esempio in stile card, come nella demo LeaderOS.</p>
+                  <a class="more" href="javascript:void(0)">Read More →</a>
+                </article>
+              </div>
+            </div>
+          </div>
+        </section>
 
-    // ====== COPIA IP ======
-    const ipEl = document.getElementById("sf-ip");
-    const copyBtn = document.getElementById("copy-ip");
-    const noteEl = document.getElementById("copy-note");
+        <aside class="col side">
+          <div class="card">
+            <div class="card-h">
+              <h3>Top Donors</h3>
+              <span class="badge">All time</span>
+            </div>
+            <div class="card-b">
+              <table class="table">
+                <thead>
+                  <tr><th>Username</th><th>Total</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>demo</td><td>250.00€</td></tr>
+                  <tr><td>LeaderOS</td><td>100.00€</td></tr>
+                </tbody>
+              </table>
+              <div class="notice">
+                Se vuoi, qui possiamo collegare i tuoi dati reali (Tebex / store API).
+              </div>
+            </div>
+          </div>
 
-    async function copyText(text){
-      try{
-        await navigator.clipboard.writeText(text);
-        return true;
-      }catch{
-        const ta = document.createElement("textarea");
-        ta.value = text;
-        ta.style.position = "fixed";
-        ta.style.left = "-9999px";
-        document.body.appendChild(ta);
-        ta.select();
-        try{
-          const ok = document.execCommand("copy");
-          document.body.removeChild(ta);
-          return ok;
-        }catch{
-          document.body.removeChild(ta);
-          return false;
-        }
-      }
-    }
+          <div style="height:14px"></div>
 
-    copyBtn.addEventListener("click", async () => {
-      const ip = ipEl.textContent.trim();
-      const ok = await copyText(ip);
-      noteEl.innerHTML = ok ? `<i class="bi bi-check-circle-fill ico"></i>IP copiato negli appunti!` : `<i class="bi bi-x-circle-fill ico"></i>Non riesco a copiare. Copia manualmente l\'IP.`;
-      setTimeout(() => (noteEl.textContent = ""), 2500);
-    });
+          <div class="card">
+            <div class="card-h">
+              <h3>Recent Purchases</h3>
+              <span class="badge">Live</span>
+            </div>
+            <div class="card-b">
+              <table class="table">
+                <thead>
+                  <tr><th>Username</th><th>Category</th><th>Product</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>LeaderOS</td><td>VIP</td><td>MVIP</td></tr>
+                  <tr><td>LeaderOS</td><td>Spawners</td><td>Chicken Spawner</td></tr>
+                  <tr><td>demo</td><td>VIP</td><td>VIP+</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </main>
 
-    // ====== LOGIN UI (Ciao nome + avatar + Dashboard smart) ======
-    const helloEl = document.getElementById("nav-hello");
-    const helloTextEl = document.getElementById("nav-hello-text");
-    const avatarEl = document.getElementById("nav-avatar");
-    const loginEl = document.getElementById("nav-login");
-    const dashEl = document.getElementById("nav-dashboard");
-    const heroDashEl = document.getElementById("hero-dashboard");
-    const logoutEl = document.getElementById("nav-logout");
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div>
+        <h4>About</h4>
+        <p>
+          Sito per server game in stile LeaderOS: store, staff, vote e dashboard. Collegabile alle tue API e a Discord.
+        </p>
+      </div>
+      <div>
+        <h4>Quick Menu</h4>
+        <div class="links">
+          <a href="index.html">Home</a>
+          <a href="store.html">Store</a>
+          <a href="staff.html">Staff</a>
+          <a href="vote.html">Vote</a>
+          <a href="dashboard.html">Dashboard</a>
+        </div>
+      </div>
+      <div>
+        <h4>Links</h4>
+        <div class="links">
+          <a href="javascript:void(0)">Rules</a>
+          <a href="javascript:void(0)">Terms of Service</a>
+          <a href="javascript:void(0)">Privacy Policy</a>
+          <a href="javascript:void(0)">Discord</a>
+        </div>
+      </div>
+    </div>
+    <div class="container copy">
+      <span>All rights reserved. © 2026</span>
+      <span>Style inspired by LeaderOS-like layout</span>
+    </div>
+  </footer>
 
-    // Badge ruolo navbar
-    const roleBadgeEl = document.getElementById("nav-role");
-    const roleTextEl = document.getElementById("nav-role-text");
-    const roleDotEl = document.getElementById("nav-role-dot");
-
-    function colorToHex(n){
-      const hex = Number(n || 0).toString(16).padStart(6, "0");
-      return "#" + hex;
-    }
-
-    async function refreshAuth(){
-      try{
-        const r = await fetch("/api/me", { cache: "no-store" });
-        const j = await r.json();
-
-        if(j.loggedIn && j.user){
-          helloEl.style.display = "inline-flex";
-          helloTextEl.textContent = `Ciao, ${j.user.username}`;
-
-          if(j.user.avatar){
-            avatarEl.src = j.user.avatar;
-            avatarEl.style.display = "inline-block";
-          } else {
-            avatarEl.style.display = "none";
-          }
-
-          loginEl.style.display = "none";
-          logoutEl.style.display = "inline-flex";
-
-          dashEl.href = "/dashboard.html";
-          heroDashEl.href = "/dashboard.html";
-
-          // carica ruolo più alto (filtrato lato API)
-          try{
-            const rr = await fetch("/api/roles", { cache: "no-store" });
-            const jj = await rr.json();
-            if(jj.ok && jj.primaryRole){
-              roleBadgeEl.style.display = "inline-flex";
-              roleTextEl.textContent = jj.primaryRole.name;
-              roleDotEl.style.background = colorToHex(jj.primaryRole.color);
-            }else{
-              roleBadgeEl.style.display = "none";
-            }
-          }catch{
-            roleBadgeEl.style.display = "none";
-          }
-
-          return;
-        }
-
-        // non loggato
-        helloEl.style.display = "none";
-        avatarEl.style.display = "none";
-        roleBadgeEl.style.display = "none";
-
-        loginEl.style.display = "inline-flex";
-        logoutEl.style.display = "none";
-
-        dashEl.href = "/api/login";
-        heroDashEl.href = "/api/login";
-      } catch(e){
-        helloEl.style.display = "none";
-        avatarEl.style.display = "none";
-        roleBadgeEl.style.display = "none";
-        logoutEl.style.display = "none";
-        dashEl.href = "/api/login";
-        heroDashEl.href = "/api/login";
-      }
-    }
-
-    refreshAuth();
-
-    // ====== ❄️ NEVE (leggera) ======
-    (function snow(){
-      const c = document.getElementById("snow");
-      const ctx = c.getContext("2d", { alpha: true });
-
-      let w = 0, h = 0, dpr = 1;
-      function resize(){
-        dpr = Math.min(window.devicePixelRatio || 1, 2);
-        w = Math.floor(window.innerWidth);
-        h = Math.floor(window.innerHeight);
-        c.width = Math.floor(w * dpr);
-        c.height = Math.floor(h * dpr);
-        c.style.width = w + "px";
-        c.style.height = h + "px";
-        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      }
-      window.addEventListener("resize", resize);
-      resize();
-
-      const flakes = [];
-      const COUNT = Math.min(140, Math.max(70, Math.floor((w*h)/18000)));
-
-      function rand(min, max){ return Math.random() * (max - min) + min; }
-
-      function init(){
-        flakes.length = 0;
-        for(let i=0;i<COUNT;i++){
-          flakes.push({
-            x: rand(0, w),
-            y: rand(0, h),
-            r: rand(0.8, 2.6),
-            vx: rand(-0.35, 0.35),
-            vy: rand(0.8, 2.2),
-          });
-        }
-      }
-      init();
-      window.addEventListener("resize", init);
-
-      let last = performance.now();
-      function tick(now){
-        const dt = Math.min(32, now - last);
-        last = now;
-
-        ctx.clearRect(0,0,w,h);
-        ctx.beginPath();
-
-        for(const f of flakes){
-          f.x += (f.vx * dt) * 0.06;
-          f.y += (f.vy * dt) * 0.06;
-          f.x += Math.sin((f.y + now*0.02) * 0.01) * 0.25;
-
-          if(f.y - f.r > h){ f.y = -f.r; f.x = rand(0,w); }
-          if(f.x < -10) f.x = w + 10;
-          if(f.x > w + 10) f.x = -10;
-
-          ctx.moveTo(f.x + f.r, f.y);
-          ctx.arc(f.x, f.y, f.r, 0, Math.PI*2);
-        }
-
-        ctx.fillStyle = "rgba(234, 240, 255, 0.55)";
-        ctx.fill();
-
-        requestAnimationFrame(tick);
-      }
-      requestAnimationFrame(tick);
-    })();
-  </script>
-<script src="assets/ui.js"></script></body>
+  <script src="assets/js/config.js"></script>
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/app.js"></script>
+  <script src="assets/js/snow.js"></script>
+</body>
 </html>

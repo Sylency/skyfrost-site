@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>{BRAND} • Register</title>
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="index.html">
+        <span class="brand-badge" aria-hidden="true"></span>
+        <span>Hytale Server</span>
+      </a>
+      <nav class="nav" data-nav></nav>
+      <div class="actions">
+        <a class="btn" href="login.html">Login</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="container">
+      <div class="card" style="max-width:640px;margin:0 auto;">
+        <div class="card-h">
+          <h3>Register</h3>
+          <span class="badge">Placeholder</span>
+        </div>
+        <div class="card-b">
+          <form class="form" onsubmit="event.preventDefault(); alert('Demo: registrazione disabilitata');">
+            <div class="input">
+              <label>Username</label>
+              <input placeholder="Your name" required />
+            </div>
+            <div class="input">
+              <label>Email</label>
+              <input type="email" placeholder="you@example.com" required />
+            </div>
+            <div class="input">
+              <label>Password</label>
+              <input type="password" placeholder="••••••••" required />
+            </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap">
+              <button class="btn primary" type="submit">Create account</button>
+              <a class="btn" href="index.html">Back</a>
+            </div>
+          </form>
+
+          <div class="notice" style="margin-top:12px">
+            In produzione: meglio “Register via Discord” (semplice e con ruoli).
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="assets/js/config.js"></script>
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>

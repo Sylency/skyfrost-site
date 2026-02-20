@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>{BRAND} • Store</title>
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="index.html">
+        <span class="brand-badge" aria-hidden="true"></span>
+        <span>Hytale Server</span>
+      </a>
+      <nav class="nav" data-nav></nav>
+      <div class="actions">
+        <a class="btn" href="login.html">Login</a>
+        <a class="btn primary" href="register.html">Register</a>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container">
+      <div class="hero-card">
+        <div class="hero-inner">
+          <div class="hero-left">
+            <div class="kicker">Store</div>
+            <h1 class="title">Pacchetti & vantaggi</h1>
+            <p class="subtitle">Qui puoi integrare il tuo store reale (Tebex o API custom). Layout a categorie come LeaderOS.</p>
+          </div>
+          <div class="stats">
+            <div class="stat" data-server-stat>
+              <div class="stat-top"><span>Server</span><span class="pill" data-pill>—</span></div>
+              <div class="stat-val" data-val>-/- players online</div>
+              <div class="stat-sub" data-sub>—</div>
+            </div>
+            <div class="stat" data-discord-stat>
+              <div class="stat-top"><span>Discord</span><span class="pill" data-pill>—</span></div>
+              <div class="stat-val" data-val>-/- members online</div>
+              <div class="stat-sub" data-sub>—</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <main class="main">
+    <div class="container">
+      <div class="row">
+        <section class="col">
+          <div class="card">
+            <div class="card-h">
+              <h3>Categorie</h3>
+              <span class="badge">Seleziona</span>
+            </div>
+            <div class="card-b">
+              <div class="list">
+                <div class="item">
+                  <div class="meta">VIP</div>
+                  <h4>Ranks</h4>
+                  <p>VIP, VIP+, MVIP…</p>
+                  <a class="more" href="javascript:void(0)">Open →</a>
+                </div>
+                <div class="item">
+                  <div class="meta">Crates</div>
+                  <h4>Keys & Crates</h4>
+                  <p>Ricompense e bundle.</p>
+                  <a class="more" href="javascript:void(0)">Open →</a>
+                </div>
+                <div class="item">
+                  <div class="meta">Cosmetics</div>
+                  <h4>Skins</h4>
+                  <p>Oggetti estetici.</p>
+                  <a class="more" href="javascript:void(0)">Open →</a>
+                </div>
+              </div>
+
+              <div class="notice" style="margin-top:12px">
+                Tip: se mi dici come prendevi i pacchetti (Tebex JSON o la tua API), lo collego qui e diventa tutto dinamico.
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <aside class="col side">
+          <div class="card">
+            <div class="card-h">
+              <h3>Carrello</h3>
+              <span class="badge">Demo</span>
+            </div>
+            <div class="card-b">
+              <div class="notice">
+                Carrello demo. In produzione: integra pagamento / checkout esterno.
+              </div>
+              <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
+                <button class="btn">View Cart</button>
+                <button class="btn primary">Checkout</button>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container copy">
+      <span>All rights reserved. © 2026</span>
+      <span>Store</span>
+    </div>
+  </footer>
+
+  <script src="assets/js/config.js"></script>
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>

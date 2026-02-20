@@ -1,149 +1,79 @@
-<!DOCTYPE html>
-
+<!doctype html>
 <html lang="it">
 <head>
-<link rel=\"icon\" href=\"assets/logo.png\"/>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Vote - Hytale Server</title>
-<meta content="Vota il server e ottieni ricompense in-game!" name="description"/>
-
-<link href="assets/ui.css" rel="stylesheet"/><link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet"/></head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>{BRAND} • Vote</title>
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
 <body>
-<!-- Snow -->
-<div aria-hidden="true" class="snow" id="snow"></div>
-<header>
-<link rel=\"icon\" href=\"assets/logo.png\"/>
-<div class="nav">
-<a class="brand" href="index.html">
-<div class="logo"></div>
-<div>Hytale Server</div>
-</a>
-<div class="navlinks">
-<a href="index.html">Home</a>
-<a href="store.html">Store</a>
-<a href="staff.html">Staff</a>
-<a href="dashboard.html">Dashboard</a>
-<a href="vote.html">Vote</a>
-</div>
-</div>
-</header>
-<main>
-<section class="hero">
-<div class="panel">
-<h1 class="title">Vote &amp; Ricompense</h1>
-<p class="subtitle">
-          Votando ci aiuti a far crescere il server e ottieni ricompense in-game.
-          Completa tutti i voti disponibili per massimizzare le ricompense.
-        </p>
-<div class="pillrow">
-<div class="pill"><span class="dot"></span> 4 siti di voto</div>
-<div class="pill">🎁 Ricompense base (no bonus VIP)</div>
-<div class="pill">⏱️ Ogni sito ha il suo cooldown</div>
-</div>
-</div>
-<div class="panel howto">
-<h3>Come funziona</h3>
-<ol class="steps">
-<li>Clicca “Vota ora” su un sito.</li>
-<li>Completa il voto (captcha / login, dipende dal sito).</li>
-<li>Rientra in game e riscatta la ricompensa (comando /vote o come da regole del server).</li>
-</ol>
-</div>
-</section>
-<h2 class="sectionTitle">Siti di voto</h2>
-<section class="grid" id="voteGrid"></section>
-<h2 class="sectionTitle">Ricompense</h2>
-<section class="rewards">
-<div class="rewardBox">
-<h4>Per ogni voto</h4>
-<ul class="rewardList">
-<li>+1 Vote Key</li>
-<li>+500 Coins</li>
-<li>Possibilità di drop extra (random)</li>
-</ul>
-</div>
-<div class="rewardBox">
-<h4>Bonus giornaliero (se completi tutti i voti)</h4>
-<ul class="rewardList">
-<li>+2 Vote Keys extra</li>
-<li>+1 Mystery Crate (chance)</li>
-<li>Badge “Supporter” (se previsto)</li>
-</ul>
-</div>
-</section>
-<div class="footer">
-      Se vuoi cambio anche icone/testi/link dei siti: dimmi i 4 URL finali e li metto perfetti.
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="index.html">
+        <span class="brand-badge" aria-hidden="true"></span>
+        <span>Hytale Server</span>
+      </a>
+      <nav class="nav" data-nav></nav>
+      <div class="actions">
+        <a class="btn" href="login.html">Login</a>
+        <a class="btn primary" href="register.html">Register</a>
+      </div>
     </div>
-</main>
-<script>
-    // ====== SNOW generator (leggero) ======
-    (function makeSnow(){
-      const snow = document.getElementById("snow");
-      const flakes = 45;
-      for(let i=0;i<flakes;i++){
-        const s = document.createElement("span");
-        const left = Math.random()*100;
-        const size = 3 + Math.random()*5;
-        const dur = 6 + Math.random()*10;
-        const delay = Math.random()*-10;
-        s.style.left = left + "vw";
-        s.style.width = size + "px";
-        s.style.height = size + "px";
-        s.style.opacity = (0.35 + Math.random()*0.6).toFixed(2);
-        s.style.animationDuration = dur + "s";
-        s.style.animationDelay = delay + "s";
-        s.style.transform = `translateY(${Math.random()*-50}px)`;
-        snow.appendChild(s);
-      }
-    })();
+  </header>
 
-    // ====== VOTE SITES (4) ======
-    // Cambia qui link/nome/descrizione a piacere.
-    const voteSites = [
-      {
-        name: "Vote Site #1",
-        badge: "Toplist",
-        desc: "Vota qui per supportare il server e ottenere ricompense.",
-        url: "https://example.com/vote1"
-      },
-      {
-        name: "Vote Site #2",
-        badge: "Ranking",
-        desc: "Ogni voto conta: aiutaci a salire in classifica!",
-        url: "https://example.com/vote2"
-      },
-      {
-        name: "Vote Site #3",
-        badge: "Community",
-        desc: "Completa il voto e torna in game per riscattare.",
-        url: "https://example.com/vote3"
-      },
-      {
-        name: "Vote Site #4",
-        badge: "NEW",
-        desc: "Nuovo sito aggiunto: grazie per il supporto!",
-        url: "https://example.com/vote4"
-      }
-    ];
-
-    const grid = document.getElementById("voteGrid");
-
-    voteSites.forEach((site) => {
-      const card = document.createElement("div");
-      card.className = "card";
-      card.innerHTML = `
-        <div class="cardTop">
-          <h3 class="siteName">${site.name}</h3>
-          <span class="badge">${site.badge}</span>
+  <section class="hero">
+    <div class="container">
+      <div class="hero-card">
+        <div class="hero-inner">
+          <div class="hero-left">
+            <div class="kicker">Vote</div>
+            <h1 class="title">Vota e ricevi ricompense</h1>
+            <p class="subtitle">Inserisci qui i tuoi siti voto reali. Il layout è pronto.</p>
+          </div>
+          <div class="stats">
+            <div class="stat" data-server-stat>
+              <div class="stat-top"><span>Server</span><span class="pill" data-pill>—</span></div>
+              <div class="stat-val" data-val>-/- players online</div>
+              <div class="stat-sub" data-sub>—</div>
+            </div>
+            <div class="stat" data-discord-stat>
+              <div class="stat-top"><span>Discord</span><span class="pill" data-pill>—</span></div>
+              <div class="stat-val" data-val>-/- members online</div>
+              <div class="stat-sub" data-sub>—</div>
+            </div>
+          </div>
         </div>
-        <p>${site.desc}</p>
-        <a class="btn" href="${site.url}" target="_blank" rel="noopener noreferrer">
-          Vota ora ↗
-        </a>
-      `;
-      grid.appendChild(card);
-    });
-  </script>
-<script src="assets/ui.js"></script></body>
+      </div>
+    </div>
+  </section>
+
+  <main class="main">
+    <div class="container">
+      <div class="card">
+        <div class="card-h">
+          <h3>Vote Sites</h3>
+          <span class="badge">Daily</span>
+        </div>
+        <div class="card-b">
+          <div class="list" data-vote-list></div>
+          <div class="notice" style="margin-top:12px">
+            Modifica i link in <strong>assets/js/vote.js</strong>.
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container copy">
+      <span>All rights reserved. © 2026</span>
+      <span>Vote</span>
+    </div>
+  </footer>
+
+  <script src="assets/js/config.js"></script>
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/app.js"></script>
+  <script src="assets/js/vote.js"></script>
+</body>
 </html>
