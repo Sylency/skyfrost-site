@@ -2,6 +2,7 @@
 
 <html lang="it">
 <head>
+<link rel=\"icon\" href=\"assets/logo.png\"/>
 <meta charset="utf-8"/>
 <meta content="width=device-width,initial-scale=1" name="viewport"/>
 <title>SkyFrost • Dashboard</title>
@@ -10,9 +11,10 @@
 <link href="assets/ui.css" rel="stylesheet"/></head>
 <body>
 <header class="topbar">
+<link rel=\"icon\" href=\"assets/logo.png\"/>
 <div class="topbar-inner">
 <a class="brand" href="/">
-<span class="brand-badge"><img alt="SkyFrost" loading="eager" onerror="if(!this.dataset.f){this.dataset.f=1;this.src='assets/icon.png';}else{this.style.display='none';this.nextElementSibling.style.display='flex';}" src="assets/logo.png"/><span aria-hidden="true" class="brandFallback">SF</span></span>
+<span class="brand-badge"><img alt="SkyFrost" loading="eager" onerror="if(!this.dataset.f){this.dataset.f=1;this.src='assets/logo.png';}else{this.style.display='none';this.nextElementSibling.style.display='flex';}" src="assets/logo.png"/><span aria-hidden="true" class="brandFallback">SF</span></span>
 <span>SkyFrost • Dashboard</span>
 </a>
 <div class="right">
@@ -42,10 +44,10 @@
 <div class="hero-right card">
 <div class="profile">
 <img alt="" class="avatar" id="avatar"/>
-<div style="min-width:0">
+<div>
 <div class="name" id="name">Caricamento…</div>
 <div class="id" id="uid"></div>
-<div class="pillrow" id="badges" style="margin-top:10px"></div>
+<div class="pillrow" id="badges"></div>
 </div>
 </div>
 <div class="minirow">
@@ -63,10 +65,10 @@
 <div class="grid2">
 <section class="card">
 <div class="card-head">
-<h2 class="title" style="margin:0"><i class="bi bi-tags-fill ico"></i>Ruoli Discord</h2>
+<h2 class="title"><i class="bi bi-tags-fill ico"></i>Ruoli Discord</h2>
 <div class="muted" id="rolesMeta">Filtrati automaticamente</div>
 </div>
-<div class="roles chips" id="roles" style="margin-top:12px">
+<div class="roles chips" id="roles">
 <div class="skeleton-line"></div>
 <div class="skeleton-line"></div>
 <div class="skeleton-line"></div>
@@ -77,7 +79,7 @@
       </div>
 </section>
 <aside class="card">
-<h2 class="title" style="margin:0 0 10px 0"><i class="bi bi-lightning-charge-fill ico"></i>Azioni rapide</h2>
+<h2 class="title"><i class="bi bi-lightning-charge-fill ico"></i>Azioni rapide</h2>
 <div class="actions">
 <a class="action-card" href="http://discord.skyfrost.it/" rel="noopener" target="_blank">
 <div class="ac-ico"><i class="bi bi-discord"></i></div>
@@ -159,7 +161,7 @@
       badgesEl.innerHTML = "";
       if(j.primaryRole){
         const c = colorToHex(j.primaryRole.color);
-        badgesEl.innerHTML += `<div class="pill"><span style="display:inline-block;width:10px;height:10px;border-radius:999px;background:${c}"></span>${j.primaryRole.name}</div>`;
+        badgesEl.innerHTML += `<div class="pill"><span></span>${j.primaryRole.name}</div>`;
       }
       if(j.booster){
         badgesEl.innerHTML += `<div class="pill"><i class="bi bi-rocket-takeoff ico"></i>Booster</div>`;
@@ -176,7 +178,7 @@
       document.getElementById("roleCount").textContent = String(roles.length);
       rolesEl.innerHTML = roles.map(rr => {
         const c = colorToHex(rr.color);
-        return `<div class="chip" title="${rr.id}"><span class="dot" style="background:${c}"></span>${rr.name}</div>`;
+        return `<div class="chip" title="${rr.id}"><span class="dot"></span>${rr.name}</div>`;
       }).join("");
     }
 

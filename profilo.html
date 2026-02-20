@@ -2,6 +2,7 @@
 
 <html lang="it">
 <head>
+<link rel=\"icon\" href=\"assets/logo.png\"/>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <title>Store • SkyFrost</title>
@@ -14,7 +15,7 @@
 <a class="brand" href="index.html">
 <div class="brand-badge" id="brandBadge">
 <img alt="SkyFrost" id="brandLogo" src="assets/logo.png"/>
-<div class="fallback" id="brandFallback" style="display:none">SF</div>
+<div class="fallback is-hidden" id="brandFallback">SF</div>
 </div>
 <div>SkyFrost</div>
 </a>
@@ -66,8 +67,8 @@
 <div>Totale stimato</div>
 <div id="total">—</div>
 </div>
-<div style="display:flex; gap:10px; margin-top:12px">
-<button class="btn primary" id="checkoutBtn" style="flex:1; justify-content:center">
+<div>
+<button class="btn primary" id="checkoutBtn">
 <i class="bi bi-lock-fill"></i> Checkout
             </button>
 <button class="btn danger" id="clearBtn" title="Svuota carrello">
@@ -92,7 +93,7 @@
     (function(){
       const img = document.getElementById('brandLogo');
       const fb = document.getElementById('brandFallback');
-      const candidates = ["assets/logo.png", "assets/icon.png", "assets/favicon.png"];
+      const candidates = ["assets/logo.png", "assets/logo.png", "assets/logo.png"];
       let i = 0;
       img.addEventListener('error', () => {
         i++;
@@ -232,9 +233,9 @@
     function renderSkeleton(){
       const c = el('content');
       c.innerHTML = `
-        <div class="skeleton" style="margin-bottom:10px"></div>
-        <div class="skeleton" style="margin-bottom:10px"></div>
-        <div class="skeleton" style="margin-bottom:10px"></div>
+        <div class="skeleton"></div>
+        <div class="skeleton"></div>
+        <div class="skeleton"></div>
         <div class="skeleton"></div>
       `;
       el('jumpPills').innerHTML = '';
@@ -247,7 +248,7 @@
         const count = s.subcats.reduce((acc,sc) => acc + sc.packages.length, 0);
         const b = document.createElement('button');
         b.className = 'pill';
-        b.innerHTML = `<i class="bi bi-bookmark-star-fill" style="color:rgba(125,211,252,.9)"></i> ${escapeHtml(s.name)} <span class="count">${count}</span>`;
+        b.innerHTML = `<i class="bi bi-bookmark-star-fill"></i> ${escapeHtml(s.name)} <span class="count">${count}</span>`;
         b.addEventListener('click', () => {
           const target = document.querySelector(`[data-sec="${cssEsc(String(s.id))}"]`);
           if (target) target.scrollIntoView({behavior:'smooth', block:'start'});
@@ -270,10 +271,10 @@
       const currency = p.currency || 'EUR';
       return `
         <div class="card">
-          <div class="img">${img ? `<img src="${escapeHtml(img)}" alt="">` : `<div style="color:rgba(233,238,247,.55); font-weight:900"><i class="bi bi-image"></i></div>`}</div>
+          <div class="img">${img ? `<img src="${escapeHtml(img)}" alt="">` : `<div><i class="bi bi-image"></i></div>`}</div>
           <div class="body">
             <div class="title">${escapeHtml(p.name || 'Pacchetto')}</div>
-            <div style="color:var(--muted); font-size:12px; line-height:1.35; min-height: 32px">
+            <div>
               ${escapeHtml(desc ? (desc.length > 90 ? desc.slice(0,90)+'…' : desc) : '—')}
             </div>
             <div class="price">
@@ -320,7 +321,7 @@
         html += `
           <div class="section" data-sec="${escapeHtml(String(s.id))}">
             <div class="section-header">
-              <h2><i class="bi bi-collection-fill" style="color:rgba(125,211,252,.9)"></i> ${escapeHtml(s.name)}</h2>
+              <h2><i class="bi bi-collection-fill"></i> ${escapeHtml(s.name)}</h2>
               <div class="meta">${total} pacchetti</div>
             </div>
         `;
@@ -328,7 +329,7 @@
         for (const sc of visibleSubcats){
           html += `
             <div class="subcat">
-              <h3><i class="bi bi-folder-fill" style="color:rgba(233,238,247,.75)"></i> ${escapeHtml(sc.name)} <span style="color:var(--muted); font-size:12px">(${sc.packages.length})</span></h3>
+              <h3><i class="bi bi-folder-fill"></i> ${escapeHtml(sc.name)} <span>(${sc.packages.length})</span></h3>
               <div class="cards">
                 ${sc.packages.map(packageCard).join('')}
               </div>
@@ -391,14 +392,14 @@
       dlg.style.maxWidth='720px';
       dlg.style.width='calc(100% - 24px)';
       dlg.innerHTML = `
-        <div style="padding:14px 14px 0; display:flex; gap:10px; align-items:flex-start; border-bottom:1px solid rgba(255,255,255,.10)">
-          <div style="font-weight:900; font-size:16px; flex:1">${escapeHtml(title)}</div>
-          <button class="btn" style="border-radius:12px" id="closeDlg"><i class="bi bi-x-lg"></i></button>
+        <div>
+          <div>${escapeHtml(title)}</div>
+          <button class="btn" id="closeDlg"><i class="bi bi-x-lg"></i></button>
         </div>
-        <div style="padding:14px; display:flex; flex-direction:column; gap:10px">
-          <div style="color:rgba(233,238,247,.85); font-weight:900">${formatEUR(price)} <span style="color:var(--muted); font-weight:700; font-size:12px">${escapeHtml(pkg.currency||'EUR')}</span></div>
-          <div style="color:var(--muted); font-size:13px; line-height:1.5">${desc || '<em>Nessuna descrizione.</em>'}</div>
-          <div style="display:flex; gap:10px; justify-content:flex-end">
+        <div>
+          <div>${formatEUR(price)} <span>${escapeHtml(pkg.currency||'EUR')}</span></div>
+          <div>${desc || '<em>Nessuna descrizione.</em>'}</div>
+          <div>
             <button class="btn primary" id="addDlg"><i class="bi bi-bag-plus-fill"></i> Aggiungi al carrello</button>
           </div>
         </div>
@@ -432,14 +433,14 @@
               <div class="meta">${escapeHtml(item.category || '')}</div>
               <div class="qty">
                 <button onclick="decQty(${item.id})" title="Meno"><i class="bi bi-dash"></i></button>
-                <div style="min-width:22px; text-align:center; font-weight:900">${item.qty}</div>
+                <div>${item.qty}</div>
                 <button onclick="incQty(${item.id})" title="Più"><i class="bi bi-plus"></i></button>
               </div>
             </div>
             <div class="right">
-              <div style="font-weight:900">${formatEUR(item.price)}</div>
+              <div>${formatEUR(item.price)}</div>
               <div class="meta">x ${item.qty}</div>
-              <button class="btn danger" style="margin-top:8px; padding:8px 10px" onclick="removeItem(${item.id})"><i class="bi bi-trash3-fill"></i></button>
+              <button class="btn danger" onclick="removeItem(${item.id})"><i class="bi bi-trash3-fill"></i></button>
             </div>
           </div>
         `;

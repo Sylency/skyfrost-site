@@ -2,6 +2,7 @@
 
 <html lang="it">
 <head>
+<link rel=\"icon\" href=\"assets/logo.png\"/>
 <meta charset="utf-8"/>
 <meta content="width=device-width,initial-scale=1" name="viewport"/>
 <title>SkyFrost • Server Hytale ITA</title>
@@ -11,9 +12,10 @@
 <body>
 <canvas id="snow"></canvas>
 <header class="nav">
+<link rel=\"icon\" href=\"assets/logo.png\"/>
 <div class="nav-inner">
 <a class="brand" href="/">
-<span class="brand-badge"><img alt="SkyFrost" loading="eager" onerror="if(!this.dataset.f){this.dataset.f=1;this.src='assets/icon.png';}else{this.style.display='none';this.nextElementSibling.style.display='flex';}" src="assets/logo.png"/><span aria-hidden="true" class="brandFallback">SF</span></span>
+<span class="brand-badge"><img alt="SkyFrost" loading="eager" onerror="if(!this.dataset.f){this.dataset.f=1;this.src='assets/logo.png';}else{this.style.display='none';this.nextElementSibling.style.display='flex';}" src="assets/logo.png"/><span aria-hidden="true" class="brandFallback">SF</span></span>
 <span>SkyFrost</span>
 </a>
 <nav class="links">
@@ -34,7 +36,7 @@
 </span>
 <a class="btn" href="/api/login" id="nav-login"><i class="bi bi-box-arrow-in-right ico"></i>Login</a>
 <a class="btn" href="/dashboard.html" id="nav-dashboard"><i class="bi bi-stars ico"></i>Dashboard</a>
-<a class="btn ghost" href="/api/logout" id="nav-logout" style="display:none;">Logout</a>
+<a class="btn ghost is-hidden" href="/api/logout" id="nav-logout">Logout</a>
 <a class="btn primary" href="http://discord.skyfrost.it/" rel="noopener" target="_blank">Discord</a>
 </div>
 </div>
@@ -115,7 +117,7 @@
 <p>Combattimenti rapidi e competitivi basati su abilità e strategia</p>
 </div>
 </section>
-<section class="grid3" style="margin-top:14px;">
+<section class="grid3">
 <div class="card" id="wiki">
 <h3><i class="bi bi-book ico"></i>Wiki</h3>
 <p>Regole, guide e info sul server. Aggiorniamo spesso.</p>

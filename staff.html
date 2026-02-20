@@ -2,6 +2,7 @@
 
 <html lang="it">
 <head>
+<link rel=\"icon\" href=\"assets/logo.png\"/>
 <meta charset="utf-8"/>
 <meta content="width=device-width,initial-scale=1" name="viewport"/>
 <title>SkyFrost • Staff</title>
@@ -10,9 +11,10 @@
 <link href="assets/ui.css" rel="stylesheet"/></head>
 <body>
 <header class="topbar">
+<link rel=\"icon\" href=\"assets/logo.png\"/>
 <div class="topbar-inner">
 <a class="brand" href="/">
-<span class="brand-badge"><img alt="SkyFrost" loading="eager" onerror="if(!this.dataset.f){this.dataset.f=1;this.src='assets/icon.png';}else{this.style.display='none';this.nextElementSibling.style.display='flex';}" src="assets/logo.png"/><span aria-hidden="true" class="brandFallback">SF</span></span>
+<span class="brand-badge"><img alt="SkyFrost" loading="eager" onerror="if(!this.dataset.f){this.dataset.f=1;this.src='assets/logo.png';}else{this.style.display='none';this.nextElementSibling.style.display='flex';}" src="assets/logo.png"/><span aria-hidden="true" class="brandFallback">SF</span></span>
 <span>SkyFrost • Staff</span>
 </a>
 <div class="right">
@@ -112,19 +114,19 @@
             ? members.map(m => `
                 <div class="member">
                   <img class="avatar" src="${esc(m.avatar || "")}" alt="">
-                  <div style="min-width:0">
+                  <div>
                     <div class="mname">${esc(m.display || m.username || "User")}</div>
                     <div class="muser">@${esc(m.username || "")}</div>
                   </div>
                 </div>
               `).join("")
-            : `<div class="loading" style="margin-top:0">Nessun membro con questo ruolo.</div>`;
+            : `<div class="loading">Nessun membro con questo ruolo.</div>`;
 
           return `
             <section class="section">
               <div class="section-head">
                 <div class="role-title">
-                  <span class="role-dot" style="background:${roleColor}"></span>
+                  <span class="role-dot"></span>
                   <span>${esc(roleName)}</span>
                 </div>
                 <div class="count">${members.length} membri</div>
