@@ -1,229 +1,94 @@
-<!doctype html>
+<!DOCTYPE html>
+
 <html lang="it">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>SkyFrost • Wiki</title>
-  <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>SkyFrost • Wiki</title>
 
-    /* Bootstrap Icons */
-    .bi{vertical-align:-0.125em}
-    .ico{margin-right:.45rem}
-:root{
-      --bg:#070a12;
-      --panel: rgba(255,255,255,.06);
-      --border: rgba(255,255,255,.10);
-      --txt:#eaf0ff;
-      --muted:#a9b6d3;
-      --acc:#7dd3fc;
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      color:var(--txt);
-      background:
-        radial-gradient(1200px 600px at 20% 0%, rgba(125,211,252,.14), transparent 55%),
-        radial-gradient(900px 600px at 80% 10%, rgba(99,102,241,.12), transparent 55%),
-        linear-gradient(180deg, #050711, var(--bg));
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
-    }
-    a{color:inherit;text-decoration:none}
-    .container{max-width:1100px;margin:0 auto;padding:26px 16px 70px}
-
-    .nav{
-      position:sticky; top:0; z-index:50;
-      backdrop-filter: blur(10px);
-      background: rgba(7,10,18,.55);
-      border-bottom: 1px solid var(--border);
-    }
-    .nav-inner{
-      max-width:1100px; margin:0 auto;
-      padding:14px 16px;
-      display:flex; align-items:center; justify-content:space-between; gap:16px;
-    }
-    .brand{font-weight:900; letter-spacing:.2px; font-size:18px}
-    .links{display:flex; gap:14px; color:var(--muted); flex-wrap:wrap}
-    .links a:hover{color:var(--txt)}
-    .btn{
-      border:1px solid var(--border);
-      background: rgba(255,255,255,.04);
-      color:var(--txt);
-      padding:10px 12px;
-      border-radius:12px;
-      cursor:pointer;
-      display:inline-block;
-      font-weight:650;
-    }
-    .btn.primary{
-      border:none;
-      background: linear-gradient(90deg, #22d3ee, #60a5fa);
-      color:#07101f;
-      font-weight:800;
-    }
-
-    h1{margin:0 0 6px; font-size:40px; letter-spacing:-.02em}
-    p{margin:0; color:var(--muted); line-height:1.6}
-
-    .layout{
-      margin-top:14px;
-      display:grid;
-      grid-template-columns: 280px 1fr;
-      gap:12px;
-      align-items:start;
-    }
-
-    .panel{
-      border:1px solid var(--border);
-      background: var(--panel);
-      border-radius:18px;
-      padding:14px;
-    }
-
-    .menu a{
-      display:block;
-      padding:10px 10px;
-      border-radius:12px;
-      color:var(--muted);
-      border:1px solid transparent;
-      margin-bottom:8px;
-    }
-    .menu a:hover{
-      color:var(--txt);
-      border-color: var(--border);
-      background: rgba(0,0,0,.10);
-    }
-
-    .article h2{margin:0 0 8px}
-    .article .meta{font-size:12px;color:var(--muted);margin-bottom:10px}
-    .article ul{margin:8px 0 0 18px; color:var(--muted)}
-    .article li{margin:6px 0}
-
-    .callout{
-      margin-top:10px;
-      border:1px dashed rgba(125,211,252,.45);
-      background: rgba(125,211,252,.08);
-      border-radius:14px;
-      padding:12px;
-      color: var(--muted);
-      font-size:14px;
-    }
-
-    .footer{margin-top:22px;color:var(--muted);font-size:13px;opacity:.9}
-
-    @media (max-width: 900px){
-      .links{display:none}
-      .layout{grid-template-columns:1fr}
-    }
-    .brand-badge{position:relative}
-  .brandFallback{
-    position:absolute; inset:0;
-    display:none;
-    align-items:center; justify-content:center;
-    font-weight:1000;
-    color: rgba(255,255,255,.85);
-    letter-spacing:.4px;
-    font-size:12px;
-    background: rgba(0,0,0,.18);
-  }
-</style>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-</head>
-
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet"/>
+<link href="assets/ui.css" rel="stylesheet"/></head>
 <body>
-  <header class="nav">
-    <div class="nav-inner">
-      <a class="brand" href="/">SkyFrost</a>
-
-      <nav class="links">
-        <a href="/wiki.html">Wiki</a>
-        <a href="/#supporto">Supporto</a>
-        <a href="/#vote">Vote</a>
-        <a href="/#news">News</a>
-      </nav>
-
-      <div>
-        <a class="btn primary" href="http://discord.skyfrost.it/" target="_blank" rel="noopener">Discord</a>
-      </div>
-    </div>
-  </header>
-
-  <main class="container">
-    <div class="panel">
-      <h1>Wiki</h1>
-      <p>Regole, guide e informazioni sul server SkyFrost.</p>
-    </div>
-
-    <section class="layout">
-      <aside class="panel menu">
-        <a href="#regole"><i class="bi bi-journal-text ico"></i>Regole</a>
-        <a href="#comandi"><i class="bi bi-keyboard ico"></i>Comandi</a>
-        <a href="#guide"><i class="bi bi-compass ico"></i>Guide</a>
-        <a href="#staff"><i class="bi bi-shield ico"></i>Staff</a>
-      </aside>
-
-      <article class="panel article">
-        <section id="regole">
-          <h2><i class="bi bi-journal-text ico"></i>Regole</h2>
-          <div class="meta">Aggiornato: <span id="d1"></span></div>
-          <p>Metti qui le regole principali. Esempio:</p>
-          <ul>
-            <li>Niente cheat / exploit.</li>
-            <li>Rispetta staff e player.</li>
-            <li>Niente spam o contenuti tossici.</li>
-          </ul>
-          <div class="callout">
+<header class="nav">
+<div class="nav-inner">
+<a class="brand" href="/">SkyFrost</a>
+<nav class="links">
+<a href="/wiki.html">Wiki</a>
+<a href="/#supporto">Supporto</a>
+<a href="/#vote">Vote</a>
+<a href="/#news">News</a>
+</nav>
+<div>
+<a class="btn primary" href="http://discord.skyfrost.it/" rel="noopener" target="_blank">Discord</a>
+</div>
+</div>
+</header>
+<main class="container">
+<div class="panel">
+<h1>Wiki</h1>
+<p>Regole, guide e informazioni sul server SkyFrost.</p>
+</div>
+<section class="layout">
+<aside class="panel menu">
+<a href="#regole"><i class="bi bi-journal-text ico"></i>Regole</a>
+<a href="#comandi"><i class="bi bi-keyboard ico"></i>Comandi</a>
+<a href="#guide"><i class="bi bi-compass ico"></i>Guide</a>
+<a href="#staff"><i class="bi bi-shield ico"></i>Staff</a>
+</aside>
+<article class="panel article">
+<section id="regole">
+<h2><i class="bi bi-journal-text ico"></i>Regole</h2>
+<div class="meta">Aggiornato: <span id="d1"></span></div>
+<p>Metti qui le regole principali. Esempio:</p>
+<ul>
+<li>Niente cheat / exploit.</li>
+<li>Rispetta staff e player.</li>
+<li>Niente spam o contenuti tossici.</li>
+</ul>
+<div class="callout">
             Tip: puoi modificare questa pagina quando vuoi da GitHub → file <b>wiki.html</b>.
           </div>
-        </section>
-
-        <hr style="border:none;border-top:1px solid rgba(255,255,255,.10);margin:16px 0">
-
-        <section id="comandi">
-          <h2><i class="bi bi-keyboard ico"></i>Comandi</h2>
-          <div class="meta">Aggiornato: <span id="d2"></span></div>
-          <p>Scrivi una lista dei comandi utili (se li avrai sul server).</p>
-          <ul>
-            <li>/help — mostra aiuto</li>
-            <li>/spawn — torna allo spawn</li>
-            <li>/discord — link discord</li>
-          </ul>
-        </section>
-
-        <hr style="border:none;border-top:1px solid rgba(255,255,255,.10);margin:16px 0">
-
-        <section id="guide">
-          <h2><i class="bi bi-compass ico"></i>Guide</h2>
-          <div class="meta">Aggiornato: <span id="d3"></span></div>
-          <p>Qui metti guide tipo: “Come iniziare”, “Economia”, “Eventi”.</p>
-          <ul>
-            <li>Come iniziare (starter)</li>
-            <li>Progressione</li>
-            <li>Eventi e ricompense</li>
-          </ul>
-        </section>
-
-        <hr style="border:none;border-top:1px solid rgba(255,255,255,.10);margin:16px 0">
-
-        <section id="staff">
-          <h2><i class="bi bi-shield ico"></i>Staff</h2>
-          <div class="meta">Aggiornato: <span id="d4"></span></div>
-          <p>Metti ruoli e nomi (anche solo Discord tag).</p>
-          <ul>
-            <li>Owner: ???</li>
-            <li>Admin: ???</li>
-            <li>Mod: ???</li>
-          </ul>
-        </section>
-
-      </article>
-    </section>
-
-    <div class="footer">
+</section>
+<hr style="border:none;border-top:1px solid rgba(255,255,255,.10);margin:16px 0"/>
+<section id="comandi">
+<h2><i class="bi bi-keyboard ico"></i>Comandi</h2>
+<div class="meta">Aggiornato: <span id="d2"></span></div>
+<p>Scrivi una lista dei comandi utili (se li avrai sul server).</p>
+<ul>
+<li>/help — mostra aiuto</li>
+<li>/spawn — torna allo spawn</li>
+<li>/discord — link discord</li>
+</ul>
+</section>
+<hr style="border:none;border-top:1px solid rgba(255,255,255,.10);margin:16px 0"/>
+<section id="guide">
+<h2><i class="bi bi-compass ico"></i>Guide</h2>
+<div class="meta">Aggiornato: <span id="d3"></span></div>
+<p>Qui metti guide tipo: “Come iniziare”, “Economia”, “Eventi”.</p>
+<ul>
+<li>Come iniziare (starter)</li>
+<li>Progressione</li>
+<li>Eventi e ricompense</li>
+</ul>
+</section>
+<hr style="border:none;border-top:1px solid rgba(255,255,255,.10);margin:16px 0"/>
+<section id="staff">
+<h2><i class="bi bi-shield ico"></i>Staff</h2>
+<div class="meta">Aggiornato: <span id="d4"></span></div>
+<p>Metti ruoli e nomi (anche solo Discord tag).</p>
+<ul>
+<li>Owner: ???</li>
+<li>Admin: ???</li>
+<li>Mod: ???</li>
+</ul>
+</section>
+</article>
+</section>
+<div class="footer">
       © <span id="y"></span> SkyFrost
     </div>
-  </main>
-
-  <script>
+</main>
+<script>
     const now = new Date();
     const fmt = now.toLocaleDateString("it-IT", { day:"2-digit", month:"short", year:"numeric" });
     document.getElementById("y").textContent = now.getFullYear();
@@ -232,5 +97,5 @@
     document.getElementById("d3").textContent = fmt;
     document.getElementById("d4").textContent = fmt;
   </script>
-</body>
+<script src="assets/ui.js"></script></body>
 </html>

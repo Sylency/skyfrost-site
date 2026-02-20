@@ -1,406 +1,121 @@
-<!doctype html>
+<!DOCTYPE html>
+
 <html lang="it">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>SkyFrost • Dashboard</title>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>SkyFrost • Dashboard</title>
 
-  <style>
-
-    /* Bootstrap Icons */
-    .bi{vertical-align:-0.125em}
-    .ico{margin-right:.45rem}
-:root{
-      --bg:#070a12;
-      --border: rgba(255,255,255,.10);
-      --border2: rgba(255,255,255,.14);
-      --txt:#eaf0ff;
-      --muted:#a9b6d3;
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      color:var(--txt);
-      background:
-        radial-gradient(1000px 550px at 20% 0%, rgba(125,211,252,.14), transparent 55%),
-        radial-gradient(900px 550px at 80% 10%, rgba(96,165,250,.12), transparent 55%),
-        linear-gradient(180deg, #050711, var(--bg));
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
-      overflow-x:hidden;
-    }
-    a{color:inherit;text-decoration:none}
-    .container{max-width:1120px;margin:0 auto;padding:22px 16px 70px}
-
-    .topbar{
-      position:sticky; top:0; z-index:40;
-      background: rgba(7,10,18,.55);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-    }
-    .topbar-inner{
-      max-width:1120px; margin:0 auto;
-      padding:14px 16px;
-      display:flex; align-items:center; justify-content:space-between; gap:12px;
-    }
-    .brand{
-      display:flex; align-items:center; gap:10px;
-      font-weight:950; letter-spacing:.2px;
-    }
-    .brand-badge{
-      width:34px;height:34px;border-radius:12px;
-      border:1px solid var(--border2);
-      overflow:hidden;
-      background: rgba(255,255,255,.06);
-      box-shadow: 0 8px 30px rgba(125,211,252,.10);
-      display:flex;align-items:center;justify-content:center;
-    }
-    .brand-badge img{width:100%;height:100%;object-fit:cover;display:block}
-
-    .btn{
-      border:1px solid var(--border);
-      background: rgba(255,255,255,.04);
-      color:var(--txt);
-      padding:10px 12px;
-      border-radius:12px;
-      cursor:pointer;
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      font-weight:900;
-      transition: transform .12s ease, background .12s ease, border-color .12s ease;
-    }
-    .btn:hover{transform: translateY(-1px); border-color: rgba(255,255,255,.16); background: rgba(255,255,255,.06);}
-    .btn.primary{
-      border:none;
-      background: linear-gradient(90deg, #22d3ee, #60a5fa);
-      color:#07101f;
-      font-weight:950;
-      box-shadow: 0 16px 40px rgba(34,211,238,.10);
-    }
-    .btn.ghost{background: transparent}
-    .right{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-
-    .grid{
-      margin-top:14px;
-      display:grid;
-      grid-template-columns: 340px 1fr;
-      gap:12px;
-      align-items:start;
-    }
-
-    .card{
-      border:1px solid var(--border2);
-      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.04));
-      border-radius:20px;
-      padding:16px;
-      box-shadow: 0 12px 40px rgba(0,0,0,.25);
-    }
-
-    .title{margin:0 0 10px;font-size:18px;letter-spacing:-.01em}
-    .muted{color:rgba(234,240,255,.70);line-height:1.55}
-
-    .profile{
-      display:flex; gap:12px; align-items:center;
-      padding:14px;
-      border-radius:18px;
-      border:1px solid var(--border);
-      background: rgba(0,0,0,.16);
-    }
-    .avatar{
-      width:56px;height:56px;border-radius:18px;
-      border:1px solid rgba(255,255,255,.16);
-      background: rgba(255,255,255,.06);
-      object-fit:cover;
-    }
-    .name{font-weight:950;font-size:16px}
-    .id{font-size:12px;color:rgba(234,240,255,.60);margin-top:2px;word-break:break-all}
-
-    .pillrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-    .pill{
-      border:1px solid var(--border);
-      background: rgba(0,0,0,.14);
-      border-radius:999px;
-      padding:8px 10px;
-      font-weight:900;
-      font-size:13px;
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-    }
-
-    .roles{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-    .role{
-      border:1px solid var(--border);
-      background: rgba(0,0,0,.14);
-      border-radius:999px;
-      padding:8px 10px;
-      font-weight:900;
-      font-size:13px;
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      max-width:100%;
-    }
-    .role .r-dot{width:9px;height:9px;border-radius:999px;background:rgba(125,211,252,.85);flex:0 0 auto}
-    .role .r-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:260px}
-
-    .action{
-      border:1px solid var(--border);
-      background: rgba(0,0,0,.12);
-      border-radius:16px;
-      padding:12px;
-      display:flex;justify-content:space-between;align-items:center;gap:10px;
-      margin-top:10px;
-    }
-
-    @media (max-width: 980px){
-      .grid{grid-template-columns:1fr}
-    }
-  
-    /* Dashboard upgrade */
-    .hero{
-      display:grid;
-      grid-template-columns: 1.35fr .85fr;
-      gap:18px;
-      margin: 26px auto 18px;
-      align-items:stretch;
-    }
-    .kicker{
-      display:inline-flex;
-      align-items:center;
-      gap:.45rem;
-      padding:8px 12px;
-      border:1px solid var(--border);
-      border-radius:999px;
-      background: rgba(255,255,255,.03);
-      color: var(--muted);
-      font-weight:800;
-      font-size:12px;
-      letter-spacing:.02em;
-    }
-    .hero h1{
-      margin:10px 0 6px;
-      font-size: clamp(26px, 4vw, 38px);
-      line-height:1.1;
-      letter-spacing:-.02em;
-    }
-    .sub{margin:0 0 14px;color:var(--muted);max-width:60ch}
-    .quick{display:flex;flex-wrap:wrap;gap:10px}
-    .qbtn{
-      display:inline-flex;align-items:center;gap:.45rem;
-      padding:10px 12px;border-radius:12px;
-      border:1px solid var(--border);
-      background: rgba(255,255,255,.02);
-      color: var(--txt); text-decoration:none; font-weight:850;
-      transition: transform .15s ease, background .15s ease, border-color .15s ease;
-    }
-    .qbtn:hover{transform: translateY(-1px); background: rgba(255,255,255,.04); border-color: var(--border2)}
-    .hero-right{padding:16px}
-    .minirow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
-    .mini{
-      border:1px solid var(--border);
-      border-radius:14px;
-      padding:12px;
-      background: rgba(255,255,255,.02);
-    }
-    .mini-top{color:var(--muted);font-weight:850;font-size:12px;display:flex;align-items:center}
-    .mini-val{font-weight:950;font-size:14px;margin-top:6px}
-    .grid2{display:grid;grid-template-columns: 1.25fr .75fr; gap:18px; margin: 18px auto 40px}
-    .card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
-    .chips{display:flex;flex-wrap:wrap;gap:10px}
-    .chip{
-      display:inline-flex;align-items:center;gap:.5rem;
-      padding:10px 12px;border-radius:999px;
-      border:1px solid var(--border);
-      background: rgba(255,255,255,.02);
-      font-weight:850;
-    }
-    .chip .dot{width:10px;height:10px;border-radius:999px;background: rgba(255,255,255,.35)}
-    .hint{
-      margin-top:14px;
-      padding:12px 12px;
-      border-radius:14px;
-      border:1px dashed rgba(255,255,255,.14);
-      color: var(--muted);
-      display:flex;align-items:flex-start;
-      gap:.5rem;
-      background: rgba(255,255,255,.015);
-      font-size:13px;
-    }
-    .actions{display:flex;flex-direction:column;gap:10px;margin-top:8px}
-    .action-card{
-      display:grid;
-      grid-template-columns: 44px 1fr auto;
-      gap:12px;
-      align-items:center;
-      padding:12px;
-      border-radius:16px;
-      border:1px solid var(--border);
-      background: rgba(255,255,255,.02);
-      color: var(--txt);
-      text-decoration:none;
-      transition: transform .15s ease, background .15s ease, border-color .15s ease;
-    }
-    .action-card:hover{transform: translateY(-1px); background: rgba(255,255,255,.04); border-color: var(--border2)}
-    .ac-ico{
-      width:44px;height:44px;border-radius:14px;
-      display:grid;place-items:center;
-      background: rgba(125,211,252,.10);
-      border:1px solid rgba(125,211,252,.20);
-      font-size:18px;
-    }
-    .ac-title{font-weight:950}
-    .skeleton-line{
-      height:38px;border-radius:999px;
-      border:1px solid var(--border);
-      background: linear-gradient(90deg, rgba(255,255,255,.02), rgba(255,255,255,.06), rgba(255,255,255,.02));
-      background-size: 200% 100%;
-      animation: shimmer 1.3s infinite linear;
-      width: min(320px, 100%);
-    }
-    @keyframes shimmer{0%{background-position:0% 0%}100%{background-position:200% 0%}}
-    @media (max-width: 980px){
-      .hero{grid-template-columns:1fr}
-      .grid2{grid-template-columns:1fr}
-    }
-
-    .brand-badge{position:relative}
-  .brandFallback{
-    position:absolute; inset:0;
-    display:none;
-    align-items:center; justify-content:center;
-    font-weight:1000;
-    color: rgba(255,255,255,.85);
-    letter-spacing:.4px;
-    font-size:12px;
-    background: rgba(0,0,0,.18);
-  }
-</style>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-</head>
-
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet"/>
+<link href="assets/ui.css" rel="stylesheet"/></head>
 <body>
-  <header class="topbar">
-    <div class="topbar-inner">
-      <a class="brand" href="/">
-        <span class="brand-badge"><img src="assets/logo.png" alt="SkyFrost" loading="eager" onerror="if(!this.dataset.f){this.dataset.f=1;this.src='assets/icon.png';}else{this.style.display='none';this.nextElementSibling.style.display='flex';}"><span class="brandFallback" aria-hidden="true">SF</span></span>
-        <span>SkyFrost • Dashboard</span>
-      </a>
-
-      <div class="right">
-        <a class="btn" href="/">Home</a>
-        <a class="btn" href="/profilo.html">Store</a>
-        <a class="btn" href="/wiki.html">Wiki</a>
-        <a class="btn" href="/supporto.html">Supporto</a>
-        <a class="btn primary" href="http://discord.skyfrost.it/" target="_blank" rel="noopener">Discord</a>
-        <a class="btn ghost" href="/api/logout">Logout</a>
-      </div>
-    </div>
-  </header>
-
-  <main class="container">
-  <section class="hero">
-    <div class="hero-left">
-      <div class="kicker"><i class="bi bi-grid-1x2-fill ico"></i>Dashboard</div>
-      <h1 id="greeting">Bentornato</h1>
-      <p class="sub">Gestisci profilo, ruoli e link rapidi in un’unica schermata.</p>
-
-      <div class="quick">
-        <a class="qbtn" href="/profilo.html"><i class="bi bi-person-badge ico"></i>Store</a>
-        <a class="qbtn" href="/staff.html"><i class="bi bi-people-fill ico"></i>Staff</a>
-        <a class="qbtn" href="/vote.html"><i class="bi bi-hand-thumbs-up-fill ico"></i>Vote</a>
-        <a class="qbtn" href="/wiki.html"><i class="bi bi-book-half ico"></i>Wiki</a>
-        <a class="qbtn" href="/supporto.html"><i class="bi bi-life-preserver ico"></i>Supporto</a>
-      </div>
-    </div>
-
-    <div class="hero-right card">
-      <div class="profile">
-        <img class="avatar" id="avatar" alt="">
-        <div style="min-width:0">
-          <div class="name" id="name">Caricamento…</div>
-          <div class="id" id="uid"></div>
-          <div class="pillrow" id="badges" style="margin-top:10px"></div>
-        </div>
-      </div>
-
-      <div class="minirow">
-        <div class="mini">
-          <div class="mini-top"><i class="bi bi-shield-check ico"></i>Sessione</div>
-          <div class="mini-val" id="sess">Verifica…</div>
-        </div>
-        <div class="mini">
-          <div class="mini-top"><i class="bi bi-collection ico"></i>Ruoli</div>
-          <div class="mini-val" id="roleCount">—</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <div class="grid2">
-    <section class="card">
-      <div class="card-head">
-        <h2 class="title" style="margin:0"><i class="bi bi-tags-fill ico"></i>Ruoli Discord</h2>
-        <div class="muted" id="rolesMeta">Filtrati automaticamente</div>
-      </div>
-
-      <div class="roles chips" id="roles" style="margin-top:12px">
-        <div class="skeleton-line"></div>
-        <div class="skeleton-line"></div>
-        <div class="skeleton-line"></div>
-      </div>
-
-      <div class="hint">
-        <i class="bi bi-info-circle ico"></i>
+<header class="topbar">
+<div class="topbar-inner">
+<a class="brand" href="/">
+<span class="brand-badge"><img alt="SkyFrost" loading="eager" onerror="if(!this.dataset.f){this.dataset.f=1;this.src='assets/icon.png';}else{this.style.display='none';this.nextElementSibling.style.display='flex';}" src="assets/logo.png"/><span aria-hidden="true" class="brandFallback">SF</span></span>
+<span>SkyFrost • Dashboard</span>
+</a>
+<div class="right">
+<a class="btn" href="/">Home</a>
+<a class="btn" href="/profilo.html">Store</a>
+<a class="btn" href="/wiki.html">Wiki</a>
+<a class="btn" href="/supporto.html">Supporto</a>
+<a class="btn primary" href="http://discord.skyfrost.it/" rel="noopener" target="_blank">Discord</a>
+<a class="btn ghost" href="/api/logout">Logout</a>
+</div>
+</div>
+</header>
+<main class="container">
+<section class="hero">
+<div class="hero-left">
+<div class="kicker"><i class="bi bi-grid-1x2-fill ico"></i>Dashboard</div>
+<h1 id="greeting">Bentornato</h1>
+<p class="sub">Gestisci profilo, ruoli e link rapidi in un’unica schermata.</p>
+<div class="quick">
+<a class="qbtn" href="/profilo.html"><i class="bi bi-person-badge ico"></i>Store</a>
+<a class="qbtn" href="/staff.html"><i class="bi bi-people-fill ico"></i>Staff</a>
+<a class="qbtn" href="/vote.html"><i class="bi bi-hand-thumbs-up-fill ico"></i>Vote</a>
+<a class="qbtn" href="/wiki.html"><i class="bi bi-book-half ico"></i>Wiki</a>
+<a class="qbtn" href="/supporto.html"><i class="bi bi-life-preserver ico"></i>Supporto</a>
+</div>
+</div>
+<div class="hero-right card">
+<div class="profile">
+<img alt="" class="avatar" id="avatar"/>
+<div style="min-width:0">
+<div class="name" id="name">Caricamento…</div>
+<div class="id" id="uid"></div>
+<div class="pillrow" id="badges" style="margin-top:10px"></div>
+</div>
+</div>
+<div class="minirow">
+<div class="mini">
+<div class="mini-top"><i class="bi bi-shield-check ico"></i>Sessione</div>
+<div class="mini-val" id="sess">Verifica…</div>
+</div>
+<div class="mini">
+<div class="mini-top"><i class="bi bi-collection ico"></i>Ruoli</div>
+<div class="mini-val" id="roleCount">—</div>
+</div>
+</div>
+</div>
+</section>
+<div class="grid2">
+<section class="card">
+<div class="card-head">
+<h2 class="title" style="margin:0"><i class="bi bi-tags-fill ico"></i>Ruoli Discord</h2>
+<div class="muted" id="rolesMeta">Filtrati automaticamente</div>
+</div>
+<div class="roles chips" id="roles" style="margin-top:12px">
+<div class="skeleton-line"></div>
+<div class="skeleton-line"></div>
+<div class="skeleton-line"></div>
+</div>
+<div class="hint">
+<i class="bi bi-info-circle ico"></i>
         Se manca un ruolo, controlla la whitelist nel backend (`DISCORD_ALLOWED_ROLE_IDS`).
       </div>
-    </section>
-
-    <aside class="card">
-      <h2 class="title" style="margin:0 0 10px 0"><i class="bi bi-lightning-charge-fill ico"></i>Azioni rapide</h2>
-
-      <div class="actions">
-        <a class="action-card" href="http://discord.skyfrost.it/" target="_blank" rel="noopener">
-          <div class="ac-ico"><i class="bi bi-discord"></i></div>
-          <div>
-            <div class="ac-title">Apri Discord</div>
-            <div class="muted">Entra nel server e contatta lo staff.</div>
-          </div>
-          <i class="bi bi-arrow-up-right"></i>
-        </a>
-
-        <a class="action-card" href="/supporto.html">
-          <div class="ac-ico"><i class="bi bi-chat-dots-fill"></i></div>
-          <div>
-            <div class="ac-title">Apri supporto</div>
-            <div class="muted">Problemi? Trovi canali e link utili.</div>
-          </div>
-          <i class="bi bi-chevron-right"></i>
-        </a>
-
-        <a class="action-card" href="/staff.html">
-          <div class="ac-ico"><i class="bi bi-people-fill"></i></div>
-          <div>
-            <div class="ac-title">Vedi lo staff</div>
-            <div class="muted">Lista aggiornata automaticamente.</div>
-          </div>
-          <i class="bi bi-chevron-right"></i>
-        </a>
-
-        <a class="action-card" href="/api/logout">
-          <div class="ac-ico"><i class="bi bi-box-arrow-right"></i></div>
-          <div>
-            <div class="ac-title">Logout</div>
-            <div class="muted">Disconnetti la sessione corrente.</div>
-          </div>
-          <i class="bi bi-chevron-right"></i>
-        </a>
-      </div>
-    </aside>
-  </div>
+</section>
+<aside class="card">
+<h2 class="title" style="margin:0 0 10px 0"><i class="bi bi-lightning-charge-fill ico"></i>Azioni rapide</h2>
+<div class="actions">
+<a class="action-card" href="http://discord.skyfrost.it/" rel="noopener" target="_blank">
+<div class="ac-ico"><i class="bi bi-discord"></i></div>
+<div>
+<div class="ac-title">Apri Discord</div>
+<div class="muted">Entra nel server e contatta lo staff.</div>
+</div>
+<i class="bi bi-arrow-up-right"></i>
+</a>
+<a class="action-card" href="/supporto.html">
+<div class="ac-ico"><i class="bi bi-chat-dots-fill"></i></div>
+<div>
+<div class="ac-title">Apri supporto</div>
+<div class="muted">Problemi? Trovi canali e link utili.</div>
+</div>
+<i class="bi bi-chevron-right"></i>
+</a>
+<a class="action-card" href="/staff.html">
+<div class="ac-ico"><i class="bi bi-people-fill"></i></div>
+<div>
+<div class="ac-title">Vedi lo staff</div>
+<div class="muted">Lista aggiornata automaticamente.</div>
+</div>
+<i class="bi bi-chevron-right"></i>
+</a>
+<a class="action-card" href="/api/logout">
+<div class="ac-ico"><i class="bi bi-box-arrow-right"></i></div>
+<div>
+<div class="ac-title">Logout</div>
+<div class="muted">Disconnetti la sessione corrente.</div>
+</div>
+<i class="bi bi-chevron-right"></i>
+</a>
+</div>
+</aside>
+</div>
 </main>
-
-  <script>
+<script>
     function colorToHex(n){
       const hex = Number(n || 0).toString(16).padStart(6, "0");
       return "#" + hex;
@@ -468,5 +183,5 @@
     loadMe();
     loadRoles();
   </script>
-</body>
+<script src="assets/ui.js"></script></body>
 </html>
