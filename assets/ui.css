@@ -1966,3 +1966,7 @@ details .details-body{padding: 0 14px 14px}
     font-size:12px;
     background: rgba(0,0,0,.18);
   }
+
+
+/* Utilities */
+.is-hidden{display:none !important;}
