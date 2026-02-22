@@ -1,120 +1,296 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>{BRAND} • Store</title>
-  <link rel="stylesheet" href="assets/css/style.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SkyFrost — Store</title>
+  <link rel="stylesheet" href="assets/style.css" />
+  <style>
+    .store-header {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 60px 32px 40px;
+    }
+    .store-header h1 {
+      font-family: var(--font-head);
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+    .store-header p { color: var(--text-2); max-width: 480px; }
+
+    /* Tabs */
+    .store-tabs {
+      display: flex;
+      gap: 6px;
+      margin-top: 28px;
+      flex-wrap: wrap;
+    }
+    .tab-btn {
+      padding: 8px 18px;
+      border-radius: 8px;
+      font-family: var(--font-head);
+      font-size: .88rem;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      cursor: pointer;
+      background: var(--glass);
+      border: 1px solid var(--border);
+      color: var(--text-2);
+      transition: all .2s;
+    }
+    .tab-btn:hover, .tab-btn.active {
+      background: rgba(26,144,255,.15);
+      border-color: var(--border-h);
+      color: var(--ice-300);
+    }
+
+    /* Grid */
+    .store-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 32px 80px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 20px;
+    }
+
+    /* Product card */
+    .product-card {
+      padding: 0;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform .2s, border-color .2s, box-shadow .2s;
+    }
+    .product-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--border-h);
+      box-shadow: 0 16px 50px rgba(26,144,255,.12);
+    }
+    .product-card__banner {
+      height: 130px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .banner-vip   { background: linear-gradient(135deg, #0a1a3a, #1a4a8a); }
+    .banner-mvip  { background: linear-gradient(135deg, #1a0a00, #7a3a00); }
+    .banner-spawn { background: linear-gradient(135deg, #001a0a, #004a2a); }
+    .banner-key   { background: linear-gradient(135deg, #10001a, #3a006a); }
+    .banner-coin  { background: linear-gradient(135deg, #1a1a00, #5a4a00); }
+    .product-card__banner::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, transparent 40%, rgba(0,0,0,.4));
+    }
+    .product-card__body { padding: 18px; }
+    .product-card__name {
+      font-family: var(--font-head);
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .product-card__desc { font-size: .82rem; color: var(--text-2); margin-bottom: 14px; }
+    .product-card__footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .product-card__price {
+      font-family: var(--font-head);
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--ice-300);
+    }
+    .product-card__price .old {
+      font-size: .8rem;
+      color: var(--text-3);
+      text-decoration: line-through;
+      margin-left: 6px;
+    }
+
+    /* Featured tag */
+    .tag-featured {
+      position: absolute;
+      top: 10px; right: 10px;
+      z-index: 1;
+      background: linear-gradient(135deg, #ffa500, #ff6b00);
+      color: #000;
+      font-size: .65rem;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+
+    @media (max-width: 600px) {
+      .store-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+    }
+  </style>
 </head>
 <body>
-  <header class="topbar">
-    <div class="container topbar-inner">
-      <a class="brand" href="index.html">
-        <span class="brand-badge" aria-hidden="true"></span>
-        <span>Hytale Server</span>
-      </a>
-      <nav class="nav" data-nav></nav>
-      <div class="actions">
-        <a class="btn" href="login.html">Login</a>
-        <a class="btn primary" href="register.html">Register</a>
-      </div>
-    </div>
-  </header>
+<canvas id="particles-canvas"></canvas>
+<div class="page-wrapper">
 
-  <section class="hero">
-    <div class="container">
-      <div class="hero-card">
-        <div class="hero-inner">
-          <div class="hero-left">
-            <div class="kicker">Store</div>
-            <h1 class="title">Pacchetti & vantaggi</h1>
-            <p class="subtitle">Qui puoi integrare il tuo store reale (Tebex o API custom). Layout a categorie come LeaderOS.</p>
-          </div>
-          <div class="stats">
-            <div class="stat" data-server-stat>
-              <div class="stat-top"><span>Server</span><span class="pill" data-pill>—</span></div>
-              <div class="stat-val" data-val>-/- players online</div>
-              <div class="stat-sub" data-sub>—</div>
-            </div>
-            <div class="stat" data-discord-stat>
-              <div class="stat-top"><span>Discord</span><span class="pill" data-pill>—</span></div>
-              <div class="stat-val" data-val>-/- members online</div>
-              <div class="stat-sub" data-sub>—</div>
-            </div>
-          </div>
+  <div class="store-header fade-up">
+    <h1>🛒 Store</h1>
+    <p>Acquista rank, oggetti e boost per migliorare la tua esperienza su SkyFrost. Tutti i pagamenti sono sicuri.</p>
+    <div class="store-tabs">
+      <button class="tab-btn active" onclick="filterCategory('all', this)">Tutti</button>
+      <button class="tab-btn" onclick="filterCategory('vip', this)">VIP Ranks</button>
+      <button class="tab-btn" onclick="filterCategory('spawner', this)">Spawner</button>
+      <button class="tab-btn" onclick="filterCategory('key', this)">Chiavi</button>
+      <button class="tab-btn" onclick="filterCategory('coin', this)">Monete</button>
+    </div>
+  </div>
+
+  <div class="store-grid" id="store-grid">
+
+    <div class="card product-card fade-up delay-1" data-cat="vip">
+      <div class="product-card__banner banner-vip">⭐</div>
+      <div class="product-card__body">
+        <div class="product-card__name">VIP</div>
+        <div class="product-card__desc">Accesso ai comandi VIP, prefisso esclusivo e fly in spawn.</div>
+        <div class="product-card__footer">
+          <div class="product-card__price">€ 4,99</div>
+          <button class="btn btn-primary btn-sm">Acquista</button>
         </div>
       </div>
     </div>
-  </section>
 
-  <main class="main">
-    <div class="container">
-      <div class="row">
-        <section class="col">
-          <div class="card">
-            <div class="card-h">
-              <h3>Categorie</h3>
-              <span class="badge">Seleziona</span>
-            </div>
-            <div class="card-b">
-              <div class="list">
-                <div class="item">
-                  <div class="meta">VIP</div>
-                  <h4>Ranks</h4>
-                  <p>VIP, VIP+, MVIP…</p>
-                  <a class="more" href="javascript:void(0)">Open →</a>
-                </div>
-                <div class="item">
-                  <div class="meta">Crates</div>
-                  <h4>Keys & Crates</h4>
-                  <p>Ricompense e bundle.</p>
-                  <a class="more" href="javascript:void(0)">Open →</a>
-                </div>
-                <div class="item">
-                  <div class="meta">Cosmetics</div>
-                  <h4>Skins</h4>
-                  <p>Oggetti estetici.</p>
-                  <a class="more" href="javascript:void(0)">Open →</a>
-                </div>
-              </div>
-
-              <div class="notice" style="margin-top:12px">
-                Tip: se mi dici come prendevi i pacchetti (Tebex JSON o la tua API), lo collego qui e diventa tutto dinamico.
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <aside class="col side">
-          <div class="card">
-            <div class="card-h">
-              <h3>Carrello</h3>
-              <span class="badge">Demo</span>
-            </div>
-            <div class="card-b">
-              <div class="notice">
-                Carrello demo. In produzione: integra pagamento / checkout esterno.
-              </div>
-              <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
-                <button class="btn">View Cart</button>
-                <button class="btn primary">Checkout</button>
-              </div>
-            </div>
-          </div>
-        </aside>
+    <div class="card product-card fade-up delay-2" data-cat="vip">
+      <div class="product-card__banner banner-vip" style="position:relative">
+        <span class="tag-featured">Popolare</span>
+        🌟
+      </div>
+      <div class="product-card__body">
+        <div class="product-card__name">VIP+</div>
+        <div class="product-card__desc">Tutto di VIP + kit avanzato, priorità in coda e chat color.</div>
+        <div class="product-card__footer">
+          <div class="product-card__price">€ 8,99 <span class="old">€ 12,99</span></div>
+          <button class="btn btn-primary btn-sm">Acquista</button>
+        </div>
       </div>
     </div>
-  </main>
 
-  <footer class="footer">
-    <div class="container copy">
-      <span>All rights reserved. © 2026</span>
-      <span>Store</span>
+    <div class="card product-card fade-up delay-3" data-cat="vip">
+      <div class="product-card__banner banner-mvip" style="position:relative">
+        <span class="tag-featured">Best Value</span>
+        👑
+      </div>
+      <div class="product-card__body">
+        <div class="product-card__name">MVIP</div>
+        <div class="product-card__desc">Il rank massimo. Accesso totale, cosmetics esclusivi e tag custom.</div>
+        <div class="product-card__footer">
+          <div class="product-card__price">€ 19,99</div>
+          <button class="btn btn-cyan btn-sm">Acquista</button>
+        </div>
+      </div>
     </div>
-  </footer>
 
-  <script src="assets/js/config.js"></script>
-  <script src="assets/js/api.js"></script>
-  <script src="assets/js/app.js"></script>
+    <div class="card product-card fade-up delay-1" data-cat="spawner">
+      <div class="product-card__banner banner-spawn">🐔</div>
+      <div class="product-card__body">
+        <div class="product-card__name">Chicken Spawner</div>
+        <div class="product-card__desc">Spawner di pollo per la tua island. Velocità media.</div>
+        <div class="product-card__footer">
+          <div class="product-card__price">€ 2,99</div>
+          <button class="btn btn-primary btn-sm">Acquista</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card product-card fade-up delay-2" data-cat="spawner">
+      <div class="product-card__banner banner-spawn">🐷</div>
+      <div class="product-card__body">
+        <div class="product-card__name">Pig Spawner</div>
+        <div class="product-card__desc">Spawner di maiale, ottimo per farm di carni rapida.</div>
+        <div class="product-card__footer">
+          <div class="product-card__price">€ 3,99</div>
+          <button class="btn btn-primary btn-sm">Acquista</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card product-card fade-up delay-3" data-cat="spawner">
+      <div class="product-card__banner banner-spawn">🐉</div>
+      <div class="product-card__body">
+        <div class="product-card__name">Dragon Spawner</div>
+        <div class="product-card__desc">Lo spawner più raro. Drop esclusivi e alta velocità.</div>
+        <div class="product-card__footer">
+          <div class="product-card__price">€ 14,99</div>
+          <button class="btn btn-cyan btn-sm">Acquista</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card product-card fade-up delay-1" data-cat="key">
+      <div class="product-card__banner banner-key">🗝️</div>
+      <div class="product-card__body">
+        <div class="product-card__name">Chiave Comune x5</div>
+        <div class="product-card__desc">5 chiavi per i crate comuni. Ricompense casuali garantite.</div>
+        <div class="product-card__footer">
+          <div class="product-card__price">€ 1,99</div>
+          <button class="btn btn-primary btn-sm">Acquista</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card product-card fade-up delay-2" data-cat="key">
+      <div class="product-card__banner banner-key">🔑</div>
+      <div class="product-card__body">
+        <div class="product-card__name">Chiave Rara x3</div>
+        <div class="product-card__desc">3 chiavi per i crate rari. Alta probabilità di ricompense epiche.</div>
+        <div class="product-card__footer">
+          <div class="product-card__price">€ 3,49</div>
+          <button class="btn btn-primary btn-sm">Acquista</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card product-card fade-up delay-1" data-cat="coin">
+      <div class="product-card__banner banner-coin">💰</div>
+      <div class="product-card__body">
+        <div class="product-card__name">5.000 SkyCoins</div>
+        <div class="product-card__desc">Monete da usare nel market interno del server.</div>
+        <div class="product-card__footer">
+          <div class="product-card__price">€ 1,99</div>
+          <button class="btn btn-primary btn-sm">Acquista</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card product-card fade-up delay-2" data-cat="coin">
+      <div class="product-card__banner banner-coin">💎</div>
+      <div class="product-card__body">
+        <div class="product-card__name">25.000 SkyCoins</div>
+        <div class="product-card__desc">Pacchetto grande, risparmio del 20% rispetto ai singoli.</div>
+        <div class="product-card__footer">
+          <div class="product-card__price">€ 7,99 <span class="old">€ 9,99</span></div>
+          <button class="btn btn-primary btn-sm">Acquista</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="assets/components.js"></script>
+<script src="assets/main.js"></script>
+<script>
+  function filterCategory(cat, btn) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.product-card').forEach(c => {
+      c.style.display = (cat === 'all' || c.dataset.cat === cat) ? '' : 'none';
+    });
+  }
+</script>
 </body>
 </html>

@@ -1,188 +1,301 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>{BRAND} • Home</title>
-  <link rel="stylesheet" href="assets/css/style.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SkyFrost — Hytale Server</title>
+  <meta name="description" content="SkyFrost, il miglior server Hytale italiano. Store, staff, vote e community." />
+  <link rel="stylesheet" href="assets/style.css" />
+  <style>
+    /* ── Hero ── */
+    .hero {
+      padding: 80px 32px 60px;
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 48px;
+      align-items: start;
+    }
+    .hero__eyebrow {
+      font-family: var(--font-head);
+      font-size: .82rem;
+      font-weight: 700;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--ice-400);
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .hero__eyebrow::before {
+      content: '';
+      width: 32px; height: 2px;
+      background: linear-gradient(90deg, var(--ice-400), var(--cyan));
+      border-radius: 1px;
+    }
+    .hero__title {
+      font-family: var(--font-head);
+      font-size: clamp(2.8rem, 6vw, 5rem);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -.01em;
+      margin-bottom: 22px;
+    }
+    .hero__title .highlight {
+      background: linear-gradient(135deg, var(--ice-300), var(--cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero__desc {
+      color: var(--text-2);
+      font-size: 1.05rem;
+      max-width: 520px;
+      margin-bottom: 36px;
+      line-height: 1.75;
+    }
+    .hero__cta { display: flex; gap: 14px; flex-wrap: wrap; }
+
+    /* ── Stats sidebar ── */
+    .stats-sidebar { display: flex; flex-direction: column; gap: 16px; }
+    .stat-widget .icon {
+      font-size: 1.5rem;
+      margin-bottom: 8px;
+    }
+
+    /* ── Main layout ── */
+    .main-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 32px 80px;
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 24px;
+    }
+
+    /* ── Blog cards ── */
+    .blog-card {
+      padding: 24px;
+      margin-bottom: 16px;
+      cursor: pointer;
+    }
+    .blog-card__meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .blog-card__date { font-size: .78rem; color: var(--text-3); }
+    .blog-card__title {
+      font-family: var(--font-head);
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      transition: color .2s;
+    }
+    .blog-card:hover .blog-card__title { color: var(--ice-300); }
+    .blog-card__excerpt { color: var(--text-2); font-size: .9rem; }
+    .blog-card__read {
+      margin-top: 14px;
+      font-size: .82rem;
+      font-weight: 600;
+      color: var(--ice-400);
+      letter-spacing: .04em;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* ── Side widgets ── */
+    .sidebar { display: flex; flex-direction: column; gap: 16px; }
+    .widget-title {
+      font-family: var(--font-head);
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      padding: 16px 16px 0;
+    }
+
+    @media (max-width: 900px) {
+      .hero        { grid-template-columns: 1fr; }
+      .stats-sidebar { flex-direction: row; flex-wrap: wrap; }
+      .stats-sidebar .card { flex: 1 1 140px; }
+      .main-grid   { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 <body>
-  <canvas id="snow"></canvas>
+<canvas id="particles-canvas"></canvas>
+<div class="page-wrapper">
+  <!-- Nav & Footer injected by components.js -->
 
-  <header class="topbar">
-    <div class="container topbar-inner">
-      <a class="brand" href="index.html">
-        <span class="brand-badge" aria-hidden="true">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-            <path d="M12 2l9 5v10l-9 5-9-5V7l9-5Z" stroke="currentColor" stroke-width="2" opacity=".9"/>
-            <path d="M12 7l6 3.5V17l-6 3.5L6 17v-6.5L12 7Z" stroke="currentColor" stroke-width="2" opacity=".6"/>
-          </svg>
-        </span>
-        <span data-brand>Hytale Server</span>
-      </a>
-
-      <nav class="nav" data-nav></nav>
-
-      <div class="actions">
-        <a class="btn" href="login.html">Login</a>
-        <a class="btn primary" href="register.html">Register</a>
+  <!-- ── Hero ───────────────────────────────────── -->
+  <section class="hero fade-up">
+    <div class="hero__left">
+      <p class="hero__eyebrow">Hytale Server Italiano</p>
+      <h1 class="hero__title">
+        Benvenuto su<br>
+        <span class="highlight">SkyFrost</span>
+      </h1>
+      <p class="hero__desc">
+        Il server Hytale che stavi cercando. Community appassionata, staff attivo, eventi continui e uno store ricco di contenuti esclusivi.
+      </p>
+      <div class="hero__cta">
+        <a href="store.html" class="btn btn-primary btn-lg">Visita lo Store</a>
+        <a href="vote.html"  class="btn btn-ghost btn-lg">Vota il Server</a>
       </div>
     </div>
-  </header>
 
-  <section class="hero">
-    <div class="container">
-      <div class="hero-card">
-        <div class="hero-inner">
-          <div class="hero-left">
-            <div class="kicker">Welcome</div>
-            <h1 class="title">Community • Store • Staff</h1>
-            <p class="subtitle">
-              Un sito pulito e veloce in stile LeaderOS: news a sinistra, box utili a destra, e contatori live server/Discord.
-            </p>
-            <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
-              <a class="btn primary" href="store.html">Open Store</a>
-              <a class="btn" href="staff.html">View Staff</a>
-              <a class="btn good" href="vote.html">Vote</a>
-            </div>
-          </div>
-
-          <div class="stats">
-            <div class="stat" data-server-stat>
-              <div class="stat-top">
-                <span>Server</span>
-                <span class="pill" data-pill>—</span>
-              </div>
-              <div class="stat-val" data-val>-/- players online</div>
-              <div class="stat-sub" data-sub>—</div>
-            </div>
-
-            <div class="stat" data-discord-stat>
-              <div class="stat-top">
-                <span>Discord</span>
-                <span class="pill" data-pill>—</span>
-              </div>
-              <div class="stat-val" data-val>-/- members online</div>
-              <div class="stat-sub" data-sub>—</div>
-            </div>
-          </div>
+    <!-- Stats sidebar in hero -->
+    <div class="stats-sidebar">
+      <div class="card stat-widget">
+        <div class="icon">🎮</div>
+        <div class="stat-widget__label">Giocatori Online</div>
+        <div class="stat-widget__value" id="stat-players">—</div>
+        <div class="stat-widget__sub">
+          <span class="stat-widget__dot dot-green"></span> Server attivo
         </div>
+      </div>
+      <div class="card stat-widget">
+        <div class="icon">💬</div>
+        <div class="stat-widget__label">Discord Members</div>
+        <div class="stat-widget__value" id="stat-discord">—</div>
+        <div class="stat-widget__sub">
+          <span class="stat-widget__dot dot-blue"></span> Online ora
+        </div>
+      </div>
+      <div class="card stat-widget">
+        <div class="icon">🏆</div>
+        <div class="stat-widget__label">Totale Donatori</div>
+        <div class="stat-widget__value" id="stat-donors">—</div>
+        <div class="stat-widget__sub">Grazie a tutti ❤</div>
+      </div>
+      <div class="card stat-widget">
+        <div class="icon">⭐</div>
+        <div class="stat-widget__label">Voti questo mese</div>
+        <div class="stat-widget__value" id="stat-votes">—</div>
+        <div class="stat-widget__sub">Vota per salire di grado!</div>
       </div>
     </div>
   </section>
 
-  <main class="main">
-    <div class="container">
-      <div class="row">
-        <section class="col">
-          <div class="card">
-            <div class="card-h">
-              <h3>Blog</h3>
-              <span class="badge">Updates</span>
-            </div>
-            <div class="card-b">
-              <div class="list">
-                <article class="item">
-                  <div class="meta">Updates • Feb 20, 2026</div>
-                  <h4>Benvenuto sul nuovo sito</h4>
-                  <p>Questa è una news di esempio. Puoi collegare qui un vero feed (API / database) quando vuoi.</p>
-                  <a class="more" href="javascript:void(0)">Read More →</a>
-                </article>
-                <article class="item">
-                  <div class="meta">Updates • Feb 18, 2026</div>
-                  <h4>Patch notes</h4>
-                  <p>Altra news di esempio in stile card, come nella demo LeaderOS.</p>
-                  <a class="more" href="javascript:void(0)">Read More →</a>
-                </article>
-              </div>
-            </div>
-          </div>
-        </section>
+  <div class="glow-line" style="max-width:1200px;margin:0 auto 32px;"></div>
 
-        <aside class="col side">
-          <div class="card">
-            <div class="card-h">
-              <h3>Top Donors</h3>
-              <span class="badge">All time</span>
-            </div>
-            <div class="card-b">
-              <table class="table">
-                <thead>
-                  <tr><th>Username</th><th>Total</th></tr>
-                </thead>
-                <tbody>
-                  <tr><td>demo</td><td>250.00€</td></tr>
-                  <tr><td>LeaderOS</td><td>100.00€</td></tr>
-                </tbody>
-              </table>
-              <div class="notice">
-                Se vuoi, qui possiamo collegare i tuoi dati reali (Tebex / store API).
-              </div>
-            </div>
-          </div>
+  <!-- ── Main Grid ──────────────────────────────── -->
+  <div class="main-grid">
+    <!-- Blog -->
+    <div class="main-col">
+      <div class="section-title">📢 Ultime Notizie</div>
 
-          <div style="height:14px"></div>
-
-          <div class="card">
-            <div class="card-h">
-              <h3>Recent Purchases</h3>
-              <span class="badge">Live</span>
-            </div>
-            <div class="card-b">
-              <table class="table">
-                <thead>
-                  <tr><th>Username</th><th>Category</th><th>Product</th></tr>
-                </thead>
-                <tbody>
-                  <tr><td>LeaderOS</td><td>VIP</td><td>MVIP</td></tr>
-                  <tr><td>LeaderOS</td><td>Spawners</td><td>Chicken Spawner</td></tr>
-                  <tr><td>demo</td><td>VIP</td><td>VIP+</td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </aside>
-      </div>
-    </div>
-  </main>
-
-  <footer class="footer">
-    <div class="container footer-inner">
-      <div>
-        <h4>About</h4>
-        <p>
-          Sito per server game in stile LeaderOS: store, staff, vote e dashboard. Collegabile alle tue API e a Discord.
+      <article class="card blog-card fade-up delay-1">
+        <div class="blog-card__meta">
+          <span class="badge badge-blue">Update</span>
+          <span class="badge badge-green">Nuovo</span>
+          <span class="blog-card__date">20 Feb 2026</span>
+        </div>
+        <h2 class="blog-card__title">Benvenuto sul nuovo sito di SkyFrost!</h2>
+        <p class="blog-card__excerpt">
+          Abbiamo completamente rinnovato il portale del server. Nuova UI, store migliorato, pagina staff aggiornata e molto altro. Continua a seguirci per tutte le novità!
         </p>
-      </div>
-      <div>
-        <h4>Quick Menu</h4>
-        <div class="links">
-          <a href="index.html">Home</a>
-          <a href="store.html">Store</a>
-          <a href="staff.html">Staff</a>
-          <a href="vote.html">Vote</a>
-          <a href="dashboard.html">Dashboard</a>
-        </div>
-      </div>
-      <div>
-        <h4>Links</h4>
-        <div class="links">
-          <a href="javascript:void(0)">Rules</a>
-          <a href="javascript:void(0)">Terms of Service</a>
-          <a href="javascript:void(0)">Privacy Policy</a>
-          <a href="javascript:void(0)">Discord</a>
-        </div>
-      </div>
-    </div>
-    <div class="container copy">
-      <span>All rights reserved. © 2026</span>
-      <span>Style inspired by LeaderOS-like layout</span>
-    </div>
-  </footer>
+        <span class="blog-card__read">Leggi tutto →</span>
+      </article>
 
-  <script src="assets/js/config.js"></script>
-  <script src="assets/js/api.js"></script>
-  <script src="assets/js/app.js"></script>
-  <script src="assets/js/snow.js"></script>
+      <article class="card blog-card fade-up delay-2">
+        <div class="blog-card__meta">
+          <span class="badge badge-cyan">Patch</span>
+          <span class="blog-card__date">18 Feb 2026</span>
+        </div>
+        <h2 class="blog-card__title">Patch 1.3 — Nuove zone e bilanciamento</h2>
+        <p class="blog-card__excerpt">
+          La patch 1.3 introduce tre nuove zone esplorabili, decine di mob inediti e un sistema di bilanciamento per le classi. Entra in gioco e scopri tutte le novità!
+        </p>
+        <span class="blog-card__read">Leggi tutto →</span>
+      </article>
+
+      <article class="card blog-card fade-up delay-3">
+        <div class="blog-card__meta">
+          <span class="badge badge-gold">Evento</span>
+          <span class="blog-card__date">15 Feb 2026</span>
+        </div>
+        <h2 class="blog-card__title">Evento San Valentino — Ricompense speciali</h2>
+        <p class="blog-card__excerpt">
+          Hai completato le quest speciali di San Valentino? Le ricompense saranno distribuite entro la fine del mese. Controlla il tuo inventario e il tuo account!
+        </p>
+        <span class="blog-card__read">Leggi tutto →</span>
+      </article>
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <!-- Top Donors -->
+      <div class="card fade-up delay-1">
+        <div class="widget-title">🏅 Top Donatori</div>
+        <table class="sf-table" style="margin-top:8px">
+          <thead>
+            <tr><th>#</th><th>Username</th><th>Totale</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="rank">1</td><td>ArcticWolf</td><td style="color:var(--ice-300)">€ 320</td></tr>
+            <tr><td class="rank">2</td><td>FrostByte</td><td style="color:var(--ice-300)">€ 210</td></tr>
+            <tr><td class="rank">3</td><td>NordLight</td><td style="color:var(--ice-300)">€ 150</td></tr>
+            <tr><td class="rank">4</td><td>IceBreaker</td><td style="color:var(--ice-300)">€ 90</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Recent Purchases -->
+      <div class="card fade-up delay-2">
+        <div class="widget-title">🛒 Acquisti Recenti</div>
+        <table class="sf-table" style="margin-top:8px">
+          <thead>
+            <tr><th>User</th><th>Prodotto</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>ArcticWolf</td>
+              <td><span class="badge badge-gold">MVIP</span></td>
+            </tr>
+            <tr>
+              <td>FrostByte</td>
+              <td><span class="badge badge-blue">VIP+</span></td>
+            </tr>
+            <tr>
+              <td>NordLight</td>
+              <td><span class="badge badge-purple">Spawner</span></td>
+            </tr>
+            <tr>
+              <td>IceBreaker</td>
+              <td><span class="badge badge-cyan">Key x5</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Discord Widget -->
+      <div class="card fade-up delay-3" style="padding:20px;text-align:center">
+        <div style="font-size:2rem;margin-bottom:10px">💬</div>
+        <div style="font-family:var(--font-head);font-size:1.1rem;font-weight:700;margin-bottom:6px">Unisciti al Discord</div>
+        <div style="color:var(--text-2);font-size:.85rem;margin-bottom:16px">Chatta con la community, trova party e ricevi aggiornamenti in tempo reale.</div>
+        <a href="#" class="btn btn-primary" style="width:100%;justify-content:center">Entra nel Discord</a>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<script src="assets/components.js"></script>
+<script src="assets/main.js"></script>
+<script>
+  // Animate stats on load
+  window.addEventListener('load', () => {
+    setTimeout(() => SF.animateCount(document.getElementById('stat-players'), 0, 47), 400);
+    setTimeout(() => SF.animateCount(document.getElementById('stat-discord'), 0, 312), 600);
+    setTimeout(() => SF.animateCount(document.getElementById('stat-donors'), 0, 89), 800);
+    setTimeout(() => SF.animateCount(document.getElementById('stat-votes'), 0, 154), 1000);
+  });
+</script>
 </body>
 </html>

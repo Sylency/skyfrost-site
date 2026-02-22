@@ -1,62 +1,119 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>{BRAND} • Register</title>
-  <link rel="stylesheet" href="assets/css/style.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SkyFrost — Registrati</title>
+  <link rel="stylesheet" href="assets/style.css" />
+  <style>
+    .auth-page {
+      min-height: calc(100vh - var(--nav-h));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 16px;
+    }
+    .auth-box { width: 100%; max-width: 420px; }
+    .auth-logo {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    .auth-logo .logo-icon {
+      width: 56px; height: 56px;
+      background: linear-gradient(135deg, var(--ice-400), var(--cyan));
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      margin: 0 auto 14px;
+      box-shadow: 0 0 30px var(--ice-glow);
+    }
+    .auth-logo h1 { font-family: var(--font-head); font-size: 1.6rem; font-weight: 800; }
+    .auth-logo p  { color: var(--text-2); font-size: .88rem; margin-top: 4px; }
+    .auth-card { padding: 32px; }
+
+    .perks {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+    .perk {
+      background: var(--glass-b);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: .78rem;
+      color: var(--text-2);
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .btn-submit { width: 100%; justify-content: center; padding: 13px; font-size: .95rem; }
+    .auth-footer { text-align: center; margin-top: 20px; font-size: .85rem; color: var(--text-3); }
+    .tos { font-size: .75rem; color: var(--text-3); text-align: center; margin-top: 12px; }
+    .tos a { color: var(--ice-400); }
+  </style>
 </head>
 <body>
-  <header class="topbar">
-    <div class="container topbar-inner">
-      <a class="brand" href="index.html">
-        <span class="brand-badge" aria-hidden="true"></span>
-        <span>Hytale Server</span>
-      </a>
-      <nav class="nav" data-nav></nav>
-      <div class="actions">
-        <a class="btn" href="login.html">Login</a>
+<canvas id="particles-canvas"></canvas>
+<div class="page-wrapper">
+
+  <div class="auth-page">
+    <div class="auth-box">
+      <div class="auth-logo fade-up">
+        <div class="logo-icon">❄</div>
+        <h1>Sky<span style="color:var(--ice-400)">Frost</span></h1>
+        <p>Crea il tuo account gratuito</p>
+      </div>
+
+      <div class="card auth-card fade-up delay-1">
+
+        <div class="perks">
+          <div class="perk">🎮 Accesso completo</div>
+          <div class="perk">🛒 Gestione acquisti</div>
+          <div class="perk">🗳 Sistema voto</div>
+          <div class="perk">📊 Dashboard stats</div>
+        </div>
+
+        <div class="form-group">
+          <label class="sf-label" for="username">Username</label>
+          <input id="username" type="text" class="sf-input" placeholder="Scegli un nickname..." autocomplete="username" />
+        </div>
+
+        <div class="form-group">
+          <label class="sf-label" for="email">Email</label>
+          <input id="email" type="email" class="sf-input" placeholder="tua@email.com" autocomplete="email" />
+        </div>
+
+        <div class="form-group">
+          <label class="sf-label" for="password">Password</label>
+          <input id="password" type="password" class="sf-input" placeholder="Min. 8 caratteri" autocomplete="new-password" />
+        </div>
+
+        <div class="form-group">
+          <label class="sf-label" for="password2">Conferma Password</label>
+          <input id="password2" type="password" class="sf-input" placeholder="Ripeti la password" autocomplete="new-password" />
+        </div>
+
+        <button class="btn btn-primary btn-submit">Crea Account</button>
+
+        <div class="tos">
+          Registrandoti accetti i nostri <a href="#">Termini di Servizio</a> e la <a href="#">Privacy Policy</a>.
+        </div>
+
+        <div class="auth-footer">
+          Hai già un account? <a href="login.html" style="color:var(--ice-400)">Accedi</a>
+        </div>
       </div>
     </div>
-  </header>
+  </div>
 
-  <main class="main">
-    <div class="container">
-      <div class="card" style="max-width:640px;margin:0 auto;">
-        <div class="card-h">
-          <h3>Register</h3>
-          <span class="badge">Placeholder</span>
-        </div>
-        <div class="card-b">
-          <form class="form" onsubmit="event.preventDefault(); alert('Demo: registrazione disabilitata');">
-            <div class="input">
-              <label>Username</label>
-              <input placeholder="Your name" required />
-            </div>
-            <div class="input">
-              <label>Email</label>
-              <input type="email" placeholder="you@example.com" required />
-            </div>
-            <div class="input">
-              <label>Password</label>
-              <input type="password" placeholder="••••••••" required />
-            </div>
-            <div style="display:flex;gap:10px;flex-wrap:wrap">
-              <button class="btn primary" type="submit">Create account</button>
-              <a class="btn" href="index.html">Back</a>
-            </div>
-          </form>
+</div>
 
-          <div class="notice" style="margin-top:12px">
-            In produzione: meglio “Register via Discord” (semplice e con ruoli).
-          </div>
-        </div>
-      </div>
-    </div>
-  </main>
-
-  <script src="assets/js/config.js"></script>
-  <script src="assets/js/api.js"></script>
-  <script src="assets/js/app.js"></script>
+<script src="assets/components.js"></script>
+<script src="assets/main.js"></script>
 </body>
 </html>
