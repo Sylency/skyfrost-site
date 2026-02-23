@@ -1,11 +1,11 @@
 /* SKYFROST — components.js — shared nav + footer */
 (function() {
   const PAGES = [
-    { href:'index.html',     icon:'🏠', label:'Home' },
-    { href:'store.html',     icon:'🛒', label:'Negozio' },
-    { href:'staff.html',     icon:'👥', label:'Staff' },
-    { href:'vote.html',      icon:'🗳', label:'Vota' },
-    { href:'dashboard.html', icon:'📊', label:'Dashboard' },
+    { href:'index.html',     icon:'<i class="bi bi-house-fill"></i>',       label:'Home' },
+    { href:'store.html',     icon:'<i class="bi bi-cart-fill"></i>',         label:'Negozio' },
+    { href:'staff.html',     icon:'<i class="bi bi-people-fill"></i>',       label:'Staff' },
+    { href:'vote.html',      icon:'<i class="bi bi-check2-square"></i>',     label:'Vota' },
+    { href:'dashboard.html', icon:'<i class="bi bi-speedometer2"></i>',      label:'Dashboard' },
   ];
 
   // NAV
@@ -26,7 +26,7 @@
   footer.innerHTML = `
     <div class="footer-inner">
       <div>
-        <div class="fb-brand">❄ SkyFrost</div>
+        <div class="fb-brand"><i class="bi bi-snow"></i> SkyFrost</div>
         <p class="fb-desc">SkyFrost è il server Hytale italiano per eccellenza. Community attiva, staff dedicato ed eventi continui.</p>
       </div>
       <div class="fc">
@@ -35,18 +35,18 @@
       </div>
       <div class="fc">
         <h4>Social Media</h4>
-        <a href="#">📘 Facebook</a>
-        <a href="#">📸 Instagram</a>
-        <a href="#">🐦 X / Twitter</a>
-        <a href="#">▶ YouTube</a>
-        <a href="#">💬 Discord</a>
+        <a href="#"><i class="bi bi-facebook"></i> Facebook</a>
+        <a href="#"><i class="bi bi-instagram"></i> Instagram</a>
+        <a href="#"><i class="bi bi-twitter-x"></i> X / Twitter</a>
+        <a href="#"><i class="bi bi-youtube"></i> YouTube</a>
+        <a href="#"><i class="bi bi-discord"></i> Discord</a>
       </div>
       <div class="fc">
         <h4>Link</h4>
-        <a href="register.html">Registrati</a>
-        <a href="#">Supporto</a>
-        <a href="#">Termini di Servizio</a>
-        <a href="#">Privacy</a>
+        <a href="register.html"><i class="bi bi-person-plus-fill"></i> Registrati</a>
+        <a href="#"><i class="bi bi-headset"></i> Supporto</a>
+        <a href="#"><i class="bi bi-file-text-fill"></i> Termini di Servizio</a>
+        <a href="#"><i class="bi bi-shield-lock-fill"></i> Privacy</a>
       </div>
     </div>
     <div class="footer-bottom">

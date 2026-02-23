@@ -458,3 +458,107 @@ img { display: block; max-width: 100%; }
   .top-nav .nav-auth { position: static; margin-top: 2px; }
   .footer-inner { grid-template-columns: 1fr; }
 }
+
+/* ══ BOOTSTRAP ICONS — global tweaks ════════════════════════ */
+.bi {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: -0.12em;
+  line-height: 1;
+}
+
+/* Nav icons */
+.top-nav a .bi { font-size: .85rem; }
+
+/* Hero logo icon */
+.hero-logo .bi { font-size: 2.6rem; color: #fff; }
+
+/* Footer brand icon */
+.fb-brand .bi { font-size: 1rem; }
+
+/* Mini avatar inside tables — center the icon */
+.mini-av .bi {
+  font-size: .75rem;
+  color: rgba(180,220,255,0.7);
+}
+
+/* Author avatar */
+.author-avatar .bi { font-size: .75rem; color: rgba(180,220,255,0.8); }
+
+/* Dashboard avatar */
+.d-av .bi { font-size: 1.6rem; color: #fff; }
+
+/* Staff avatar */
+.s-av .bi { font-size: 1.4rem; color: rgba(200,230,255,0.9); }
+
+/* Widget/section title icons */
+.wc-title .bi,
+.wc-header .bi { font-size: .8rem; }
+
+/* Store-cta icon */
+.store-cta .bi { font-size: 1.2rem; color: #fff; }
+
+/* Featured product header */
+.fp-header .bi { font-size: .75rem; }
+
+/* Sidebar widget-card headers */
+.wc-header > .bi { margin-right: 3px; }
+
+/* Footer column links */
+.fc a .bi { font-size: .75rem; width: 14px; }
+
+/* Page header */
+.page-hd .bi { font-size: .9rem; margin-right: 3px; }
+
+/* Role labels in staff */
+.role-lbl .bi { font-size: .72rem; }
+
+/* Vote cards */
+.v-icon .bi { font-size: 1.2rem; color: rgba(180,220,255,0.85); }
+
+/* Badges */
+.bdg .bi { font-size: .58rem; }
+
+/* Buttons */
+.btn .bi { font-size: .8rem; }
+
+/* Store-cta big icon on its own span */
+.sc-icon .bi { font-size: 1.2rem; color: #fff; }
+
+/* Ensure snow canvas is always behind content */
+#snow-canvas { z-index: 2 !important; }
+.page-wrapper { z-index: 3; position: relative; }
+.top-nav      { z-index: 200; }
+
+/* ══ NEWS THUMB — big centered icon ═════════════════════════ */
+.news-thumb { position: relative; }
+.news-thumb .bi {
+  font-size: 4.5rem !important;
+  color: rgba(180, 220, 255, 0.18);
+  text-shadow: 0 0 40px rgba(26,143,255,0.3);
+  filter: drop-shadow(0 0 20px rgba(26,143,255,0.2));
+}
+
+/* ══ STORE — product banner icons ═══════════════════════════ */
+.s-banner .bi {
+  font-size: 2.8rem !important;
+  color: rgba(180, 220, 255, 0.55);
+  filter: drop-shadow(0 0 12px rgba(26,143,255,0.3));
+}
+
+/* ══ VOTE — site icon ═══════════════════════════════════════ */
+.v-icon .bi { font-size: 1.3rem !important; }
+
+/* ══ STAFF — role avatars ═══════════════════════════════════ */
+.s-av .bi { font-size: 1.5rem !important; }
+
+/* ══ DASHBOARD — user avatar ════════════════════════════════ */
+.d-av .bi { font-size: 1.7rem !important; }
+
+/* ══ HERO LOGO ══════════════════════════════════════════════ */
+.hero-logo .bi {
+  font-size: 2.8rem !important;
+  color: #fff;
+  filter: drop-shadow(0 0 8px rgba(26,143,255,0.7));
+}
