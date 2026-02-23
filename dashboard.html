@@ -1,320 +1,112 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="color-scheme" content="dark">
+  <title>SkyFrost — Dashboard</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Exo+2:ital,wght@0,300;0,400;0,600;0,800;1,300&display=swap" rel="stylesheet">
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SkyFrost — Dashboard</title>
-  <link rel="stylesheet" href="assets/style.css" />
-  <style>
-    .dash-layout {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 40px 32px 80px;
-      display: grid;
-      grid-template-columns: 240px 1fr;
-      gap: 24px;
-    }
-
-    /* Sidebar */
-    .dash-sidebar { display: flex; flex-direction: column; gap: 8px; }
-    .dash-user {
-      padding: 20px;
-      text-align: center;
-      margin-bottom: 8px;
-    }
-    .dash-user__avatar {
-      width: 70px; height: 70px;
-      background: linear-gradient(135deg, var(--ice-500), var(--cyan));
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.8rem;
-      margin: 0 auto 12px;
-      box-shadow: 0 0 20px var(--ice-glow);
-    }
-    .dash-user__name { font-family: var(--font-head); font-size: 1.1rem; font-weight: 700; }
-    .dash-user__rank { margin-top: 6px; }
-
-    .nav-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 11px 16px;
-      border-radius: 8px;
-      color: var(--text-2);
-      font-size: .9rem;
-      cursor: pointer;
-      border: 1px solid transparent;
-      transition: all .2s;
-      background: none;
-      width: 100%;
-      text-align: left;
-    }
-    .nav-item:hover { background: var(--glass-b); color: var(--text-1); border-color: var(--border); }
-    .nav-item.active {
-      background: rgba(26,144,255,.12);
-      color: var(--ice-300);
-      border-color: rgba(26,144,255,.3);
-    }
-    .nav-item .icon { width: 18px; text-align: center; }
-
-    /* Main content */
-    .dash-main { display: flex; flex-direction: column; gap: 20px; }
-
-    .panel { display: none; }
-    .panel.active { display: flex; flex-direction: column; gap: 20px; }
-
-    /* Stats row */
-    .stats-row {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 14px;
-    }
-
-    /* XP bar */
-    .xp-bar-wrap { padding: 20px; }
-    .xp-bar-label {
-      display: flex;
-      justify-content: space-between;
-      font-size: .8rem;
-      color: var(--text-3);
-      margin-bottom: 8px;
-    }
-    .xp-bar {
-      height: 8px;
-      background: var(--bg-3);
-      border-radius: 4px;
-      overflow: hidden;
-    }
-    .xp-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--ice-500), var(--cyan));
-      border-radius: 4px;
-      width: 0;
-      transition: width 1.2s cubic-bezier(.22,1,.36,1);
-    }
-
-    /* Purchases table */
-    .section-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 14px;
-    }
-
-    /* Settings form */
-    .settings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
-
-    @media (max-width: 900px) {
-      .dash-layout { grid-template-columns: 1fr; }
-      .dash-sidebar { flex-direction: row; flex-wrap: wrap; }
-      .dash-user { display: none; }
-      .stats-row { grid-template-columns: 1fr 1fr; }
-      .settings-grid { grid-template-columns: 1fr; }
-    }
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
+  <style>body { font-family: 'Inter','Segoe UI',system-ui,sans-serif; }</style>
 </head>
 <body>
-<canvas id="particles-canvas"></canvas>
+<div class="bg-scene"></div>
 <div class="page-wrapper">
 
-  <div class="dash-layout">
+  <div class="dash-grid">
 
     <!-- Sidebar -->
-    <aside class="dash-sidebar">
-      <div class="card dash-user fade-up">
-        <div class="dash-user__avatar">🧊</div>
-        <div class="dash-user__name">ArcticWolf</div>
-        <div class="dash-user__rank"><span class="badge badge-gold">MVIP</span></div>
+    <aside class="d-sidebar">
+      <div class="d-user">
+        <div class="d-av">🧊</div>
+        <div class="d-uname">ArcticWolf</div>
+        <span class="bdg bdg-y">MVIP</span>
       </div>
-
-      <button class="nav-item active" onclick="showPanel('overview', this)">
-        <span class="icon">📊</span> Overview
-      </button>
-      <button class="nav-item" onclick="showPanel('purchases', this)">
-        <span class="icon">🛒</span> Acquisti
-      </button>
-      <button class="nav-item" onclick="showPanel('votes', this)">
-        <span class="icon">🗳</span> I miei voti
-      </button>
-      <button class="nav-item" onclick="showPanel('settings', this)">
-        <span class="icon">⚙</span> Impostazioni
-      </button>
+      <button class="d-nav active" onclick="showPanel('overview',this)">📊 Overview</button>
+      <button class="d-nav" onclick="showPanel('purchases',this)">🛒 Acquisti</button>
+      <button class="d-nav" onclick="showPanel('votes',this)">🗳 I miei voti</button>
+      <button class="d-nav" onclick="showPanel('settings',this)">⚙ Impostazioni</button>
       <div style="flex:1"></div>
-      <button class="nav-item" style="color:var(--text-3);margin-top:auto" onclick="location.href='index.html'">
-        <span class="icon">🚪</span> Logout
-      </button>
+      <button class="d-nav" style="margin-top:8px;color:var(--text-3)" onclick="location.href='index.html'">🚪 Logout</button>
     </aside>
 
     <!-- Main -->
-    <div class="dash-main">
+    <div>
 
       <!-- Overview -->
-      <div class="panel active" id="panel-overview">
+      <div class="d-panel active" id="p-overview">
+        <div class="d-stats">
+          <div class="d-stat"><div class="dl">Ore Giocate</div><div class="dv" id="d-h">0</div><div class="ds">questo mese</div></div>
+          <div class="d-stat"><div class="dl">SkyCoins</div><div class="dv" id="d-c">0</div><div class="ds">disponibili</div></div>
+          <div class="d-stat"><div class="dl">Voti</div><div class="dv" id="d-v">0</div><div class="ds">questo mese</div></div>
+          <div class="d-stat"><div class="dl">Acquisti</div><div class="dv" id="d-p">0</div><div class="ds">totali</div></div>
+        </div>
 
-        <div class="stats-row">
-          <div class="card stat-widget fade-up delay-1">
-            <div class="stat-widget__label">Ore giocate</div>
-            <div class="stat-widget__value" id="d-hours">0</div>
-            <div class="stat-widget__sub">questo mese</div>
-          </div>
-          <div class="card stat-widget fade-up delay-2">
-            <div class="stat-widget__label">SkyCoins</div>
-            <div class="stat-widget__value" id="d-coins">0</div>
-            <div class="stat-widget__sub">disponibili</div>
-          </div>
-          <div class="card stat-widget fade-up delay-3">
-            <div class="stat-widget__label">Voti dati</div>
-            <div class="stat-widget__value" id="d-votes">0</div>
-            <div class="stat-widget__sub">questo mese</div>
-          </div>
-          <div class="card stat-widget fade-up delay-4">
-            <div class="stat-widget__label">Acquisti</div>
-            <div class="stat-widget__value" id="d-purchases">0</div>
-            <div class="stat-widget__sub">totali</div>
+        <div class="d-card">
+          <div class="d-card-hd">⚡ Esperienza — Livello 42</div>
+          <div class="xp-wrap">
+            <div class="xp-lbs"><span>8,400 XP</span><span>10,000 XP</span></div>
+            <div class="xp-tr"><div class="xp-fl" id="xp-bar" style="width:0"></div></div>
           </div>
         </div>
 
-        <!-- XP -->
-        <div class="card xp-bar-wrap fade-up">
-          <div class="section-title" style="margin-bottom:12px">⚡ Esperienza</div>
-          <div style="font-family:var(--font-head);font-size:1rem;font-weight:700;margin-bottom:12px">
-            Livello 42 <span style="color:var(--text-3);font-size:.85rem;font-weight:400">→ Livello 43</span>
-          </div>
-          <div class="xp-bar-label">
-            <span>8,400 XP</span>
-            <span>10,000 XP</span>
-          </div>
-          <div class="xp-bar">
-            <div class="xp-fill" id="xp-fill"></div>
-          </div>
-        </div>
-
-        <!-- Recent activity -->
-        <div class="card fade-up">
-          <div style="padding:16px 16px 8px">
-            <div class="section-title">📋 Attività Recente</div>
-          </div>
-          <table class="sf-table">
+        <div class="d-card">
+          <div class="d-card-hd">📋 Attività Recente</div>
+          <table class="wc-table">
             <thead><tr><th>Evento</th><th>Dettaglio</th><th>Data</th></tr></thead>
             <tbody>
-              <tr><td>🛒 Acquisto</td><td><span class="badge badge-gold">MVIP</span></td><td style="color:var(--text-3);font-size:.8rem">20 Feb 2026</td></tr>
-              <tr><td>🗳 Voto</td><td>MinecraftList</td><td style="color:var(--text-3);font-size:.8rem">19 Feb 2026</td></tr>
-              <tr><td>🗝 Chiave usata</td><td>Crate Raro</td><td style="color:var(--text-3);font-size:.8rem">18 Feb 2026</td></tr>
-              <tr><td>🎮 Login</td><td>Server principale</td><td style="color:var(--text-3);font-size:.8rem">18 Feb 2026</td></tr>
+              <tr><td>🛒 Acquisto</td><td><span class="bdg bdg-y">MVIP</span></td><td style="color:var(--text-3);font-size:.65rem">20 Feb 2026</td></tr>
+              <tr><td>🗳 Voto</td><td>MinecraftList</td><td style="color:var(--text-3);font-size:.65rem">19 Feb 2026</td></tr>
+              <tr><td>🗝 Chiave usata</td><td>Crate Raro</td><td style="color:var(--text-3);font-size:.65rem">18 Feb 2026</td></tr>
+              <tr><td>🎮 Login</td><td>Server principale</td><td style="color:var(--text-3);font-size:.65rem">18 Feb 2026</td></tr>
             </tbody>
           </table>
         </div>
       </div>
 
       <!-- Purchases -->
-      <div class="panel" id="panel-purchases">
-        <div class="card fade-up">
-          <div style="padding:16px 16px 8px">
-            <div class="section-title">🛒 Storico Acquisti</div>
-          </div>
-          <table class="sf-table">
+      <div class="d-panel" id="p-purchases">
+        <div class="d-card">
+          <div class="d-card-hd">🛒 Storico Acquisti</div>
+          <table class="wc-table">
             <thead><tr><th>Prodotto</th><th>Prezzo</th><th>Status</th><th>Data</th></tr></thead>
             <tbody>
-              <tr>
-                <td><strong>MVIP</strong></td>
-                <td style="color:var(--ice-300)">€ 19,99</td>
-                <td><span class="badge badge-green">Completato</span></td>
-                <td style="color:var(--text-3);font-size:.8rem">20 Feb 2026</td>
-              </tr>
-              <tr>
-                <td><strong>Vote Key x3</strong></td>
-                <td style="color:var(--ice-300)">€ 3,49</td>
-                <td><span class="badge badge-green">Completato</span></td>
-                <td style="color:var(--text-3);font-size:.8rem">10 Gen 2026</td>
-              </tr>
-              <tr>
-                <td><strong>25.000 SkyCoins</strong></td>
-                <td style="color:var(--ice-300)">€ 7,99</td>
-                <td><span class="badge badge-green">Completato</span></td>
-                <td style="color:var(--text-3);font-size:.8rem">5 Gen 2026</td>
-              </tr>
+              <tr><td><strong>MVIP</strong></td><td style="color:var(--cobalt)">€ 19,99</td><td><span class="bdg bdg-g">OK</span></td><td style="color:var(--text-3);font-size:.65rem">20 Feb 2026</td></tr>
+              <tr><td><strong>Vote Key x3</strong></td><td style="color:var(--cobalt)">€ 3,49</td><td><span class="bdg bdg-g">OK</span></td><td style="color:var(--text-3);font-size:.65rem">10 Gen 2026</td></tr>
+              <tr><td><strong>25.000 SkyCoins</strong></td><td style="color:var(--cobalt)">€ 7,99</td><td><span class="bdg bdg-g">OK</span></td><td style="color:var(--text-3);font-size:.65rem">5 Gen 2026</td></tr>
             </tbody>
           </table>
         </div>
       </div>
 
       <!-- Votes -->
-      <div class="panel" id="panel-votes">
-        <div class="card fade-up">
-          <div style="padding:16px 16px 8px">
-            <div class="section-title">🗳 I miei voti</div>
-          </div>
-          <table class="sf-table">
+      <div class="d-panel" id="p-votes">
+        <div class="d-card">
+          <div class="d-card-hd">🗳 I miei voti</div>
+          <table class="wc-table">
             <thead><tr><th>Sito</th><th>Ultimo voto</th><th>Status</th><th>Azione</th></tr></thead>
             <tbody>
-              <tr>
-                <td>MinecraftList</td>
-                <td style="color:var(--text-3);font-size:.8rem">19 Feb 2026 — 14:32</td>
-                <td><span class="badge badge-green">Disponibile</span></td>
-                <td><a href="vote.html" class="btn btn-primary btn-sm">Vota</a></td>
-              </tr>
-              <tr>
-                <td>ServerList.gg</td>
-                <td style="color:var(--text-3);font-size:.8rem">19 Feb 2026 — 14:35</td>
-                <td><span class="badge badge-green">Disponibile</span></td>
-                <td><a href="vote.html" class="btn btn-primary btn-sm">Vota</a></td>
-              </tr>
-              <tr>
-                <td>HytaleServers</td>
-                <td style="color:var(--text-3);font-size:.8rem">20 Feb 2026 — 09:10</td>
-                <td><span class="badge badge-red">Attendi 4h</span></td>
-                <td><button class="btn btn-ghost btn-sm" disabled>In attesa</button></td>
-              </tr>
+              <tr><td>MinecraftList</td><td style="color:var(--text-3);font-size:.65rem">19 Feb — 14:32</td><td><span class="bdg bdg-g">Disponibile</span></td><td><a href="vote.html" class="btn btn-primary btn-sm">Vota</a></td></tr>
+              <tr><td>ServerList.gg</td><td style="color:var(--text-3);font-size:.65rem">19 Feb — 14:35</td><td><span class="bdg bdg-g">Disponibile</span></td><td><a href="vote.html" class="btn btn-primary btn-sm">Vota</a></td></tr>
+              <tr><td>HytaleServers</td><td style="color:var(--text-3);font-size:.65rem">20 Feb — 09:10</td><td><span class="bdg bdg-r">Attendi 4h</span></td><td><button class="btn btn-ghost btn-sm" disabled>Attesa</button></td></tr>
             </tbody>
           </table>
         </div>
       </div>
 
       <!-- Settings -->
-      <div class="panel" id="panel-settings">
-        <div class="card fade-up" style="padding:28px">
-          <div class="section-title">⚙ Impostazioni Account</div>
-          <div class="settings-grid">
-            <div class="form-group">
-              <label class="sf-label">Username</label>
-              <input type="text" class="sf-input" value="ArcticWolf" />
-            </div>
-            <div class="form-group">
-              <label class="sf-label">Email</label>
-              <input type="email" class="sf-input" value="arctic@example.com" />
-            </div>
-            <div class="form-group">
-              <label class="sf-label">Nuova Password</label>
-              <input type="password" class="sf-input" placeholder="Lascia vuoto per non cambiare" />
-            </div>
-            <div class="form-group">
-              <label class="sf-label">Conferma Password</label>
-              <input type="password" class="sf-input" placeholder="Ripeti la password" />
-            </div>
+      <div class="d-panel" id="p-settings">
+        <div class="d-card" style="padding:20px">
+          <div class="d-card-hd" style="padding:0;border:none;margin-bottom:14px">⚙ Impostazioni Account</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <div class="f-grp" style="margin:0"><label class="f-lbl">Username</label><input type="text" class="f-inp" value="ArcticWolf"></div>
+            <div class="f-grp" style="margin:0"><label class="f-lbl">Email</label><input type="email" class="f-inp" value="arctic@example.com"></div>
+            <div class="f-grp" style="margin:0"><label class="f-lbl">Nuova Password</label><input type="password" class="f-inp" placeholder="Lascia vuoto"></div>
+            <div class="f-grp" style="margin:0"><label class="f-lbl">Conferma</label><input type="password" class="f-inp" placeholder="Ripeti"></div>
           </div>
-          <div style="margin-top:8px">
-            <button class="btn btn-primary">Salva modifiche</button>
-          </div>
-        </div>
-
-        <div class="card fade-up delay-1" style="padding:28px">
-          <div class="section-title">🔗 Connessioni</div>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--border)">
-            <div style="display:flex;align-items:center;gap:12px">
-              <span style="font-size:1.4rem">🎮</span>
-              <div>
-                <div style="font-weight:600;font-size:.92rem">Discord</div>
-                <div style="color:var(--text-3);font-size:.78rem">Non connesso</div>
-              </div>
-            </div>
-            <button class="btn btn-outline btn-sm">Connetti</button>
-          </div>
+          <button class="btn btn-primary btn-sm" style="margin-top:14px">Salva modifiche</button>
         </div>
       </div>
 
@@ -322,23 +114,21 @@
   </div>
 
 </div>
-
 <script src="assets/components.js"></script>
 <script src="assets/main.js"></script>
 <script>
   function showPanel(id, btn) {
-    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-    document.getElementById('panel-' + id).classList.add('active');
+    document.querySelectorAll('.d-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.d-nav').forEach(b => b.classList.remove('active'));
+    document.getElementById('p-' + id).classList.add('active');
     btn.classList.add('active');
   }
-
   window.addEventListener('load', () => {
-    setTimeout(() => SF.animateCount(document.getElementById('d-hours'), 0, 87), 400);
-    setTimeout(() => SF.animateCount(document.getElementById('d-coins'), 0, 6240), 500);
-    setTimeout(() => SF.animateCount(document.getElementById('d-votes'), 0, 48), 600);
-    setTimeout(() => SF.animateCount(document.getElementById('d-purchases'), 0, 3), 700);
-    setTimeout(() => { document.getElementById('xp-fill').style.width = '84%'; }, 500);
+    setTimeout(() => { animCount(document.getElementById('d-h'),87); }, 300);
+    setTimeout(() => { animCount(document.getElementById('d-c'),6240); }, 400);
+    setTimeout(() => { animCount(document.getElementById('d-v'),48); }, 500);
+    setTimeout(() => { animCount(document.getElementById('d-p'),3); }, 600);
+    setTimeout(() => { document.getElementById('xp-bar').style.width='84%'; }, 500);
   });
 </script>
 </body>

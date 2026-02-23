@@ -1,122 +1,57 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="color-scheme" content="dark">
+  <title>SkyFrost — Registrati</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Exo+2:ital,wght@0,300;0,400;0,600;0,800;1,300&display=swap" rel="stylesheet">
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SkyFrost — Registrati</title>
-  <link rel="stylesheet" href="assets/style.css" />
-  <style>
-    .auth-page {
-      min-height: calc(100vh - var(--nav-h));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 40px 16px;
-    }
-    .auth-box { width: 100%; max-width: 420px; }
-    .auth-logo {
-      text-align: center;
-      margin-bottom: 32px;
-    }
-    .auth-logo .logo-icon {
-      width: 56px; height: 56px;
-      background: linear-gradient(135deg, var(--ice-400), var(--cyan));
-      border-radius: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.8rem;
-      margin: 0 auto 14px;
-      box-shadow: 0 0 30px var(--ice-glow);
-    }
-    .auth-logo h1 { font-family: var(--font-head); font-size: 1.6rem; font-weight: 800; }
-    .auth-logo p  { color: var(--text-2); font-size: .88rem; margin-top: 4px; }
-    .auth-card { padding: 32px; }
-
-    .perks {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      margin-bottom: 24px;
-    }
-    .perk {
-      background: var(--glass-b);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 10px 12px;
-      font-size: .78rem;
-      color: var(--text-2);
-      display: flex;
-      align-items: center;
-      gap: 7px;
-    }
-
-    .btn-submit { width: 100%; justify-content: center; padding: 13px; font-size: .95rem; }
-    .auth-footer { text-align: center; margin-top: 20px; font-size: .85rem; color: var(--text-3); }
-    .tos { font-size: .75rem; color: var(--text-3); text-align: center; margin-top: 12px; }
-    .tos a { color: var(--ice-400); }
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
+  <style>body { font-family: 'Inter','Segoe UI',system-ui,sans-serif; }</style>
 </head>
 <body>
-<canvas id="particles-canvas"></canvas>
+<div class="bg-scene"></div>
 <div class="page-wrapper">
 
-  <div class="auth-page">
-    <div class="auth-box">
-      <div class="auth-logo fade-up">
-        <div class="logo-icon">❄</div>
-        <h1>Sky<span style="color:var(--ice-400)">Frost</span></h1>
-        <p>Crea il tuo account gratuito</p>
+  <div class="auth-wrap">
+    <div class="auth-box fu">
+      <h2>Crea Account</h2>
+      <p class="auth-sub">Unisciti alla community di SkyFrost gratuitamente.</p>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:14px">
+        <div style="background:rgba(26,143,255,.07);border:1px solid var(--border);border-radius:var(--r-sm);padding:8px 10px;font-size:.7rem;color:var(--text-2);display:flex;align-items:center;gap:6px">🎮 Accesso completo</div>
+        <div style="background:rgba(26,143,255,.07);border:1px solid var(--border);border-radius:var(--r-sm);padding:8px 10px;font-size:.7rem;color:var(--text-2);display:flex;align-items:center;gap:6px">🛒 Gestione acquisti</div>
+        <div style="background:rgba(26,143,255,.07);border:1px solid var(--border);border-radius:var(--r-sm);padding:8px 10px;font-size:.7rem;color:var(--text-2);display:flex;align-items:center;gap:6px">🗳 Sistema voto</div>
+        <div style="background:rgba(26,143,255,.07);border:1px solid var(--border);border-radius:var(--r-sm);padding:8px 10px;font-size:.7rem;color:var(--text-2);display:flex;align-items:center;gap:6px">📊 Dashboard</div>
       </div>
 
-      <div class="card auth-card fade-up delay-1">
-
-        <div class="perks">
-          <div class="perk">🎮 Accesso completo</div>
-          <div class="perk">🛒 Gestione acquisti</div>
-          <div class="perk">🗳 Sistema voto</div>
-          <div class="perk">📊 Dashboard stats</div>
-        </div>
-
-        <div class="form-group">
-          <label class="sf-label" for="username">Username</label>
-          <input id="username" type="text" class="sf-input" placeholder="Scegli un nickname..." autocomplete="username" />
-        </div>
-
-        <div class="form-group">
-          <label class="sf-label" for="email">Email</label>
-          <input id="email" type="email" class="sf-input" placeholder="tua@email.com" autocomplete="email" />
-        </div>
-
-        <div class="form-group">
-          <label class="sf-label" for="password">Password</label>
-          <input id="password" type="password" class="sf-input" placeholder="Min. 8 caratteri" autocomplete="new-password" />
-        </div>
-
-        <div class="form-group">
-          <label class="sf-label" for="password2">Conferma Password</label>
-          <input id="password2" type="password" class="sf-input" placeholder="Ripeti la password" autocomplete="new-password" />
-        </div>
-
-        <button class="btn btn-primary btn-submit">Crea Account</button>
-
-        <div class="tos">
-          Registrandoti accetti i nostri <a href="#">Termini di Servizio</a> e la <a href="#">Privacy Policy</a>.
-        </div>
-
-        <div class="auth-footer">
-          Hai già un account? <a href="login.html" style="color:var(--ice-400)">Accedi</a>
-        </div>
+      <div class="f-grp">
+        <label class="f-lbl">Username</label>
+        <input type="text" class="f-inp" placeholder="Scegli un nickname..." autocomplete="username">
       </div>
+      <div class="f-grp">
+        <label class="f-lbl">Email</label>
+        <input type="email" class="f-inp" placeholder="tua@email.com" autocomplete="email">
+      </div>
+      <div class="f-grp">
+        <label class="f-lbl">Password</label>
+        <input type="password" class="f-inp" placeholder="Min. 8 caratteri" autocomplete="new-password">
+      </div>
+      <div class="f-grp">
+        <label class="f-lbl">Conferma Password</label>
+        <input type="password" class="f-inp" placeholder="Ripeti la password" autocomplete="new-password">
+      </div>
+      <button class="f-submit">Crea Account</button>
+      <div style="text-align:center;margin-top:8px;font-size:.65rem;color:var(--text-3)">
+        Registrandoti accetti i <a href="#" style="color:var(--cobalt)">Termini di Servizio</a> e la <a href="#" style="color:var(--cobalt)">Privacy Policy</a>.
+      </div>
+      <div class="auth-lnk">Hai già un account? <a href="login.html">Accedi</a></div>
     </div>
   </div>
 
 </div>
-
 <script src="assets/components.js"></script>
 <script src="assets/main.js"></script>
 </body>

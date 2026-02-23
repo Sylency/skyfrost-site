@@ -1,304 +1,230 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="color-scheme" content="dark">
+  <title>SkyFrost — Hytale Server</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Exo+2:ital,wght@0,300;0,400;0,600;0,800;1,300&display=swap" rel="stylesheet">
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SkyFrost — Hytale Server</title>
-  <meta name="description" content="SkyFrost, il miglior server Hytale italiano. Store, staff, vote e community." />
-  <link rel="stylesheet" href="assets/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
   <style>
-    /* ── Hero ── */
-    .hero {
-      padding: 80px 32px 60px;
-      max-width: 1200px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 1fr 380px;
-      gap: 48px;
-      align-items: start;
-    }
-    .hero__eyebrow {
-      font-family: var(--font-head);
-      font-size: .82rem;
-      font-weight: 700;
-      letter-spacing: .18em;
-      text-transform: uppercase;
-      color: var(--ice-400);
-      margin-bottom: 18px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .hero__eyebrow::before {
-      content: '';
-      width: 32px; height: 2px;
-      background: linear-gradient(90deg, var(--ice-400), var(--cyan));
-      border-radius: 1px;
-    }
-    .hero__title {
-      font-family: var(--font-head);
-      font-size: clamp(2.8rem, 6vw, 5rem);
-      font-weight: 800;
-      line-height: 1.05;
-      letter-spacing: -.01em;
-      margin-bottom: 22px;
-    }
-    .hero__title .highlight {
-      background: linear-gradient(135deg, var(--ice-300), var(--cyan));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .hero__desc {
-      color: var(--text-2);
-      font-size: 1.05rem;
-      max-width: 520px;
-      margin-bottom: 36px;
-      line-height: 1.75;
-    }
-    .hero__cta { display: flex; gap: 14px; flex-wrap: wrap; }
-
-    /* ── Stats sidebar ── */
-    .stats-sidebar { display: flex; flex-direction: column; gap: 16px; }
-    .stat-widget .icon {
-      font-size: 1.5rem;
-      margin-bottom: 8px;
-    }
-
-    /* ── Main layout ── */
-    .main-grid {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 32px 80px;
-      display: grid;
-      grid-template-columns: 1fr 340px;
-      gap: 24px;
-    }
-
-    /* ── Blog cards ── */
-    .blog-card {
-      padding: 24px;
-      margin-bottom: 16px;
-      cursor: pointer;
-    }
-    .blog-card__meta {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 12px;
-    }
-    .blog-card__date { font-size: .78rem; color: var(--text-3); }
-    .blog-card__title {
-      font-family: var(--font-head);
-      font-size: 1.25rem;
-      font-weight: 700;
-      margin-bottom: 8px;
-      transition: color .2s;
-    }
-    .blog-card:hover .blog-card__title { color: var(--ice-300); }
-    .blog-card__excerpt { color: var(--text-2); font-size: .9rem; }
-    .blog-card__read {
-      margin-top: 14px;
-      font-size: .82rem;
-      font-weight: 600;
-      color: var(--ice-400);
-      letter-spacing: .04em;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    /* ── Side widgets ── */
-    .sidebar { display: flex; flex-direction: column; gap: 16px; }
-    .widget-title {
-      font-family: var(--font-head);
-      font-size: .78rem;
-      font-weight: 700;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-      color: var(--text-3);
-      padding: 16px 16px 0;
-    }
-
-    @media (max-width: 900px) {
-      .hero        { grid-template-columns: 1fr; }
-      .stats-sidebar { flex-direction: row; flex-wrap: wrap; }
-      .stats-sidebar .card { flex: 1 1 140px; }
-      .main-grid   { grid-template-columns: 1fr; }
-    }
+    body { font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; }
   </style>
 </head>
 <body>
-<canvas id="particles-canvas"></canvas>
+<div class="bg-scene"></div>
 <div class="page-wrapper">
-  <!-- Nav & Footer injected by components.js -->
 
-  <!-- ── Hero ───────────────────────────────────── -->
-  <section class="hero fade-up">
-    <div class="hero__left">
-      <p class="hero__eyebrow">Hytale Server Italiano</p>
-      <h1 class="hero__title">
-        Benvenuto su<br>
-        <span class="highlight">SkyFrost</span>
-      </h1>
-      <p class="hero__desc">
-        Il server Hytale che stavi cercando. Community appassionata, staff attivo, eventi continui e uno store ricco di contenuti esclusivi.
-      </p>
-      <div class="hero__cta">
-        <a href="store.html" class="btn btn-primary btn-lg">Visita lo Store</a>
-        <a href="vote.html"  class="btn btn-ghost btn-lg">Vota il Server</a>
-      </div>
+  <!-- ── Hero Band ─────────────────────────────────── -->
+  <div class="hero-band fu">
+    <!-- Left: Server info -->
+    <div class="hero-side left">
+      <span class="hs-label">Gioca ora</span>
+      <span class="hs-val">play.skyfrost.net</span>
+      <span class="hs-status green-dot"><span id="hp-count">—</span> giocatori online</span>
     </div>
 
-    <!-- Stats sidebar in hero -->
-    <div class="stats-sidebar">
-      <div class="card stat-widget">
-        <div class="icon">🎮</div>
-        <div class="stat-widget__label">Giocatori Online</div>
-        <div class="stat-widget__value" id="stat-players">—</div>
-        <div class="stat-widget__sub">
-          <span class="stat-widget__dot dot-green"></span> Server attivo
-        </div>
+    <!-- Center: Logo -->
+    <div class="hero-logo">❄</div>
+
+    <!-- Right: Discord -->
+    <div class="hero-side right">
+      <span class="hs-label">Sei in linea</span>
+      <span class="hs-val">discord.gg/skyfrost</span>
+      <span class="hs-status blue-dot"><span id="hd-count">—</span> membri online</span>
+    </div>
+  </div>
+
+  <!-- ── Action Bar ─────────────────────────────────── -->
+  <div class="action-bar fu d1">
+    <div class="login-banner">
+      <div>
+        <h3>SkyFrost</h3>
+        <p>Per unirsi alla nostra community, effettua il login o registrati.</p>
       </div>
-      <div class="card stat-widget">
-        <div class="icon">💬</div>
-        <div class="stat-widget__label">Discord Members</div>
-        <div class="stat-widget__value" id="stat-discord">—</div>
-        <div class="stat-widget__sub">
-          <span class="stat-widget__dot dot-blue"></span> Online ora
-        </div>
-      </div>
-      <div class="card stat-widget">
-        <div class="icon">🏆</div>
-        <div class="stat-widget__label">Totale Donatori</div>
-        <div class="stat-widget__value" id="stat-donors">—</div>
-        <div class="stat-widget__sub">Grazie a tutti ❤</div>
-      </div>
-      <div class="card stat-widget">
-        <div class="icon">⭐</div>
-        <div class="stat-widget__label">Voti questo mese</div>
-        <div class="stat-widget__value" id="stat-votes">—</div>
-        <div class="stat-widget__sub">Vota per salire di grado!</div>
+      <div class="lb-btns">
+        <a href="login.html"    class="btn btn-ghost btn-sm">Accedi</a>
+        <a href="register.html" class="btn btn-primary btn-sm">Registrati</a>
       </div>
     </div>
-  </section>
+    <a href="store.html" class="store-cta">
+      <span class="sc-icon">🛒</span>
+      <span class="sc-label">Negozio</span>
+      <span class="sc-sub">Inizia a fare acquisti!</span>
+    </a>
+  </div>
 
-  <div class="glow-line" style="max-width:1200px;margin:0 auto 32px;"></div>
-
-  <!-- ── Main Grid ──────────────────────────────── -->
+  <!-- ── Main 2-col Grid ───────────────────────────── -->
   <div class="main-grid">
-    <!-- Blog -->
-    <div class="main-col">
-      <div class="section-title">📢 Ultime Notizie</div>
 
-      <article class="card blog-card fade-up delay-1">
-        <div class="blog-card__meta">
-          <span class="badge badge-blue">Update</span>
-          <span class="badge badge-green">Nuovo</span>
-          <span class="blog-card__date">20 Feb 2026</span>
+    <!-- News column -->
+    <div class="news-col">
+
+      <article class="news-item">
+        <div class="news-thumb nt-1">⚔️</div>
+        <div class="news-body">
+          <h2 class="news-title">Benvenuto sul nuovo sito di SkyFrost!</h2>
+          <p class="news-excerpt">
+            Abbiamo completamente rinnovato il portale del server. Nuova UI ispirata al tema Cobalt, store migliorato, pagina staff aggiornata, dashboard interattiva e molto altro. Continua a seguirci per tutte le novità!
+          </p>
+          <div class="news-footer">
+            <div class="news-author">
+              <div class="author-avatar">👤</div>
+              <div>
+                <span class="author-name">SkyFrostOwner</span>
+                <span class="author-date">20 feb 2026 15:16</span>
+              </div>
+            </div>
+            <span class="read-more">Leggi di più →</span>
+          </div>
         </div>
-        <h2 class="blog-card__title">Benvenuto sul nuovo sito di SkyFrost!</h2>
-        <p class="blog-card__excerpt">
-          Abbiamo completamente rinnovato il portale del server. Nuova UI, store migliorato, pagina staff aggiornata e molto altro. Continua a seguirci per tutte le novità!
-        </p>
-        <span class="blog-card__read">Leggi tutto →</span>
       </article>
 
-      <article class="card blog-card fade-up delay-2">
-        <div class="blog-card__meta">
-          <span class="badge badge-cyan">Patch</span>
-          <span class="blog-card__date">18 Feb 2026</span>
+      <article class="news-item">
+        <div class="news-thumb nt-2">🐉</div>
+        <div class="news-body">
+          <h2 class="news-title">Patch 1.3 — Nuove zone e bilanciamento classi</h2>
+          <p class="news-excerpt">
+            La patch 1.3 introduce tre nuove zone esplorabili, decine di mob inediti e un sistema di bilanciamento per le classi. Nuovi boss, nuovi drop esclusivi e sfide cooperative. Entra in gioco e scopri tutte le novità!
+          </p>
+          <div class="news-footer">
+            <div class="news-author">
+              <div class="author-avatar">👤</div>
+              <div>
+                <span class="author-name">CodeFrost</span>
+                <span class="author-date">18 feb 2026 10:30</span>
+              </div>
+            </div>
+            <span class="read-more">Leggi di più →</span>
+          </div>
         </div>
-        <h2 class="blog-card__title">Patch 1.3 — Nuove zone e bilanciamento</h2>
-        <p class="blog-card__excerpt">
-          La patch 1.3 introduce tre nuove zone esplorabili, decine di mob inediti e un sistema di bilanciamento per le classi. Entra in gioco e scopri tutte le novità!
-        </p>
-        <span class="blog-card__read">Leggi tutto →</span>
       </article>
 
-      <article class="card blog-card fade-up delay-3">
-        <div class="blog-card__meta">
-          <span class="badge badge-gold">Evento</span>
-          <span class="blog-card__date">15 Feb 2026</span>
+      <article class="news-item">
+        <div class="news-thumb nt-3">🌿</div>
+        <div class="news-body">
+          <h2 class="news-title">Evento Primavera — Ricompense esclusive</h2>
+          <p class="news-excerpt">
+            L'evento di primavera è ufficialmente iniziato! Completa le quest stagionali, raccogli fiori rari e ottieni cosmetic esclusivi disponibili solo per un periodo limitato. Non perdere questa occasione!
+          </p>
+          <div class="news-footer">
+            <div class="news-author">
+              <div class="author-avatar">👤</div>
+              <div>
+                <span class="author-name">ArcticAdmin</span>
+                <span class="author-date">15 feb 2026 09:00</span>
+              </div>
+            </div>
+            <span class="read-more">Leggi di più →</span>
+          </div>
         </div>
-        <h2 class="blog-card__title">Evento San Valentino — Ricompense speciali</h2>
-        <p class="blog-card__excerpt">
-          Hai completato le quest speciali di San Valentino? Le ricompense saranno distribuite entro la fine del mese. Controlla il tuo inventario e il tuo account!
-        </p>
-        <span class="blog-card__read">Leggi tutto →</span>
       </article>
+
+      <div class="pagination">
+        <div class="pg-btn">‹</div>
+        <div class="pg-btn active">1</div>
+        <div class="pg-btn">2</div>
+        <div class="pg-btn">›</div>
+      </div>
     </div>
 
     <!-- Sidebar -->
     <aside class="sidebar">
+
+      <!-- Featured Product -->
+      <div class="fp-card fu d1">
+        <div class="fp-header">🌟 Prodotto in primo piano</div>
+        <div class="fp-banner">
+          <div class="fp-vip-badge">VIP</div>
+        </div>
+        <div class="fp-footer">
+          <span class="fp-name">VIP</span>
+          <span class="fp-price">4,99 EUR</span>
+        </div>
+      </div>
+
       <!-- Top Donors -->
-      <div class="card fade-up delay-1">
-        <div class="widget-title">🏅 Top Donatori</div>
-        <table class="sf-table" style="margin-top:8px">
+      <div class="widget-card fu d2">
+        <div class="wc-header">
+          <span class="wc-title">🏅 Top Donors</span>
+          <span class="wc-filter">Tutti i tempi</span>
+        </div>
+        <table class="wc-table">
           <thead>
-            <tr><th>#</th><th>Username</th><th>Totale</th></tr>
+            <tr><th>#</th><th>Nome utente</th><th>Totale</th></tr>
           </thead>
           <tbody>
-            <tr><td class="rank">1</td><td>ArcticWolf</td><td style="color:var(--ice-300)">€ 320</td></tr>
-            <tr><td class="rank">2</td><td>FrostByte</td><td style="color:var(--ice-300)">€ 210</td></tr>
-            <tr><td class="rank">3</td><td>NordLight</td><td style="color:var(--ice-300)">€ 150</td></tr>
-            <tr><td class="rank">4</td><td>IceBreaker</td><td style="color:var(--ice-300)">€ 90</td></tr>
+            <tr>
+              <td><span class="rk g">1</span></td>
+              <td><div class="user-cell"><div class="mini-av">🐺</div>ArcticWolf</div></td>
+              <td><span class="amt">320,00 EUR</span></td>
+            </tr>
+            <tr>
+              <td><span class="rk s">2</span></td>
+              <td><div class="user-cell"><div class="mini-av">❄</div>FrostByte</div></td>
+              <td><span class="amt">210,00 EUR</span></td>
+            </tr>
+            <tr>
+              <td><span class="rk b">3</span></td>
+              <td><div class="user-cell"><div class="mini-av">🌙</div>NordLight</div></td>
+              <td><span class="amt">150,00 EUR</span></td>
+            </tr>
+            <tr>
+              <td><span class="rk">4</span></td>
+              <td><div class="user-cell"><div class="mini-av">⚡</div>IceBreaker</div></td>
+              <td><span class="amt">90,00 EUR</span></td>
+            </tr>
           </tbody>
         </table>
       </div>
 
       <!-- Recent Purchases -->
-      <div class="card fade-up delay-2">
-        <div class="widget-title">🛒 Acquisti Recenti</div>
-        <table class="sf-table" style="margin-top:8px">
+      <div class="widget-card fu d3">
+        <div class="wc-header">
+          <span class="wc-title">🛒 Acquisti Recenti</span>
+        </div>
+        <table class="wc-table">
           <thead>
-            <tr><th>User</th><th>Prodotto</th></tr>
+            <tr><th>Nome utente</th><th>Categoria</th><th>Prodotto</th></tr>
           </thead>
           <tbody>
             <tr>
-              <td>ArcticWolf</td>
-              <td><span class="badge badge-gold">MVIP</span></td>
+              <td><div class="user-cell"><div class="mini-av">🐺</div>ArcticWolf</div></td>
+              <td><span class="cat-pill">VIP</span></td>
+              <td>MVIP</td>
             </tr>
             <tr>
-              <td>FrostByte</td>
-              <td><span class="badge badge-blue">VIP+</span></td>
+              <td><div class="user-cell"><div class="mini-av">🐉</div>DragonX</div></td>
+              <td><span class="cat-pill">Spawner</span></td>
+              <td>Chicken</td>
             </tr>
             <tr>
-              <td>NordLight</td>
-              <td><span class="badge badge-purple">Spawner</span></td>
+              <td><div class="user-cell"><div class="mini-av">💙</div>demo</div></td>
+              <td><span class="cat-pill">VIP</span></td>
+              <td>VIP+</td>
             </tr>
             <tr>
-              <td>IceBreaker</td>
-              <td><span class="badge badge-cyan">Key x5</span></td>
+              <td><div class="user-cell"><div class="mini-av">🌟</div>StarLight</div></td>
+              <td><span class="cat-pill">Chiavi</span></td>
+              <td>Key x5</td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      <!-- Discord Widget -->
-      <div class="card fade-up delay-3" style="padding:20px;text-align:center">
-        <div style="font-size:2rem;margin-bottom:10px">💬</div>
-        <div style="font-family:var(--font-head);font-size:1.1rem;font-weight:700;margin-bottom:6px">Unisciti al Discord</div>
-        <div style="color:var(--text-2);font-size:.85rem;margin-bottom:16px">Chatta con la community, trova party e ricevi aggiornamenti in tempo reale.</div>
-        <a href="#" class="btn btn-primary" style="width:100%;justify-content:center">Entra nel Discord</a>
-      </div>
     </aside>
   </div>
+
 </div>
 
 <script src="assets/components.js"></script>
 <script src="assets/main.js"></script>
 <script>
-  // Animate stats on load
   window.addEventListener('load', () => {
-    setTimeout(() => SF.animateCount(document.getElementById('stat-players'), 0, 47), 400);
-    setTimeout(() => SF.animateCount(document.getElementById('stat-discord'), 0, 312), 600);
-    setTimeout(() => SF.animateCount(document.getElementById('stat-donors'), 0, 89), 800);
-    setTimeout(() => SF.animateCount(document.getElementById('stat-votes'), 0, 154), 1000);
+    setTimeout(() => animCount(document.getElementById('hp-count'), 47), 300);
+    setTimeout(() => animCount(document.getElementById('hd-count'), 312), 500);
   });
 </script>
 </body>

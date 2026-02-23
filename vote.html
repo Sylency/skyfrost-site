@@ -1,219 +1,105 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="color-scheme" content="dark">
+  <title>SkyFrost — Vota</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Exo+2:ital,wght@0,300;0,400;0,600;0,800;1,300&display=swap" rel="stylesheet">
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SkyFrost — Vota</title>
-  <link rel="stylesheet" href="assets/style.css" />
-  <style>
-    .vote-header {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 60px 32px 20px;
-      text-align: center;
-    }
-    .vote-header h1 { font-family: var(--font-head); font-size: clamp(2rem,4vw,3.2rem); font-weight: 800; margin-bottom: 10px; }
-    .vote-header p  { color: var(--text-2); max-width: 480px; margin: 0 auto; }
-
-    /* Rewards banner */
-    .rewards-banner {
-      max-width: 900px;
-      margin: 32px auto 0;
-      padding: 0 32px;
-    }
-    .rewards-inner {
-      background: linear-gradient(135deg, rgba(26,90,255,.15), rgba(0,200,255,.08));
-      border: 1px solid var(--border-h);
-      border-radius: var(--r);
-      padding: 24px 28px;
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      flex-wrap: wrap;
-    }
-    .rewards-inner .icon { font-size: 2.5rem; flex-shrink: 0; }
-    .rewards-inner h3 { font-family: var(--font-head); font-size: 1.1rem; font-weight: 700; margin-bottom: 4px; }
-    .rewards-inner p { color: var(--text-2); font-size: .88rem; }
-    .rewards-list {
-      display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px;
-    }
-
-    /* Vote sites grid */
-    .vote-grid {
-      max-width: 900px;
-      margin: 32px auto 80px;
-      padding: 0 32px;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 16px;
-    }
-    .vote-site {
-      padding: 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      transition: transform .2s;
-    }
-    .vote-site:hover { transform: translateY(-3px); }
-    .vote-site__header { display: flex; align-items: center; gap: 12px; }
-    .vote-site__icon {
-      width: 44px; height: 44px;
-      border-radius: 10px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.4rem;
-      flex-shrink: 0;
-    }
-    .vs-1 { background: linear-gradient(135deg, #1a0050, #7000c8); }
-    .vs-2 { background: linear-gradient(135deg, #001a50, #0050d0); }
-    .vs-3 { background: linear-gradient(135deg, #001a20, #006a80); }
-    .vs-4 { background: linear-gradient(135deg, #1a1a00, #5a4a00); }
-    .vs-5 { background: linear-gradient(135deg, #001a00, #006000); }
-    .vs-6 { background: linear-gradient(135deg, #1a0010, #6a0040); }
-
-    .vote-site__name { font-family: var(--font-head); font-size: 1rem; font-weight: 700; }
-    .vote-site__desc { font-size: .82rem; color: var(--text-2); flex: 1; }
-    .vote-site__cooldown { font-size: .75rem; color: var(--text-3); }
-
-    /* Leaderboard */
-    .leaderboard {
-      max-width: 900px;
-      margin: 0 auto 80px;
-      padding: 0 32px;
-    }
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
+  <style>body { font-family: 'Inter','Segoe UI',system-ui,sans-serif; }</style>
 </head>
 <body>
-<canvas id="particles-canvas"></canvas>
+<div class="bg-scene"></div>
 <div class="page-wrapper">
 
-  <div class="vote-header fade-up">
-    <h1>🗳 Vota SkyFrost</h1>
-    <p>Votare il server aiuta la community a crescere e ti premia con ricompense esclusive ogni giorno!</p>
-  </div>
+  <div class="page-con">
+    <div class="page-hd">🗳 Vota SkyFrost</div>
 
-  <div class="rewards-banner fade-up delay-1">
-    <div class="rewards-inner">
-      <div class="icon">🎁</div>
+    <!-- Rewards banner -->
+    <div style="background:rgba(26,143,255,.07);border:1px solid rgba(26,143,255,.22);border-radius:var(--r);padding:14px 18px;margin-bottom:18px;display:flex;align-items:center;gap:14px" class="fu">
+      <div style="font-size:1.8rem;flex-shrink:0">🎁</div>
       <div>
-        <h3>Ricompense per ogni voto</h3>
-        <p>Ogni volta che voti ricevi automaticamente le seguenti ricompense in gioco:</p>
-        <div class="rewards-list">
-          <span class="badge badge-gold">500 SkyCoins</span>
-          <span class="badge badge-cyan">1× Vote Key</span>
-          <span class="badge badge-blue">+1 Voto rank</span>
-          <span class="badge badge-green">XP Bonus 30 min</span>
+        <div style="font-size:.82rem;font-weight:700;margin-bottom:4px">Ricompense per ogni voto</div>
+        <div style="display:flex;gap:7px;flex-wrap:wrap">
+          <span class="bdg bdg-y">500 SkyCoins</span>
+          <span class="bdg bdg-b">1× Vote Key</span>
+          <span class="bdg bdg-b">+1 Voto rank</span>
+          <span class="bdg bdg-g">XP Bonus 30 min</span>
         </div>
       </div>
     </div>
-  </div>
 
-  <div class="vote-grid">
+    <div class="vote-gr">
 
-    <div class="card vote-site fade-up delay-1">
-      <div class="vote-site__header">
-        <div class="vote-site__icon vs-1">🌐</div>
-        <div>
-          <div class="vote-site__name">MinecraftList</div>
-          <span class="badge badge-green">Disponibile</span>
-        </div>
+      <div class="v-card fu d1">
+        <div class="v-icon vi-1">🌐</div>
+        <div class="v-name">MinecraftList</div>
+        <div class="v-desc">Il principale sito di voting. Alto traffico.</div>
+        <div class="v-cd">⏱ Ogni 24 ore · <span class="v-avail">Disponibile</span></div>
+        <a href="#" class="btn btn-primary btn-sm" style="margin-top:2px">Vota →</a>
       </div>
-      <div class="vote-site__desc">Il principale sito di voting per server Hytale. Alto traffico, reward doppio!</div>
-      <div class="vote-site__cooldown">⏱ Ogni 24 ore</div>
-      <a href="#" class="btn btn-primary btn-sm" style="margin-top:4px;justify-content:center">Vota →</a>
+
+      <div class="v-card fu d2">
+        <div class="v-icon vi-2">🗺</div>
+        <div class="v-name">ServerList.gg</div>
+        <div class="v-desc">Sito internazionale con ranking competitivo.</div>
+        <div class="v-cd">⏱ Ogni 24 ore · <span class="v-avail">Disponibile</span></div>
+        <a href="#" class="btn btn-primary btn-sm" style="margin-top:2px">Vota →</a>
+      </div>
+
+      <div class="v-card fu d3">
+        <div class="v-icon vi-3">🏅</div>
+        <div class="v-name">HytaleServers</div>
+        <div class="v-desc">Dedicato ai server Hytale. Doppio impatto!</div>
+        <div class="v-cd">⏱ Ogni 12 ore · <span class="v-avail">Disponibile</span></div>
+        <a href="#" class="btn btn-primary btn-sm" style="margin-top:2px">Vota (x2) →</a>
+      </div>
+
+      <div class="v-card fu d1">
+        <div class="v-icon vi-4">⭐</div>
+        <div class="v-name">TopServerList</div>
+        <div class="v-desc">Classifica globale dei top server.</div>
+        <div class="v-cd">⏱ Ogni 24 ore · <span class="v-avail">Disponibile</span></div>
+        <a href="#" class="btn btn-primary btn-sm" style="margin-top:2px">Vota →</a>
+      </div>
+
+      <div class="v-card fu d2">
+        <div class="v-icon vi-1">🌿</div>
+        <div class="v-name">GameTracker</div>
+        <div class="v-desc">Prossimamente collegato al sistema.</div>
+        <div class="v-cd">⏱ Ogni 24 ore · <span class="v-wait">Presto</span></div>
+        <button class="btn btn-ghost btn-sm" style="margin-top:2px" disabled>Presto</button>
+      </div>
+
+      <div class="v-card fu d3">
+        <div class="v-icon vi-2">💎</div>
+        <div class="v-name">EpicServers</div>
+        <div class="v-desc">Sito europeo con alta presenza italiana.</div>
+        <div class="v-cd">⏱ Ogni 24 ore · <span class="v-avail">Disponibile</span></div>
+        <a href="#" class="btn btn-primary btn-sm" style="margin-top:2px">Vota →</a>
+      </div>
+
     </div>
 
-    <div class="card vote-site fade-up delay-2">
-      <div class="vote-site__header">
-        <div class="vote-site__icon vs-2">🗺</div>
-        <div>
-          <div class="vote-site__name">ServerList.gg</div>
-          <span class="badge badge-green">Disponibile</span>
-        </div>
-      </div>
-      <div class="vote-site__desc">Sito internazionale con ranking competitivo. Ottima visibilità per il server.</div>
-      <div class="vote-site__cooldown">⏱ Ogni 24 ore</div>
-      <a href="#" class="btn btn-primary btn-sm" style="margin-top:4px;justify-content:center">Vota →</a>
-    </div>
-
-    <div class="card vote-site fade-up delay-3">
-      <div class="vote-site__header">
-        <div class="vote-site__icon vs-3">🏅</div>
-        <div>
-          <div class="vote-site__name">HytaleServers</div>
-          <span class="badge badge-green">Disponibile</span>
-        </div>
-      </div>
-      <div class="vote-site__desc">Elenco dedicato ai server Hytale. Votare qui ha doppio impatto sul ranking!</div>
-      <div class="vote-site__cooldown">⏱ Ogni 12 ore</div>
-      <a href="#" class="btn btn-cyan btn-sm" style="margin-top:4px;justify-content:center">Vota (x2) →</a>
-    </div>
-
-    <div class="card vote-site fade-up delay-1">
-      <div class="vote-site__header">
-        <div class="vote-site__icon vs-4">⭐</div>
-        <div>
-          <div class="vote-site__name">TopServerList</div>
-          <span class="badge badge-green">Disponibile</span>
-        </div>
-      </div>
-      <div class="vote-site__desc">Classifica globale dei top server. Ogni voto conta per scalare la top 100.</div>
-      <div class="vote-site__cooldown">⏱ Ogni 24 ore</div>
-      <a href="#" class="btn btn-primary btn-sm" style="margin-top:4px;justify-content:center">Vota →</a>
-    </div>
-
-    <div class="card vote-site fade-up delay-2">
-      <div class="vote-site__header">
-        <div class="vote-site__icon vs-5">🌿</div>
-        <div>
-          <div class="vote-site__name">GameTracker</div>
-          <span class="badge badge-gold">In attesa</span>
-        </div>
-      </div>
-      <div class="vote-site__desc">Piattaforma gaming con statistiche avanzate. Prossimamente collegato al nostro sistema.</div>
-      <div class="vote-site__cooldown">⏱ Ogni 24 ore</div>
-      <a href="#" class="btn btn-ghost btn-sm" style="margin-top:4px;justify-content:center" disabled>Presto →</a>
-    </div>
-
-    <div class="card vote-site fade-up delay-3">
-      <div class="vote-site__header">
-        <div class="vote-site__icon vs-6">💎</div>
-        <div>
-          <div class="vote-site__name">EpicServers</div>
-          <span class="badge badge-green">Disponibile</span>
-        </div>
-      </div>
-      <div class="vote-site__desc">Sito europeo con alta presenza italiana. Vota e scala la classifica locale!</div>
-      <div class="vote-site__cooldown">⏱ Ogni 24 ore</div>
-      <a href="#" class="btn btn-primary btn-sm" style="margin-top:4px;justify-content:center">Vota →</a>
-    </div>
-
-  </div>
-
-  <!-- Leaderboard -->
-  <div class="leaderboard">
-    <div class="section-title fade-up">🏆 Top Votatori del Mese</div>
-    <div class="card fade-up delay-1">
-      <table class="sf-table">
-        <thead>
-          <tr><th>#</th><th>Username</th><th>Voti</th><th>Ricompensa</th></tr>
-        </thead>
+    <!-- Leaderboard -->
+    <div style="font-size:.78rem;font-weight:700;color:var(--text-1);margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid var(--border)">🏆 Top Votatori del Mese</div>
+    <div class="widget-card fu">
+      <table class="wc-table">
+        <thead><tr><th>#</th><th>Username</th><th>Voti</th><th>Premio</th></tr></thead>
         <tbody>
-          <tr><td class="rank" style="color:#ffd740">🥇 1</td><td>ArcticWolf</td><td>48</td><td><span class="badge badge-gold">Bonus x2 30gg</span></td></tr>
-          <tr><td class="rank" style="color:#b0bec5">🥈 2</td><td>FrostByte</td><td>41</td><td><span class="badge badge-cyan">Chiave Legg.</span></td></tr>
-          <tr><td class="rank" style="color:#cd7f32">🥉 3</td><td>BlizzardX</td><td>37</td><td><span class="badge badge-blue">1000 Coins</span></td></tr>
-          <tr><td class="rank">4</td><td>NordLight</td><td>29</td><td><span class="badge badge-blue">500 Coins</span></td></tr>
-          <tr><td class="rank">5</td><td>IceBreaker</td><td>22</td><td><span class="badge badge-blue">500 Coins</span></td></tr>
+          <tr><td><span class="rk g">🥇 1</span></td><td><div class="user-cell"><div class="mini-av">🐺</div>ArcticWolf</div></td><td>48</td><td><span class="bdg bdg-y">Bonus x2</span></td></tr>
+          <tr><td><span class="rk s">🥈 2</span></td><td><div class="user-cell"><div class="mini-av">❄</div>FrostByte</div></td><td>41</td><td><span class="bdg bdg-b">Chiave Leg.</span></td></tr>
+          <tr><td><span class="rk b">🥉 3</span></td><td><div class="user-cell"><div class="mini-av">🌀</div>BlizzardX</div></td><td>37</td><td><span class="bdg bdg-b">1000 Coins</span></td></tr>
+          <tr><td><span class="rk">4</span></td><td><div class="user-cell"><div class="mini-av">🌙</div>NordLight</div></td><td>29</td><td><span class="bdg bdg-b">500 Coins</span></td></tr>
         </tbody>
       </table>
     </div>
   </div>
 
 </div>
-
 <script src="assets/components.js"></script>
 <script src="assets/main.js"></script>
 </body>

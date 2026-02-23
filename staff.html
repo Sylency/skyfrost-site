@@ -1,222 +1,124 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="color-scheme" content="dark">
+  <title>SkyFrost — Staff</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Exo+2:ital,wght@0,300;0,400;0,600;0,800;1,300&display=swap" rel="stylesheet">
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SkyFrost — Staff</title>
-  <link rel="stylesheet" href="assets/style.css" />
-  <style>
-    .page-header {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 60px 32px 40px;
-    }
-    .page-header h1 { font-family: var(--font-head); font-size: clamp(2rem,4vw,3.2rem); font-weight: 800; margin-bottom: 10px; }
-    .page-header p  { color: var(--text-2); max-width: 480px; }
-
-    .staff-section { max-width: 1200px; margin: 0 auto; padding: 0 32px 80px; }
-
-    .role-section { margin-bottom: 48px; }
-    .role-label {
-      font-family: var(--font-head);
-      font-size: .82rem;
-      font-weight: 700;
-      letter-spacing: .15em;
-      text-transform: uppercase;
-      margin-bottom: 20px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .role-label::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: linear-gradient(90deg, var(--border), transparent);
-    }
-
-    .staff-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
-
-    .staff-card {
-      padding: 24px;
-      text-align: center;
-      cursor: default;
-      transition: transform .2s;
-    }
-    .staff-card:hover { transform: translateY(-4px); }
-
-    .staff-card__avatar {
-      width: 72px; height: 72px;
-      border-radius: 50%;
-      margin: 0 auto 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 2rem;
-      position: relative;
-    }
-    .avatar-admin  { background: linear-gradient(135deg, #1a0050, #7000c8); box-shadow: 0 0 20px rgba(120,0,200,.4); }
-    .avatar-mod    { background: linear-gradient(135deg, #001a50, #0050d0); box-shadow: 0 0 20px rgba(0,100,200,.35); }
-    .avatar-helper { background: linear-gradient(135deg, #001a20, #006a80); box-shadow: 0 0 20px rgba(0,150,180,.3); }
-    .avatar-dev    { background: linear-gradient(135deg, #001a00, #006000); box-shadow: 0 0 20px rgba(0,160,80,.3); }
-
-    .staff-card__avatar .status-dot {
-      position: absolute;
-      bottom: 3px; right: 3px;
-      width: 12px; height: 12px;
-      border-radius: 50%;
-      border: 2px solid var(--bg-2);
-    }
-    .online  { background: #00e676; }
-    .offline { background: #555; }
-    .away    { background: #ffd740; }
-
-    .staff-card__name {
-      font-family: var(--font-head);
-      font-size: 1.05rem;
-      font-weight: 700;
-      margin-bottom: 6px;
-    }
-    .staff-card__desc {
-      font-size: .8rem;
-      color: var(--text-3);
-      margin-top: 8px;
-    }
-
-    @media (max-width: 600px) {
-      .staff-grid { grid-template-columns: repeat(2, 1fr); }
-    }
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
+  <style>body { font-family: 'Inter','Segoe UI',system-ui,sans-serif; }</style>
 </head>
 <body>
-<canvas id="particles-canvas"></canvas>
+<div class="bg-scene"></div>
 <div class="page-wrapper">
 
-  <div class="page-header fade-up">
-    <h1>👥 Staff Team</h1>
-    <p>Il nostro staff lavora ogni giorno per garantire un'esperienza di gioco sicura, divertente e senza problemi.</p>
-  </div>
-
-  <div class="staff-section">
+  <div class="page-con">
+    <div class="page-hd">👥 Staff Team</div>
 
     <!-- Owner -->
-    <div class="role-section fade-up delay-1">
-      <div class="role-label" style="color:#c084fc">👑 Owner</div>
-      <div class="staff-grid">
-        <div class="card staff-card">
-          <div class="staff-card__avatar avatar-admin">🧊<span class="status-dot online"></span></div>
-          <div class="staff-card__name">SkyFrostOwner</div>
-          <span class="badge badge-purple">Owner</span>
-          <div class="staff-card__desc">Fondatore e responsabile del server</div>
+    <div class="staff-sec fu">
+      <div class="role-lbl">👑 Owner</div>
+      <div class="staff-gr">
+        <div class="staff-c">
+          <div class="s-av av-o">🧊<span class="sp on"></span></div>
+          <div class="s-nm">SkyFrostOwner</div>
+          <span class="rp ro">Owner</span>
         </div>
       </div>
     </div>
 
     <!-- Admin -->
-    <div class="role-section fade-up delay-2">
-      <div class="role-label" style="color:#f87171">⚔ Admin</div>
-      <div class="staff-grid">
-        <div class="card staff-card">
-          <div class="staff-card__avatar avatar-admin">🛡️<span class="status-dot online"></span></div>
-          <div class="staff-card__name">ArcticAdmin</div>
-          <span class="badge badge-red">Admin</span>
-          <div class="staff-card__desc">Gestione generale e sicurezza</div>
+    <div class="staff-sec fu d1">
+      <div class="role-lbl">⚔ Admin</div>
+      <div class="staff-gr">
+        <div class="staff-c">
+          <div class="s-av av-a">🛡️<span class="sp on"></span></div>
+          <div class="s-nm">ArcticAdmin</div>
+          <span class="rp ra">Admin</span>
         </div>
-        <div class="card staff-card">
-          <div class="staff-card__avatar avatar-admin">⚡<span class="status-dot away"></span></div>
-          <div class="staff-card__name">FrostGuard</div>
-          <span class="badge badge-red">Admin</span>
-          <div class="staff-card__desc">Ban & appeal · Gestione eventi</div>
+        <div class="staff-c">
+          <div class="s-av av-a">⚡<span class="sp aw"></span></div>
+          <div class="s-nm">FrostGuard</div>
+          <span class="rp ra">Admin</span>
         </div>
       </div>
     </div>
 
-    <!-- Moderator -->
-    <div class="role-section fade-up delay-1">
-      <div class="role-label" style="color:var(--ice-400)">🔵 Moderatore</div>
-      <div class="staff-grid">
-        <div class="card staff-card">
-          <div class="staff-card__avatar avatar-mod">🌊<span class="status-dot online"></span></div>
-          <div class="staff-card__name">WaveKeeper</div>
-          <span class="badge badge-blue">Mod</span>
-          <div class="staff-card__desc">Chat & ticket management</div>
+    <!-- Moderatore -->
+    <div class="staff-sec fu d2">
+      <div class="role-lbl">🔵 Moderatore</div>
+      <div class="staff-gr">
+        <div class="staff-c">
+          <div class="s-av av-m">🌊<span class="sp on"></span></div>
+          <div class="s-nm">WaveKeeper</div>
+          <span class="rp rm">Mod</span>
         </div>
-        <div class="card staff-card">
-          <div class="staff-card__avatar avatar-mod">❄️<span class="status-dot offline"></span></div>
-          <div class="staff-card__name">CrystalMod</div>
-          <span class="badge badge-blue">Mod</span>
-          <div class="staff-card__desc">Supporto giocatori</div>
+        <div class="staff-c">
+          <div class="s-av av-m">❄️<span class="sp off"></span></div>
+          <div class="s-nm">CrystalMod</div>
+          <span class="rp rm">Mod</span>
         </div>
-        <div class="card staff-card">
-          <div class="staff-card__avatar avatar-mod">🌀<span class="status-dot online"></span></div>
-          <div class="staff-card__name">BlizzardX</div>
-          <span class="badge badge-blue">Mod</span>
-          <div class="staff-card__desc">Anti-cheat & report</div>
+        <div class="staff-c">
+          <div class="s-av av-m">🌀<span class="sp on"></span></div>
+          <div class="s-nm">BlizzardX</div>
+          <span class="rp rm">Mod</span>
         </div>
       </div>
     </div>
 
     <!-- Helper -->
-    <div class="role-section fade-up delay-2">
-      <div class="role-label" style="color:var(--cyan)">🔷 Helper</div>
-      <div class="staff-grid">
-        <div class="card staff-card">
-          <div class="staff-card__avatar avatar-helper">🌟<span class="status-dot online"></span></div>
-          <div class="staff-card__name">StarHelper</div>
-          <span class="badge badge-cyan">Helper</span>
-          <div class="staff-card__desc">Supporto ai nuovi giocatori</div>
+    <div class="staff-sec fu d1">
+      <div class="role-lbl">🔷 Helper</div>
+      <div class="staff-gr">
+        <div class="staff-c">
+          <div class="s-av av-h">🌟<span class="sp on"></span></div>
+          <div class="s-nm">StarHelper</div>
+          <span class="rp rh">Helper</span>
         </div>
-        <div class="card staff-card">
-          <div class="staff-card__avatar avatar-helper">💙<span class="status-dot online"></span></div>
-          <div class="staff-card__name">IceGuide</div>
-          <span class="badge badge-cyan">Helper</span>
-          <div class="staff-card__desc">Guide e tutorial</div>
+        <div class="staff-c">
+          <div class="s-av av-h">💙<span class="sp on"></span></div>
+          <div class="s-nm">IceGuide</div>
+          <span class="rp rh">Helper</span>
         </div>
-        <div class="card staff-card">
-          <div class="staff-card__avatar avatar-helper">✨<span class="status-dot away"></span></div>
-          <div class="staff-card__name">GlacierHelp</div>
-          <span class="badge badge-cyan">Helper</span>
-          <div class="staff-card__desc">Ticket Discord</div>
+        <div class="staff-c">
+          <div class="s-av av-h">✨<span class="sp aw"></span></div>
+          <div class="s-nm">GlacierHelp</div>
+          <span class="rp rh">Helper</span>
         </div>
-        <div class="card staff-card">
-          <div class="staff-card__avatar avatar-helper">🌙<span class="status-dot offline"></span></div>
-          <div class="staff-card__name">NightFrost</div>
-          <span class="badge badge-cyan">Helper</span>
-          <div class="staff-card__desc">Supporto serale</div>
+        <div class="staff-c">
+          <div class="s-av av-h">🌙<span class="sp off"></span></div>
+          <div class="s-nm">NightFrost</div>
+          <span class="rp rh">Helper</span>
         </div>
       </div>
     </div>
 
-    <!-- Developer -->
-    <div class="role-section fade-up delay-1">
-      <div class="role-label" style="color:#4ade80">⚙ Developer</div>
-      <div class="staff-grid">
-        <div class="card staff-card">
-          <div class="staff-card__avatar avatar-dev">💻<span class="status-dot online"></span></div>
-          <div class="staff-card__name">CodeFrost</div>
-          <span class="badge badge-green">Dev</span>
-          <div class="staff-card__desc">Backend · Plugin · Sito web</div>
+    <!-- Dev -->
+    <div class="staff-sec fu d2">
+      <div class="role-lbl">⚙ Developer</div>
+      <div class="staff-gr">
+        <div class="staff-c">
+          <div class="s-av av-d">💻<span class="sp on"></span></div>
+          <div class="s-nm">CodeFrost</div>
+          <span class="rp rd">Dev</span>
         </div>
       </div>
     </div>
 
-    <!-- Apply -->
-    <div class="card fade-up delay-2" style="padding:32px;text-align:center;max-width:600px;margin:0 auto">
-      <div style="font-size:2.5rem;margin-bottom:14px">📋</div>
-      <h2 style="font-family:var(--font-head);font-size:1.5rem;margin-bottom:10px">Vuoi entrare nello staff?</h2>
-      <p style="color:var(--text-2);margin-bottom:24px;font-size:.93rem">
-        Cerchiamo persone serie, attive e appassionate. Compila la candidatura sul nostro Discord e il team ti risponderà il prima possibile.
-      </p>
+    <!-- Apply banner -->
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r);padding:22px;text-align:center;max-width:500px;margin:24px auto 0" class="fu">
+      <div style="font-size:1.8rem;margin-bottom:10px">📋</div>
+      <div style="font-size:.9rem;font-weight:700;margin-bottom:6px">Vuoi entrare nello staff?</div>
+      <p style="font-size:.75rem;color:var(--text-2);margin-bottom:16px">Cerchiamo persone serie, attive e appassionate. Candidati sul nostro Discord!</p>
       <a href="#" class="btn btn-primary btn-lg">Candidati ora</a>
     </div>
 
   </div>
-</div>
 
+</div>
 <script src="assets/components.js"></script>
 <script src="assets/main.js"></script>
 </body>
