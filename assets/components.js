@@ -1,67 +1,59 @@
-/* ============================================================
-   SKYFROST — components.js
-   Shared navbar & footer injected into every page
-   ============================================================ */
-
-(function injectLayout() {
-  const LINKS = [
-    { href: 'index.html',     label: 'Home' },
-    { href: 'store.html',     label: 'Store' },
-    { href: 'staff.html',     label: 'Staff' },
-    { href: 'vote.html',      label: 'Vote' },
-    { href: 'dashboard.html', label: 'Dashboard' },
+/* SKYFROST — components.js — shared nav + footer */
+(function() {
+  const PAGES = [
+    { href:'index.html',     icon:'🏠', label:'Home' },
+    { href:'store.html',     icon:'🛒', label:'Negozio' },
+    { href:'staff.html',     icon:'👥', label:'Staff' },
+    { href:'vote.html',      icon:'🗳', label:'Vota' },
+    { href:'dashboard.html', icon:'📊', label:'Dashboard' },
   ];
 
+  // NAV
   const nav = document.createElement('nav');
-  nav.className = 'navbar';
-  nav.innerHTML = `
-    <a href="index.html" class="navbar__logo">
-      <div class="logo-icon">❄</div>
-      Sky<span>Frost</span>
-    </a>
-    <div class="navbar__links">
-      ${LINKS.map(l => `<a href="${l.href}">${l.label}</a>`).join('')}
-    </div>
-    <div class="navbar__actions">
-      <a href="login.html"    class="btn btn-outline btn-sm">Login</a>
-      <a href="register.html" class="btn btn-primary btn-sm">Register</a>
-    </div>`;
+  nav.className = 'top-nav';
+  nav.innerHTML =
+    PAGES.map(p =>
+      `<a href="${p.href}" data-page="${p.href}">${p.icon} ${p.label}</a>`
+    ).join('') +
+    `<div class="nav-auth">
+       <a href="login.html"    class="btn-login">Accedi</a>
+       <a href="register.html" class="btn-reg">Registrati</a>
+     </div>`;
 
+  // FOOTER
   const footer = document.createElement('footer');
-  footer.className = 'footer';
+  footer.className = 'site-footer';
   footer.innerHTML = `
-    <div class="footer__inner">
-      <div class="footer__brand">
-        <div class="navbar__logo" style="font-size:1.2rem">
-          <div class="logo-icon" style="width:28px;height:28px;font-size:.9rem">❄</div>
-          Sky<span>Frost</span>
-        </div>
-        <p>Il server Hytale dedicato alla community italiana. Unisciti a noi e vivi l'avventura.</p>
+    <div class="footer-inner">
+      <div>
+        <div class="fb-brand">❄ SkyFrost</div>
+        <p class="fb-desc">SkyFrost è il server Hytale italiano per eccellenza. Community attiva, staff dedicato ed eventi continui.</p>
       </div>
-      <div class="footer__col">
-        <h4>Navigazione</h4>
-        ${LINKS.map(l => `<a href="${l.href}">${l.label}</a>`).join('')}
+      <div class="fc">
+        <h4>Menu veloce</h4>
+        ${PAGES.map(p=>`<a href="${p.href}">${p.icon} ${p.label}</a>`).join('')}
       </div>
-      <div class="footer__col">
-        <h4>Community</h4>
-        <a href="#">Discord</a>
-        <a href="#">Forum</a>
-        <a href="#">Regolamento</a>
-        <a href="#">Candidature</a>
+      <div class="fc">
+        <h4>Social Media</h4>
+        <a href="#">📘 Facebook</a>
+        <a href="#">📸 Instagram</a>
+        <a href="#">🐦 X / Twitter</a>
+        <a href="#">▶ YouTube</a>
+        <a href="#">💬 Discord</a>
       </div>
-      <div class="footer__col">
-        <h4>Legale</h4>
-        <a href="#">Privacy Policy</a>
+      <div class="fc">
+        <h4>Link</h4>
+        <a href="register.html">Registrati</a>
+        <a href="#">Supporto</a>
         <a href="#">Termini di Servizio</a>
-        <a href="#">Cookie</a>
+        <a href="#">Privacy</a>
       </div>
     </div>
-    <div class="footer__bottom">
-      © ${new Date().getFullYear()} SkyFrost — Tutti i diritti riservati · Hytale è un marchio di Hypixel Studios
+    <div class="footer-bottom">
+      <span>© ${new Date().getFullYear()} SkyFrost — Tutti i diritti riservati</span>
+      <span>Hytale è un marchio di Hypixel Studios</span>
     </div>`;
 
   const pw = document.querySelector('.page-wrapper');
-  if (!pw) return;
-  pw.prepend(nav);
-  pw.appendChild(footer);
+  if (pw) { pw.prepend(nav); pw.appendChild(footer); }
 })();
