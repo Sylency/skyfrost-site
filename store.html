@@ -1,169 +1,240 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="color-scheme" content="dark">
-  <title>SkyFrost — Negozio</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/style.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
-  <style>body { font-family: 'Inter','Segoe UI',system-ui,sans-serif; }</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="SkyFrost Store — Acquista VIP, cosmetic e molto altro su Tebex." />
+  <title>Store — SkyFrost</title>
+  <link rel="stylesheet" href="assets/style.css" />
 </head>
 <body>
-<div class="bg-scene"></div>
-<div class="page-wrapper">
+<script src="assets/components.js"></script>
 
-  <div class="page-con">
-    <div class="page-hd"><i class="bi bi-cart-fill"></i> Negozio</div>
-
-    <div class="s-tabs">
-      <button class="s-tab active" onclick="filterCat('all',this)">Tutti</button>
-      <button class="s-tab" onclick="filterCat('vip',this)">VIP Ranks</button>
-      <button class="s-tab" onclick="filterCat('spawner',this)">Spawner</button>
-      <button class="s-tab" onclick="filterCat('key',this)">Chiavi</button>
-      <button class="s-tab" onclick="filterCat('coin',this)">Monete</button>
-    </div>
-
-    <div class="s-grid" id="store-grid">
-
-      <div class="s-card" data-cat="vip">
-        <div class="s-banner sb-1"><i class="bi bi-shield-fill"></i></div>
-        <div class="s-info">
-          <div class="s-name">VIP</div>
-          <div class="s-desc">Accesso ai comandi VIP, prefisso e fly in spawn.</div>
-          <div class="s-foot">
-            <span class="s-price">€ 4,99</span>
-            <button class="btn btn-primary btn-sm">Acquista</button>
-          </div>
-        </div>
+<div class="page-wrap">
+  <div class="page-hero">
+    <p class="page-hero-eyebrow">⟡ Negozio ufficiale ⟡</p>
+    <h1 class="page-hero-title">Sky<span class="glow">Store</span></h1>
+    <p class="page-hero-sub">Potenzia la tua esperienza di gioco con VIP, cosmetic ed oggetti esclusivi.</p>
+    <div style="margin-top:1.5rem;display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+      <a href="https://store.skyfrost.it" target="_blank" class="btn btn-cyan">
+        Apri il negozio su Tebex →
+      </a>
+      <div class="status-pill">
+        <span class="status-dot online"></span>
+        <span>Pagamenti sicuri via Tebex</span>
       </div>
-
-      <div class="s-card" data-cat="vip">
-        <div class="s-banner sb-1" style="position:relative"><span class="hot-tag">Popolare</span><i class="bi bi-star-fill"></i></div>
-        <div class="s-info">
-          <div class="s-name">VIP+</div>
-          <div class="s-desc">Tutto di VIP + kit avanzato e chat color.</div>
-          <div class="s-foot">
-            <span class="s-price">€ 8,99 <span class="old">€ 12,99</span></span>
-            <button class="btn btn-primary btn-sm">Acquista</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="s-card" data-cat="vip">
-        <div class="s-banner sb-5" style="position:relative"><span class="hot-tag">Best</span><i class="bi bi-crown-fill"></i></div>
-        <div class="s-info">
-          <div class="s-name">MVIP</div>
-          <div class="s-desc">Il rank massimo. Cosmetics esclusivi e tag custom.</div>
-          <div class="s-foot">
-            <span class="s-price">€ 19,99</span>
-            <button class="btn btn-primary btn-sm">Acquista</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="s-card" data-cat="spawner">
-        <div class="s-banner sb-3"><i class="bi bi-egg-fill"></i></div>
-        <div class="s-info">
-          <div class="s-name">Chicken Spawner</div>
-          <div class="s-desc">Spawner di pollo per la tua island.</div>
-          <div class="s-foot">
-            <span class="s-price">€ 2,99</span>
-            <button class="btn btn-primary btn-sm">Acquista</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="s-card" data-cat="spawner">
-        <div class="s-banner sb-3"><i class="bi bi-piggy-bank-fill"></i></div>
-        <div class="s-info">
-          <div class="s-name">Pig Spawner</div>
-          <div class="s-desc">Ottimo per farm di carni rapide.</div>
-          <div class="s-foot">
-            <span class="s-price">€ 3,99</span>
-            <button class="btn btn-primary btn-sm">Acquista</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="s-card" data-cat="spawner">
-        <div class="s-banner sb-3" style="position:relative"><span class="hot-tag">Raro</span><i class="bi bi-fire"></i></div>
-        <div class="s-info">
-          <div class="s-name">Dragon Spawner</div>
-          <div class="s-desc">Drop esclusivi e alta velocità.</div>
-          <div class="s-foot">
-            <span class="s-price">€ 14,99</span>
-            <button class="btn btn-primary btn-sm">Acquista</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="s-card" data-cat="key">
-        <div class="s-banner sb-4"><i class="bi bi-key-fill"></i></div>
-        <div class="s-info">
-          <div class="s-name">Chiave Comune x5</div>
-          <div class="s-desc">5 chiavi per crate comuni.</div>
-          <div class="s-foot">
-            <span class="s-price">€ 1,99</span>
-            <button class="btn btn-primary btn-sm">Acquista</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="s-card" data-cat="key">
-        <div class="s-banner sb-4"><i class="bi bi-key"></i></div>
-        <div class="s-info">
-          <div class="s-name">Chiave Rara x3</div>
-          <div class="s-desc">Alta probabilità di ricompense epiche.</div>
-          <div class="s-foot">
-            <span class="s-price">€ 3,49</span>
-            <button class="btn btn-primary btn-sm">Acquista</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="s-card" data-cat="coin">
-        <div class="s-banner sb-2"><i class="bi bi-coin"></i></div>
-        <div class="s-info">
-          <div class="s-name">5.000 SkyCoins</div>
-          <div class="s-desc">Monete per il market interno.</div>
-          <div class="s-foot">
-            <span class="s-price">€ 1,99</span>
-            <button class="btn btn-primary btn-sm">Acquista</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="s-card" data-cat="coin">
-        <div class="s-banner sb-2" style="position:relative"><span class="hot-tag">-20%</span><i class="bi bi-gem"></i></div>
-        <div class="s-info">
-          <div class="s-name">25.000 SkyCoins</div>
-          <div class="s-desc">Risparmio del 20% rispetto ai singoli.</div>
-          <div class="s-foot">
-            <span class="s-price">€ 7,99 <span class="old">€ 9,99</span></span>
-            <button class="btn btn-primary btn-sm">Acquista</button>
-          </div>
-        </div>
-      </div>
-
     </div>
   </div>
 
-</div>
-<script src="assets/components.js"></script>
+  <div class="container">
+    <div class="divider" style="margin-bottom:3rem;"></div>
+
+    <div class="store-layout">
+
+      <!-- ── SIDEBAR ── -->
+      <aside class="store-sidebar">
+        <div class="card store-sidebar-card">
+          <div class="card-header-bar">📦 Categorie</div>
+          <ul class="sidebar-nav">
+            <li><a href="#" class="active" data-cat="all">🌐 Tutti i prodotti <span class="count">12</span></a></li>
+            <li><a href="#" data-cat="vip">⭐ VIP &amp; Rank <span class="count">4</span></a></li>
+            <li><a href="#" data-cat="cosmetic">🎨 Cosmetic <span class="count">3</span></a></li>
+            <li><a href="#" data-cat="spawner">🥚 Spawner <span class="count">2</span></a></li>
+            <li><a href="#" data-cat="keys">🗝️ Chiavi <span class="count">2</span></a></li>
+            <li><a href="#" data-cat="other">📦 Altro <span class="count">1</span></a></li>
+          </ul>
+          <div class="sidebar-divider"></div>
+          <ul class="sidebar-nav">
+            <li>
+              <a href="https://store.skyfrost.it" target="_blank">
+                🔗 Apri su Tebex
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="card" style="margin-top:1rem;">
+          <div class="card-body" style="text-align:center;">
+            <div style="font-size:1.5rem;margin-bottom:.5rem;">💎</div>
+            <div style="font-family:'Cinzel',serif;font-size:.9rem;color:var(--frost);margin-bottom:.35rem;">Pagamenti Sicuri</div>
+            <div style="font-size:.78rem;color:var(--text-dim);line-height:1.5;">Tutti gli acquisti sono gestiti tramite <strong style="color:var(--cyan);">Tebex</strong>, la piattaforma più sicura per i server gaming.</div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- ── MAIN ── -->
+      <main>
+
+        <!-- Featured -->
+        <div class="store-featured reveal">
+          <div class="featured-top">
+            <div>
+              <span class="featured-label">⭐ Più venduto</span>
+              <div class="featured-name">VIP+</div>
+              <div class="featured-price">9,99 <small>EUR/mese</small></div>
+              <ul class="featured-perks" style="margin-top:1rem;">
+                <li>Tutto ciò che include VIP</li>
+                <li>Fly in modalità survival</li>
+                <li>Kit leggendario settimanale</li>
+                <li>Priorità nella coda di accesso</li>
+                <li>Accesso alla chat privata VIP+</li>
+              </ul>
+            </div>
+            <div style="text-align:center;flex-shrink:0;">
+              <div style="font-size:5rem;opacity:.2;line-height:1;">👑</div>
+            </div>
+          </div>
+          <div style="padding:1.5rem;display:flex;gap:1rem;align-items:center;">
+            <a href="https://store.skyfrost.it" target="_blank" class="btn btn-cyan btn-lg" style="flex:1;justify-content:center;">
+              Acquista VIP+ su Tebex →
+            </a>
+            <span style="font-size:.78rem;color:var(--text-muted);">Consegna immediata</span>
+          </div>
+        </div>
+
+        <!-- Product grid -->
+        <div class="section-header" style="margin-top:2rem;">
+          <h2 class="section-title">Tutti i prodotti</h2>
+          <span style="font-size:.8rem;color:var(--text-muted);">12 articoli</span>
+        </div>
+
+        <div class="grid-auto reveal" id="product-grid">
+
+          <!-- VIP -->
+          <div class="card product-card" data-cat="vip">
+            <div class="product-img-placeholder">⭐</div>
+            <div class="product-body">
+              <div class="product-category">VIP & Rank</div>
+              <div class="product-name">VIP</div>
+              <div class="product-desc">Accesso ai privilegi VIP di base con kit settimanale e tag colorata.</div>
+              <div class="product-footer">
+                <div class="product-price">4,99 <span>EUR/mese</span></div>
+                <a href="https://store.skyfrost.it" target="_blank" class="btn btn-cyan btn-sm">Acquista</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="card product-card" data-cat="vip">
+            <div class="product-img-placeholder">👑</div>
+            <div class="product-body">
+              <div class="product-category">VIP & Rank</div>
+              <div class="product-name">VIP+</div>
+              <div class="product-desc">Fly, kit leggendario e priorità di accesso al server.</div>
+              <div class="product-footer">
+                <div class="product-price">9,99 <span>EUR/mese</span></div>
+                <a href="https://store.skyfrost.it" target="_blank" class="btn btn-cyan btn-sm">Acquista</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="card product-card" data-cat="vip">
+            <div class="product-img-placeholder">💎</div>
+            <div class="product-body">
+              <div class="product-category">VIP & Rank</div>
+              <div class="product-name">MVIP</div>
+              <div class="product-desc">Il massimo rango VIP. Accesso esclusivo a tutte le funzioni premium.</div>
+              <div class="product-footer">
+                <div class="product-price">19,99 <span>EUR/mese</span></div>
+                <a href="https://store.skyfrost.it" target="_blank" class="btn btn-cyan btn-sm">Acquista</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Cosmetic -->
+          <div class="card product-card" data-cat="cosmetic">
+            <div class="product-img-placeholder">🎨</div>
+            <div class="product-body">
+              <div class="product-category">Cosmetic</div>
+              <div class="product-name">Skin Pack — Arctic</div>
+              <div class="product-desc">Set di skin invernali esclusive a tema ghiaccio e neve.</div>
+              <div class="product-footer">
+                <div class="product-price">3,99 <span>EUR</span></div>
+                <a href="https://store.skyfrost.it" target="_blank" class="btn btn-cyan btn-sm">Acquista</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="card product-card" data-cat="cosmetic">
+            <div class="product-img-placeholder">✨</div>
+            <div class="product-body">
+              <div class="product-category">Cosmetic</div>
+              <div class="product-name">Particelle — FrostAura</div>
+              <div class="product-desc">Aura di cristalli di ghiaccio attorno al tuo personaggio.</div>
+              <div class="product-footer">
+                <div class="product-price">2,49 <span>EUR</span></div>
+                <a href="https://store.skyfrost.it" target="_blank" class="btn btn-cyan btn-sm">Acquista</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Spawner -->
+          <div class="card product-card" data-cat="spawner">
+            <div class="product-img-placeholder">🥚</div>
+            <div class="product-body">
+              <div class="product-category">Spawner</div>
+              <div class="product-name">Chicken Spawner</div>
+              <div class="product-desc">Spawner di polli per la tua base. Risorse garantite.</div>
+              <div class="product-footer">
+                <div class="product-price">1,99 <span>EUR</span></div>
+                <a href="https://store.skyfrost.it" target="_blank" class="btn btn-cyan btn-sm">Acquista</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="card product-card" data-cat="spawner">
+            <div class="product-img-placeholder">🐄</div>
+            <div class="product-body">
+              <div class="product-category">Spawner</div>
+              <div class="product-name">Cow Spawner</div>
+              <div class="product-desc">Ottieni carne e cuoio in abbondanza con questo spawner.</div>
+              <div class="product-footer">
+                <div class="product-price">2,99 <span>EUR</span></div>
+                <a href="https://store.skyfrost.it" target="_blank" class="btn btn-cyan btn-sm">Acquista</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Keys -->
+          <div class="card product-card" data-cat="keys">
+            <div class="product-img-placeholder">🗝️</div>
+            <div class="product-body">
+              <div class="product-category">Chiavi</div>
+              <div class="product-name">Key x1</div>
+              <div class="product-desc">Una chiave per aprire le crate e vincere premi casuali.</div>
+              <div class="product-footer">
+                <div class="product-price">0,99 <span>EUR</span></div>
+                <a href="https://store.skyfrost.it" target="_blank" class="btn btn-cyan btn-sm">Acquista</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="card product-card" data-cat="keys">
+            <div class="product-img-placeholder">🔑</div>
+            <div class="product-body">
+              <div class="product-category">Chiavi</div>
+              <div class="product-name">Key x5 <span class="badge badge-green" style="margin-left:.4rem;">-20%</span></div>
+              <div class="product-desc">Bundle da 5 chiavi con sconto del 20% rispetto all'acquisto singolo.</div>
+              <div class="product-footer">
+                <div class="product-price">3,99 <span>EUR</span></div>
+                <a href="https://store.skyfrost.it" target="_blank" class="btn btn-cyan btn-sm">Acquista</a>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /product-grid -->
+
+        <div style="text-align:center;margin-top:2.5rem;">
+          <a href="https://store.skyfrost.it" target="_blank" class="btn btn-outline btn-lg">
+            Vedi tutti i prodotti su Tebex →
+          </a>
+        </div>
+
+      </main>
+    </div><!-- /store-layout -->
+  </div><!-- /container -->
+</div><!-- /page-wrap -->
+
 <script src="assets/main.js"></script>
-<script>
-  function filterCat(cat, btn) {
-    document.querySelectorAll('.s-tab').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    document.querySelectorAll('.s-card').forEach(c => {
-      c.style.display = (cat === 'all' || c.dataset.cat === cat) ? '' : 'none';
-    });
-  }
-</script>
+<script>document.addEventListener('DOMContentLoaded', () => SkyFrost.initStore());</script>
 </body>
 </html>
