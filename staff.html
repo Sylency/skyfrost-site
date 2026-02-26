@@ -1,127 +1,89 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="color-scheme" content="dark">
-  <title>SkyFrost — Staff</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/style.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
-  <style>body { font-family: 'Inter','Segoe UI',system-ui,sans-serif; }</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="SkyFrost Staff — Conosci il team che gestisce il server." />
+  <title>Staff — SkyFrost</title>
+  <link rel="stylesheet" href="assets/style.css" />
 </head>
 <body>
-<div class="bg-scene"></div>
-<div class="page-wrapper">
+<script src="assets/components.js"></script>
 
-  <div class="page-con">
-    <div class="page-hd"><i class="bi bi-people-fill"></i> Staff Team</div>
+<div class="page-wrap">
 
-    <!-- Owner -->
-    <div class="staff-sec fu">
-      <div class="role-lbl"><i class="bi bi-crown-fill"></i> Owner</div>
-      <div class="staff-gr">
-        <div class="staff-c">
-          <div class="s-av av-o"><i class="bi bi-snow2"></i><span class="sp on"></span></div>
-          <div class="s-nm">SkyFrostOwner</div>
-          <span class="rp ro">Owner</span>
-        </div>
+  <div class="page-hero">
+    <p class="page-hero-eyebrow">⟡ Il nostro team ⟡</p>
+    <h1 class="page-hero-title">Il <span class="glow">Team</span></h1>
+    <p class="page-hero-sub">Persone reali che si impegnano ogni giorno per offrirti la miglior esperienza di gioco.</p>
+    <div style="margin-top:1.5rem;display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+      <a href="https://discord.gg/skyfrost" target="_blank" class="btn btn-cyan">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink:0;">
+          <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.03.056A19.9 19.9 0 0 0 6.1 21.01a.077.077 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/>
+        </svg>
+        Unisciti al Discord
+      </a>
+      <div class="status-pill">
+        <span class="status-dot online"></span>
+        <span>Dati in tempo reale da Discord</span>
       </div>
     </div>
-
-    <!-- Admin -->
-    <div class="staff-sec fu d1">
-      <div class="role-lbl"><i class="bi bi-shield-shaded"></i> Admin</div>
-      <div class="staff-gr">
-        <div class="staff-c">
-          <div class="s-av av-a"><i class="bi bi-shield-fill"></i><span class="sp on"></span></div>
-          <div class="s-nm">ArcticAdmin</div>
-          <span class="rp ra">Admin</span>
-        </div>
-        <div class="staff-c">
-          <div class="s-av av-a"><i class="bi bi-lightning-fill"></i><span class="sp aw"></span></div>
-          <div class="s-nm">FrostGuard</div>
-          <span class="rp ra">Admin</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Moderatore -->
-    <div class="staff-sec fu d2">
-      <div class="role-lbl"><i class="bi bi-circle-fill text-primary"></i> Moderatore</div>
-      <div class="staff-gr">
-        <div class="staff-c">
-          <div class="s-av av-m"><i class="bi bi-water"></i><span class="sp on"></span></div>
-          <div class="s-nm">WaveKeeper</div>
-          <span class="rp rm">Mod</span>
-        </div>
-        <div class="staff-c">
-          <div class="s-av av-m"><i class="bi bi-snow"></i>️<span class="sp off"></span></div>
-          <div class="s-nm">CrystalMod</div>
-          <span class="rp rm">Mod</span>
-        </div>
-        <div class="staff-c">
-          <div class="s-av av-m"><i class="bi bi-hurricane"></i><span class="sp on"></span></div>
-          <div class="s-nm">BlizzardX</div>
-          <span class="rp rm">Mod</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Helper -->
-    <div class="staff-sec fu d1">
-      <div class="role-lbl"><i class="bi bi-diamond-fill"></i> Helper</div>
-      <div class="staff-gr">
-        <div class="staff-c">
-          <div class="s-av av-h"><i class="bi bi-star-fill"></i><span class="sp on"></span></div>
-          <div class="s-nm">StarHelper</div>
-          <span class="rp rh">Helper</span>
-        </div>
-        <div class="staff-c">
-          <div class="s-av av-h"><i class="bi bi-person-fill"></i><span class="sp on"></span></div>
-          <div class="s-nm">IceGuide</div>
-          <span class="rp rh">Helper</span>
-        </div>
-        <div class="staff-c">
-          <div class="s-av av-h"><i class="bi bi-stars"></i><span class="sp aw"></span></div>
-          <div class="s-nm">GlacierHelp</div>
-          <span class="rp rh">Helper</span>
-        </div>
-        <div class="staff-c">
-          <div class="s-av av-h"><i class="bi bi-person-fill"></i><span class="sp off"></span></div>
-          <div class="s-nm">NightFrost</div>
-          <span class="rp rh">Helper</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Dev -->
-    <div class="staff-sec fu d2">
-      <div class="role-lbl"><i class="bi bi-gear-fill"></i> Developer</div>
-      <div class="staff-gr">
-        <div class="staff-c">
-          <div class="s-av av-d"><i class="bi bi-code-slash"></i><span class="sp on"></span></div>
-          <div class="s-nm">CodeFrost</div>
-          <span class="rp rd">Dev</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Apply banner -->
-    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r);padding:22px;text-align:center;max-width:500px;margin:24px auto 0" class="fu">
-      <div style="font-size:1.8rem;margin-bottom:10px"><i class="bi bi-clipboard-fill"></i></div>
-      <div style="font-size:.9rem;font-weight:700;margin-bottom:6px">Vuoi entrare nello staff?</div>
-      <p style="font-size:.75rem;color:var(--text-2);margin-bottom:16px">Cerchiamo persone serie, attive e appassionate. Candidati sul nostro Discord!</p>
-      <a href="#" class="btn btn-primary btn-lg">Candidati ora</a>
-    </div>
-
   </div>
 
+  <div class="container">
+    <div class="divider" style="margin-bottom:3rem;"></div>
+
+    <!-- Staff container — populated by JS via /api/discord -->
+    <div id="staff-container">
+
+      <!-- Loading skeletons -->
+      <div class="role-section">
+        <div class="role-label">
+          <span class="role-dot owner"></span>
+          <h3>Owner</h3>
+        </div>
+        <div class="grid-auto-sm">
+          <div class="card staff-card" style="gap:.75rem;">
+            <div class="skeleton skeleton-avatar"></div>
+            <div class="skeleton skeleton-line lg" style="width:100px;"></div>
+            <div class="skeleton skeleton-line sm" style="width:60px;"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="role-section" style="margin-top:2rem;">
+        <div class="role-label">
+          <span class="role-dot admin"></span>
+          <h3>Admin</h3>
+        </div>
+        <div class="grid-auto-sm">
+          <div class="card staff-card" style="gap:.75rem;">
+            <div class="skeleton skeleton-avatar"></div>
+            <div class="skeleton skeleton-line lg" style="width:100px;"></div>
+            <div class="skeleton skeleton-line sm" style="width:60px;"></div>
+          </div>
+          <div class="card staff-card" style="gap:.75rem;">
+            <div class="skeleton skeleton-avatar"></div>
+            <div class="skeleton skeleton-line lg" style="width:100px;"></div>
+            <div class="skeleton skeleton-line sm" style="width:60px;"></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /staff-container -->
+
+    <div style="margin-top:3rem;padding:2rem;text-align:center;border:1px dashed var(--border);border-radius:var(--radius-md);">
+      <div style="font-size:1.3rem;margin-bottom:.5rem;">💼</div>
+      <div style="font-family:'Cinzel',serif;color:var(--frost);margin-bottom:.4rem;">Vuoi entrare nel team?</div>
+      <div style="font-size:.88rem;color:var(--text-dim);margin-bottom:1rem;">Apri un ticket sul nostro Discord per candidarti come membro dello staff.</div>
+      <a href="https://discord.gg/skyfrost" target="_blank" class="btn btn-outline">Candidati su Discord →</a>
+    </div>
+
+    <div style="margin-bottom:4rem;"></div>
+  </div>
 </div>
-<script src="assets/components.js"></script>
+
 <script src="assets/main.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => SkyFrost.initStaff());</script>
 </body>
 </html>
