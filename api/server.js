@@ -1,49 +1,58 @@
-const express = require("express");
-const fs = require("fs");
-const path = require("path");
-require("dotenv").config();
+/**
+ * ═══════════════════════════════════════════════════════════
+ *  SKYFROST — api/server.js
+ *  Express API server — porta 3001
+ *  Avvio: node server.js  oppure  pm2 start server.js
+ * ═══════════════════════════════════════════════════════════
+ */
 
-const app = express();
+'use strict';
+
+const express = require('express');
+const fs      = require('fs');
+const path    = require('path');
+require('dotenv').config();
+
+const app  = express();
+const PORT = process.env.PORT || 3001;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// test route
-app.get("/api/health", (req, res) => {
-  res.json({ ok: true });
+// ── Health check ──
+app.get('/api/health', (req, res) => {
+  res.json({ ok: true, timestamp: new Date().toISOString() });
 });
 
-// carica automaticamente i file API
-const files = fs.readdirSync(__dirname).filter(f => f.endsWith(".js") && f !== "server.js");
+// ── Carica automaticamente tutti i file *.js (escluso server.js) ──
+const files = fs.readdirSync(__dirname)
+  .filter(f => f.endsWith('.js') && f !== 'server.js');
 
 files.forEach(file => {
-  const route = "/api/" + file.replace(".js", "");
-
+  const route = '/api/' + file.replace('.js', '');
   try {
     const handler = require(path.join(__dirname, file));
-
     app.all(route, (req, res) => {
       try {
-        if (typeof handler === "function") {
-          return handler(req, res);
-        }
-        if (handler && typeof handler.default === "function") {
-          return handler.default(req, res);
-        }
+        const fn = typeof handler === 'function'
+          ? handler
+          : typeof handler.default === 'function'
+          ? handler.default
+          : null;
 
-        res.status(500).json({ error: "Invalid export in " + file });
+        if (!fn) return res.status(500).json({ error: 'Invalid export in ' + file });
+        return fn(req, res);
       } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: "Server error" });
+        console.error('[' + route + ']', err);
+        res.status(500).json({ error: 'Server error' });
       }
     });
-
-    console.log("✔ Loaded:", route);
+    console.log('✔ Loaded:', route);
   } catch (e) {
-    console.error("❌ Error loading", file, e);
+    console.error('❌ Error loading', file, e.message);
   }
 });
 
-app.listen(3001, () => {
-  console.log("🚀 API running on http://localhost:3001");
+app.listen(PORT, () => {
+  console.log('🚀 SkyFrost API running on http://localhost:' + PORT);
 });
