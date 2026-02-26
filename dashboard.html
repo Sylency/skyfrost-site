@@ -37,13 +37,13 @@
       <!-- ── MAIN ── -->
       <main>
         <!-- Welcome -->
-        <div style="margin-bottom:2rem;">
+        <div id="overview" style="margin-bottom:2rem;">
           <h1 style="font-family:'Cinzel',serif;font-size:1.6rem;color:var(--frost);">Ciao, <span style="color:var(--cyan);">SkyPlayer</span> 👋</h1>
           <p style="color:var(--text-dim);margin-top:.3rem;">Ecco un riepilogo della tua attività su SkyFrost.</p>
         </div>
 
         <!-- Stats grid -->
-        <div class="grid-4 reveal" style="margin-bottom:2rem;">
+        <div id="stats" class="grid-4 reveal" style="margin-bottom:2rem;">
           <div class="card stat-card">
             <div class="stat-value">142</div>
             <div class="stat-label">Ore di gioco</div>
@@ -63,7 +63,7 @@
         </div>
 
         <!-- Recent purchases -->
-        <div class="card reveal reveal-delay-1" style="margin-bottom:1.5rem;">
+        <div id="purchases" class="card reveal reveal-delay-1" style="margin-bottom:1.5rem;">
           <div class="card-header-bar">🛒 Acquisti Recenti</div>
           <div class="purchase-row">
             <div>
@@ -144,6 +144,15 @@
           </div>
 
         </div><!-- /grid-2 -->
+
+        <div id="settings" class="card reveal" style="margin-top:1.5rem;">
+          <div class="card-header-bar">⚙️ Impostazioni</div>
+          <div class="card-body">
+            <div style="font-size:.88rem;color:var(--text-dim);line-height:1.6;">
+              Sezione impostazioni in arrivo. Qui verranno gestite preferenze account, notifiche e collegamenti esterni.
+            </div>
+          </div>
+        </div>
 
       </main>
     </div><!-- /dashboard-layout -->

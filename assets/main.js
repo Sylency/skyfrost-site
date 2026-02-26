@@ -50,6 +50,29 @@ SkyFrost.initIndex = function () {
 
 /* ── STORE PAGE ── */
 SkyFrost.initStore = function () {
+  const cards = Array.from(document.querySelectorAll('.product-card'));
+  const counts = cards.reduce((acc, card) => {
+    const cat = card.dataset.cat;
+    if (!cat) return acc;
+    acc[cat] = (acc[cat] || 0) + 1;
+    return acc;
+  }, {});
+
+  document.querySelectorAll('.sidebar-nav a[data-cat]').forEach(link => {
+    const cat = link.dataset.cat;
+    const countEl = link.querySelector('.count');
+    if (countEl) {
+      countEl.textContent = cat === 'all' ? String(cards.length) : String(counts[cat] || 0);
+    }
+    if (cat !== 'all' && !counts[cat]) {
+      const li = link.closest('li');
+      if (li) li.remove();
+    }
+  });
+
+  const totalLabel = document.querySelector('.section-header span');
+  if (totalLabel) totalLabel.textContent = `${cards.length} articoli`;
+
   /* Filtro categorie nella sidebar */
   document.querySelectorAll('.sidebar-nav a[data-cat]').forEach(link => {
     link.addEventListener('click', (e) => {
@@ -69,6 +92,20 @@ SkyFrost.initStaff = async function () {
   const container = document.getElementById('staff-container');
   if (!container) return;
 
+  function escapeHtml(value) {
+    return String(value ?? '').replace(/[&<>"']/g, (ch) => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;'
+    })[ch]);
+  }
+
+  function normalizeStatus(value) {
+    return ['online', 'idle', 'dnd', 'offline'].includes(value) ? value : 'offline';
+  }
+
   try {
     const res = await fetch(`${API_BASE}/discord`);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -81,7 +118,7 @@ SkyFrost.initStaff = async function () {
       <div style="text-align:center;padding:4rem;color:var(--text-dim);">
         <div style="font-size:2rem;margin-bottom:1rem;">❄️</div>
         <p style="color:var(--frost);font-family:'Cinzel',serif;margin-bottom:.5rem;">Impossibile caricare lo staff</p>
-        <p style="font-size:.82rem;color:var(--text-muted);">${err.message}</p>
+        <p style="font-size:.82rem;color:var(--text-muted);">${escapeHtml(err.message)}</p>
         <p style="font-size:.78rem;color:var(--text-muted);margin-top:.5rem;">
           Controlla che il bot sia nel server e che DISCORD_BOT_TOKEN sia configurato in api/.env
         </p>
@@ -103,20 +140,25 @@ SkyFrost.initStaff = async function () {
             <h3>${role}</h3>
           </div>
           <div class="grid-auto-sm">
-            ${members.map(m => `
+            ${members.map(m => {
+              const name = escapeHtml(m.displayName || m.username || 'Utente');
+              const avatar = escapeHtml(m.avatar || 'https://cdn.discordapp.com/embed/avatars/0.png');
+              const status = normalizeStatus(m.status);
+              return `
               <div class="card staff-card">
                 <div class="staff-avatar-wrap">
                   <img class="staff-avatar"
-                    src="${m.avatar}"
-                    alt="${m.displayName}"
+                    src="${avatar}"
+                    alt="${name}"
                     onerror="this.src='https://cdn.discordapp.com/embed/avatars/0.png'"
                   />
-                  <span class="staff-online-dot ${m.status || 'offline'}"></span>
+                  <span class="staff-online-dot ${status}"></span>
                 </div>
-                <div class="staff-name">${m.displayName}</div>
+                <div class="staff-name">${name}</div>
                 <div class="staff-role-badge ${dotClass[role]}">${role}</div>
               </div>
-            `).join('')}
+            `;
+            }).join('')}
           </div>
         </div>`;
     });
@@ -169,15 +211,33 @@ SkyFrost.initRegister = function () {
 SkyFrost.initVote = function () {
   document.querySelectorAll('[data-vote-url]').forEach(btn => {
     btn.addEventListener('click', () => {
-      window.open(btn.dataset.voteUrl, '_blank');
+      const url = (btn.dataset.voteUrl || '').trim();
+      if (!url || url.includes('YOUR_SERVER_ID')) {
+        SkyFrost.toast('Link di voto non configurato. Aggiorna gli URL in vote.html.', 'error');
+        return;
+      }
+      const popup = window.open(url, '_blank', 'noopener,noreferrer');
+      if (!popup) {
+        SkyFrost.toast('Popup bloccato. Consenti i popup per aprire il sito di voto.', 'error');
+        return;
+      }
       SkyFrost.toast('Grazie per il voto! Ricompensa in arrivo 🎁', 'success');
     });
   });
 };
 
 /* ── COPY IP ── */
-SkyFrost.copyIP = function () {
-  navigator.clipboard?.writeText('play.skyfrost.net').then(() => {
+SkyFrost.copyIP = async function () {
+  const ip = 'play.skyfrost.net';
+  if (!navigator.clipboard || typeof navigator.clipboard.writeText !== 'function') {
+    SkyFrost.toast(`Copia manuale: ${ip}`, 'info');
+    return;
+  }
+  try {
+    await navigator.clipboard.writeText(ip);
     SkyFrost.toast('IP copiato negli appunti! 🎮', 'success');
-  });
+  } catch (err) {
+    console.error('Clipboard copy failed:', err);
+    SkyFrost.toast(`Copia non riuscita. IP: ${ip}`, 'error');
+  }
 };
