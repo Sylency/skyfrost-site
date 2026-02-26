@@ -1,232 +1,219 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="color-scheme" content="dark">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="SkyFrost — Il server Hytale italiano. Esplora un mondo di ghiaccio eterno." />
   <title>SkyFrost — Hytale Server</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/style.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
-  <style>
-    body { font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; }
-  </style>
+  <link rel="stylesheet" href="assets/style.css" />
 </head>
 <body>
-<div class="bg-scene"></div>
-<div class="page-wrapper">
+<script src="assets/components.js"></script>
 
-  <!-- ── Hero Band ─────────────────────────────────── -->
-  <div class="hero-band fu">
-    <!-- Left: Server info -->
-    <div class="hero-side left">
-      <span class="hs-label">Gioca ora</span>
-      <span class="hs-val">play.skyfrost.net</span>
-      <span class="hs-status green-dot"><span id="hp-count">—</span> giocatori online</span>
+<!-- ══════════════════════════════════
+     HERO
+══════════════════════════════════ -->
+<div class="hero">
+  <p class="hero-eyebrow">⟡ Hytale Server Italiano ⟡</p>
+  <h1 class="hero-title">Sky<span class="glow">Frost</span></h1>
+  <p class="hero-subtitle">Esplora un mondo di ghiaccio eterno. Sfida il destino e lascia il tuo segno sulla tundra.</p>
+
+  <div class="hero-actions">
+    <a href="register.html" class="btn btn-cyan btn-lg">Inizia ora</a>
+    <button onclick="SkyFrost.copyIP()" class="btn btn-outline btn-lg">
+      📋 play.skyfrost.net
+    </button>
+    <a href="store.html" class="btn btn-ghost btn-lg">Vai allo Store</a>
+  </div>
+
+  <div class="hero-status">
+    <div class="status-pill">
+      <span class="status-dot online"></span>
+      <span>Server Online &nbsp;—&nbsp; <strong id="online-count">…</strong> giocatori</span>
     </div>
-
-    <!-- Center: Logo -->
-    <div class="hero-logo"><i class="bi bi-snow"></i></div>
-
-    <!-- Right: Discord -->
-    <div class="hero-side right">
-      <span class="hs-label">Sei in linea</span>
-      <span class="hs-val">discord.gg/skyfrost</span>
-      <span class="hs-status blue-dot"><span id="hd-count">—</span> membri online</span>
+    <div class="status-pill">
+      <span class="status-dot online"></span>
+      <span><a href="https://discord.gg/skyfrost" target="_blank" style="color:inherit;text-decoration:none;">discord.gg/skyfrost</a></span>
     </div>
   </div>
 
-  <!-- ── Action Bar ─────────────────────────────────── -->
-  <div class="action-bar fu d1">
-    <div class="login-banner">
-      <div>
-        <h3>SkyFrost</h3>
-        <p>Per unirsi alla nostra community, effettua il login o registrati.</p>
-      </div>
-      <div class="lb-btns">
-        <a href="login.html"    class="btn btn-ghost btn-sm">Accedi</a>
-        <a href="register.html" class="btn btn-primary btn-sm">Registrati</a>
-      </div>
-    </div>
-    <a href="store.html" class="store-cta">
-      <span class="sc-icon"><i class="bi bi-cart-fill"></i></span>
-      <span class="sc-label">Negozio</span>
-      <span class="sc-sub">Inizia a fare acquisti!</span>
-    </a>
+  <div class="scroll-hint">
+    <span>Scorri</span>
+    <span>⌄</span>
   </div>
-
-  <!-- ── Main 2-col Grid ───────────────────────────── -->
-  <div class="main-grid">
-
-    <!-- News column -->
-    <div class="news-col">
-
-      <article class="news-item">
-        <div class="news-thumb nt-1"><i class="bi bi-stars"></i></div>
-        <div class="news-body">
-          <h2 class="news-title">Benvenuto sul nuovo sito di SkyFrost!</h2>
-          <p class="news-excerpt">
-            Abbiamo completamente rinnovato il portale del server. Nuova UI ispirata al tema Cobalt, store migliorato, pagina staff aggiornata, dashboard interattiva e molto altro. Continua a seguirci per tutte le novità!
-          </p>
-          <div class="news-footer">
-            <div class="news-author">
-              <div class="author-avatar"><i class="bi bi-person-fill"></i></div>
-              <div>
-                <span class="author-name">SkyFrostOwner</span>
-                <span class="author-date">20 feb 2026 15:16</span>
-              </div>
-            </div>
-            <span class="read-more">Leggi di più →</span>
-          </div>
-        </div>
-      </article>
-
-      <article class="news-item">
-        <div class="news-thumb nt-2"><i class="bi bi-fire"></i></div>
-        <div class="news-body">
-          <h2 class="news-title">Patch 1.3 — Nuove zone e bilanciamento classi</h2>
-          <p class="news-excerpt">
-            La patch 1.3 introduce tre nuove zone esplorabili, decine di mob inediti e un sistema di bilanciamento per le classi. Nuovi boss, nuovi drop esclusivi e sfide cooperative. Entra in gioco e scopri tutte le novità!
-          </p>
-          <div class="news-footer">
-            <div class="news-author">
-              <div class="author-avatar"><i class="bi bi-person-fill"></i></div>
-              <div>
-                <span class="author-name">CodeFrost</span>
-                <span class="author-date">18 feb 2026 10:30</span>
-              </div>
-            </div>
-            <span class="read-more">Leggi di più →</span>
-          </div>
-        </div>
-      </article>
-
-      <article class="news-item">
-        <div class="news-thumb nt-3"><i class="bi bi-tree-fill"></i></div>
-        <div class="news-body">
-          <h2 class="news-title">Evento Primavera — Ricompense esclusive</h2>
-          <p class="news-excerpt">
-            L'evento di primavera è ufficialmente iniziato! Completa le quest stagionali, raccogli fiori rari e ottieni cosmetic esclusivi disponibili solo per un periodo limitato. Non perdere questa occasione!
-          </p>
-          <div class="news-footer">
-            <div class="news-author">
-              <div class="author-avatar"><i class="bi bi-person-fill"></i></div>
-              <div>
-                <span class="author-name">ArcticAdmin</span>
-                <span class="author-date">15 feb 2026 09:00</span>
-              </div>
-            </div>
-            <span class="read-more">Leggi di più →</span>
-          </div>
-        </div>
-      </article>
-
-      <div class="pagination">
-        <div class="pg-btn">‹</div>
-        <div class="pg-btn active">1</div>
-        <div class="pg-btn">2</div>
-        <div class="pg-btn">›</div>
-      </div>
-    </div>
-
-    <!-- Sidebar -->
-    <aside class="sidebar">
-
-      <!-- Featured Product -->
-      <div class="fp-card fu d1">
-        <div class="fp-header"><i class="bi bi-star-fill"></i> Prodotto in primo piano</div>
-        <div class="fp-banner">
-          <div class="fp-vip-badge">VIP</div>
-        </div>
-        <div class="fp-footer">
-          <span class="fp-name">VIP</span>
-          <span class="fp-price">4,99 EUR</span>
-        </div>
-      </div>
-
-      <!-- Top Donors -->
-      <div class="widget-card fu d2">
-        <div class="wc-header">
-          <span class="wc-title"><i class="bi bi-award-fill"></i> Top Donors</span>
-          <span class="wc-filter">Tutti i tempi</span>
-        </div>
-        <table class="wc-table">
-          <thead>
-            <tr><th>#</th><th>Nome utente</th><th>Totale</th></tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><span class="rk g">1</span></td>
-              <td><div class="user-cell"><div class="mini-av"><i class="bi bi-person-fill"></i></div>ArcticWolf</div></td>
-              <td><span class="amt">320,00 EUR</span></td>
-            </tr>
-            <tr>
-              <td><span class="rk s">2</span></td>
-              <td><div class="user-cell"><div class="mini-av"><i class="bi bi-snow"></i></div>FrostByte</div></td>
-              <td><span class="amt">210,00 EUR</span></td>
-            </tr>
-            <tr>
-              <td><span class="rk b">3</span></td>
-              <td><div class="user-cell"><div class="mini-av"><i class="bi bi-person-fill"></i></div>NordLight</div></td>
-              <td><span class="amt">150,00 EUR</span></td>
-            </tr>
-            <tr>
-              <td><span class="rk">4</span></td>
-              <td><div class="user-cell"><div class="mini-av"><i class="bi bi-lightning-fill"></i></div>IceBreaker</div></td>
-              <td><span class="amt">90,00 EUR</span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <!-- Recent Purchases -->
-      <div class="widget-card fu d3">
-        <div class="wc-header">
-          <span class="wc-title"><i class="bi bi-cart-fill"></i> Acquisti Recenti</span>
-        </div>
-        <table class="wc-table">
-          <thead>
-            <tr><th>Nome utente</th><th>Categoria</th><th>Prodotto</th></tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><div class="user-cell"><div class="mini-av"><i class="bi bi-person-fill"></i></div>ArcticWolf</div></td>
-              <td><span class="cat-pill">VIP</span></td>
-              <td>MVIP</td>
-            </tr>
-            <tr>
-              <td><div class="user-cell"><div class="mini-av"><i class="bi bi-person-fill"></i></div>DragonX</div></td>
-              <td><span class="cat-pill">Spawner</span></td>
-              <td>Chicken</td>
-            </tr>
-            <tr>
-              <td><div class="user-cell"><div class="mini-av"><i class="bi bi-person-fill"></i></div>demo</div></td>
-              <td><span class="cat-pill">VIP</span></td>
-              <td>VIP+</td>
-            </tr>
-            <tr>
-              <td><div class="user-cell"><div class="mini-av"><i class="bi bi-star-fill"></i></div>StarLight</div></td>
-              <td><span class="cat-pill">Chiavi</span></td>
-              <td>Key x5</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-    </aside>
-  </div>
-
 </div>
 
-<script src="assets/components.js"></script>
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════
+     ANNUNCI
+══════════════════════════════════ -->
+<div class="page-wrap">
+  <div class="container">
+
+    <section class="section reveal">
+      <div class="section-header">
+        <h2 class="section-title">Annunci</h2>
+        <a href="#" class="section-link">Tutti →</a>
+      </div>
+
+      <!-- Page 1 -->
+      <div class="news-page">
+        <div class="grid-3">
+
+          <article class="card news-card card-body">
+            <span class="badge badge-cyan">Aggiornamento</span>
+            <h3>Benvenuto sul nuovo sito di SkyFrost!</h3>
+            <p>Abbiamo completamente rinnovato il portale. Nuova UI, store migliorato, pagina staff aggiornata e dashboard interattiva.</p>
+            <div class="news-meta">
+              <div class="news-author">
+                <div class="author-avatar">SF</div>
+                <span>SkyFrostOwner</span>
+              </div>
+              <span>20 feb 2026</span>
+            </div>
+          </article>
+
+          <article class="card news-card card-body">
+            <span class="badge badge-cyan">Patch 1.3</span>
+            <h3>Nuove zone e bilanciamento classi</h3>
+            <p>Tre nuove zone esplorabili, decine di mob inediti e sistema di bilanciamento per le classi. Nuovi boss e drop esclusivi.</p>
+            <div class="news-meta">
+              <div class="news-author">
+                <div class="author-avatar">CF</div>
+                <span>CodeFrost</span>
+              </div>
+              <span>18 feb 2026</span>
+            </div>
+          </article>
+
+          <article class="card news-card card-body">
+            <span class="badge badge-gold">Evento</span>
+            <h3>Evento Primavera — Ricompense esclusive</h3>
+            <p>Quest stagionali, fiori rari e cosmetic esclusivi disponibili solo per un periodo limitato. Non perdere l'occasione!</p>
+            <div class="news-meta">
+              <div class="news-author">
+                <div class="author-avatar">AA</div>
+                <span>ArcticAdmin</span>
+              </div>
+              <span>15 feb 2026</span>
+            </div>
+          </article>
+
+        </div>
+      </div><!-- /page1 -->
+
+      <!-- Page 2 -->
+      <div class="news-page" style="display:none;">
+        <div class="grid-3">
+          <article class="card news-card card-body">
+            <span class="badge badge-green">Manutenzione</span>
+            <h3>Manutenzione programmata — 5 marzo</h3>
+            <p>Il server sarà offline dalle 03:00 alle 05:00 per aggiornamenti infrastrutturali. Ci scusiamo per il disagio.</p>
+            <div class="news-meta">
+              <div class="news-author"><div class="author-avatar">SF</div><span>SkyFrostOwner</span></div>
+              <span>10 feb 2026</span>
+            </div>
+          </article>
+          <article class="card news-card card-body">
+            <span class="badge badge-cyan">Sistema</span>
+            <h3>Nuovo sistema di crafting introdotto</h3>
+            <p>Il rework del crafting è ora live: ricette più intuitive, materiali ribilanciati e nuovi oggetti leggendari.</p>
+            <div class="news-meta">
+              <div class="news-author"><div class="author-avatar">CF</div><span>CodeFrost</span></div>
+              <span>8 feb 2026</span>
+            </div>
+          </article>
+          <article class="card news-card card-body">
+            <span class="badge badge-gold">Evento</span>
+            <h3>Torneo PvP — Iscrizioni aperte</h3>
+            <p>Il primo torneo PvP ufficiale di SkyFrost è ufficialmente aperto. Premi esclusivi per i top 3.</p>
+            <div class="news-meta">
+              <div class="news-author"><div class="author-avatar">AA</div><span>ArcticAdmin</span></div>
+              <span>5 feb 2026</span>
+            </div>
+          </article>
+        </div>
+      </div><!-- /page2 -->
+
+      <!-- Pagination -->
+      <div style="display:flex;align-items:center;justify-content:center;gap:1.5rem;margin-top:2rem;">
+        <button id="news-prev" class="btn btn-ghost btn-sm">‹ Prec</button>
+        <div style="display:flex;gap:.5rem;">
+          <button class="page-dot" style="width:8px;height:8px;border-radius:50%;border:none;background:var(--cyan);cursor:pointer;transition:background .2s;"></button>
+          <button class="page-dot" style="width:8px;height:8px;border-radius:50%;border:none;background:var(--border);cursor:pointer;transition:background .2s;"></button>
+        </div>
+        <button id="news-next" class="btn btn-ghost btn-sm">Succ ›</button>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ══════════════════════════════
+         STORE + LEADERBOARD
+    ══════════════════════════════ -->
+    <section class="section">
+      <div class="grid-2 reveal">
+
+        <!-- Featured product -->
+        <div class="store-featured">
+          <div class="featured-top">
+            <div>
+              <span class="featured-label">⭐ In primo piano</span>
+              <div class="featured-name">VIP</div>
+              <div class="featured-price">4,99 <small>EUR/mese</small></div>
+              <ul class="featured-perks" style="margin-top:1rem;">
+                <li>Tag [VIP] colorata in chat</li>
+                <li>Kit esclusivo settimanale</li>
+                <li>Accesso anticipato agli eventi</li>
+                <li>Skin cosmetic dedicata</li>
+              </ul>
+            </div>
+            <div style="font-size:4rem;opacity:.15;flex-shrink:0;">🌟</div>
+          </div>
+          <div style="padding:1.5rem;">
+            <a href="https://store.skyfrost.it" target="_blank" class="btn btn-cyan btn-block btn-lg">
+              Acquista su Tebex →
+            </a>
+          </div>
+        </div>
+
+        <!-- Right: leaderboard + recent purchases -->
+        <div style="display:flex;flex-direction:column;gap:1.25rem;">
+
+          <div class="card reveal reveal-delay-1">
+            <div class="card-header-bar">🏆 Top Donors</div>
+            <table class="lb-table">
+              <tr><td class="lb-rank gold">#1</td><td class="lb-name">ArcticWolf</td><td class="lb-amount">320,00 €</td></tr>
+              <tr><td class="lb-rank silver">#2</td><td class="lb-name">FrostByte</td><td class="lb-amount">210,00 €</td></tr>
+              <tr><td class="lb-rank bronze">#3</td><td class="lb-name">NordLight</td><td class="lb-amount">150,00 €</td></tr>
+              <tr><td class="lb-rank">#4</td><td class="lb-name">IceBreaker</td><td class="lb-amount">90,00 €</td></tr>
+            </table>
+          </div>
+
+          <div class="card reveal reveal-delay-2">
+            <div class="card-header-bar">⚡ Acquisti Recenti</div>
+            <div class="purchase-row"><div><div class="purchase-user">ArcticWolf</div><div class="purchase-cat">VIP</div></div><span class="purchase-item">MVIP</span></div>
+            <div class="purchase-row"><div><div class="purchase-user">DragonX</div><div class="purchase-cat">Spawner</div></div><span class="purchase-item">Chicken</span></div>
+            <div class="purchase-row"><div><div class="purchase-user">demo</div><div class="purchase-cat">VIP</div></div><span class="purchase-item">VIP+</span></div>
+            <div class="purchase-row"><div><div class="purchase-user">StarLight</div><div class="purchase-cat">Chiavi</div></div><span class="purchase-item">Key x5</span></div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </div><!-- /container -->
+</div><!-- /page-wrap -->
+
 <script src="assets/main.js"></script>
 <script>
-  window.addEventListener('load', () => {
-    setTimeout(() => animCount(document.getElementById('hp-count'), 47), 300);
-    setTimeout(() => animCount(document.getElementById('hd-count'), 312), 500);
+  document.addEventListener('DOMContentLoaded', () => {
+    SkyFrost.initIndex();
+    /* Page dot styling */
+    const style = document.createElement('style');
+    style.textContent = '.page-dot.active{background:var(--cyan)!important;}';
+    document.head.appendChild(style);
   });
 </script>
 </body>
