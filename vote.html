@@ -1,108 +1,118 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="color-scheme" content="dark">
-  <title>SkyFrost — Vota</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/style.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
-  <style>body { font-family: 'Inter','Segoe UI',system-ui,sans-serif; }</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Vota SkyFrost e ottieni ricompense esclusive ogni 24 ore." />
+  <title>Vota — SkyFrost</title>
+  <link rel="stylesheet" href="assets/style.css" />
 </head>
 <body>
-<div class="bg-scene"></div>
-<div class="page-wrapper">
+<script src="assets/components.js"></script>
 
-  <div class="page-con">
-    <div class="page-hd"><i class="bi bi-check2-square"></i> Vota SkyFrost</div>
+<div class="page-wrap">
+
+  <div class="page-hero">
+    <p class="page-hero-eyebrow">⟡ Supporta il server ⟡</p>
+    <h1 class="page-hero-title"><span class="glow">Vota</span> SkyFrost</h1>
+    <p class="page-hero-sub">Vota ogni 24 ore su tutte le piattaforme e ricevi ricompense esclusive in gioco!</p>
+  </div>
+
+  <div class="container">
+    <div class="divider" style="margin-bottom:3rem;"></div>
 
     <!-- Rewards banner -->
-    <div style="background:rgba(26,143,255,.07);border:1px solid rgba(26,143,255,.22);border-radius:var(--r);padding:14px 18px;margin-bottom:18px;display:flex;align-items:center;gap:14px" class="fu">
-      <div style="font-size:1.8rem;flex-shrink:0"><i class="bi bi-gift-fill"></i></div>
-      <div>
-        <div style="font-size:.82rem;font-weight:700;margin-bottom:4px">Ricompense per ogni voto</div>
-        <div style="display:flex;gap:7px;flex-wrap:wrap">
-          <span class="bdg bdg-y">500 SkyCoins</span>
-          <span class="bdg bdg-b">1× Vote Key</span>
-          <span class="bdg bdg-b">+1 Voto rank</span>
-          <span class="bdg bdg-g">XP Bonus 30 min</span>
+    <div class="card reveal" style="margin-bottom:3rem;overflow:hidden;">
+      <div style="background:linear-gradient(135deg,var(--bg-3),var(--bg-2));padding:2rem;display:flex;align-items:center;justify-content:space-between;gap:2rem;flex-wrap:wrap;">
+        <div>
+          <div style="font-family:'Cinzel',serif;font-size:1.3rem;color:var(--frost);margin-bottom:.5rem;">🎁 Ricompense per voto</div>
+          <div style="font-size:.9rem;color:var(--text-dim);max-width:500px;line-height:1.6;">
+            Ogni voto ti regala: <strong style="color:var(--cyan);">500 monete</strong>, una <strong style="color:var(--cyan);">Vote Key</strong> e punti per il <strong style="color:var(--cyan);">vote leaderboard mensile</strong>. Chi vota di più ottiene premi straordinari!
+          </div>
+        </div>
+        <div style="display:flex;gap:1.5rem;flex-wrap:wrap;flex-shrink:0;">
+          <div style="text-align:center;">
+            <div style="font-family:'Cinzel',serif;font-size:1.8rem;color:var(--cyan);">500</div>
+            <div style="font-size:.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;">Monete</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-family:'Cinzel',serif;font-size:1.8rem;color:var(--gold);">1</div>
+            <div style="font-size:.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;">Vote Key</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-family:'Cinzel',serif;font-size:1.8rem;color:var(--green);">+1</div>
+            <div style="font-size:.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;">Punto rank</div>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="vote-gr">
+    <!-- Vote sites -->
+    <div class="section-header reveal">
+      <h2 class="section-title">Siti di voto</h2>
+      <span style="font-size:.8rem;color:var(--text-muted);">3 siti disponibili</span>
+    </div>
 
-      <div class="v-card fu d1">
-        <div class="v-icon vi-1"><i class="bi bi-globe"></i></div>
-        <div class="v-name">MinecraftList</div>
-        <div class="v-desc">Il principale sito di voting. Alto traffico.</div>
-        <div class="v-cd"><i class="bi bi-clock"></i> Ogni 24 ore · <span class="v-avail">Disponibile</span></div>
-        <a href="#" class="btn btn-primary btn-sm" style="margin-top:2px">Vota →</a>
+    <div class="grid-3 reveal">
+
+      <div class="card vote-card">
+        <div class="vote-icon">🌐</div>
+        <div class="vote-site">MinecraftServers.net</div>
+        <div class="vote-desc">Uno dei più grandi portali per server Minecraft. Vota ogni 24 ore.</div>
+        <div class="vote-reward">🎁 500 monete + Vote Key</div>
+        <button class="btn btn-cyan btn-block"
+          data-vote-url="https://minecraftservers.net/server/YOUR_SERVER_ID">
+          Vota ora →
+        </button>
       </div>
 
-      <div class="v-card fu d2">
-        <div class="v-icon vi-2"><i class="bi bi-map-fill"></i></div>
-        <div class="v-name">ServerList.gg</div>
-        <div class="v-desc">Sito internazionale con ranking competitivo.</div>
-        <div class="v-cd"><i class="bi bi-clock"></i> Ogni 24 ore · <span class="v-avail">Disponibile</span></div>
-        <a href="#" class="btn btn-primary btn-sm" style="margin-top:2px">Vota →</a>
+      <div class="card vote-card">
+        <div class="vote-icon">🪐</div>
+        <div class="vote-site">Planet Minecraft</div>
+        <div class="vote-desc">La community più attiva di Minecraft. Supportaci con il tuo voto.</div>
+        <div class="vote-reward">🎁 500 monete + Vote Key</div>
+        <button class="btn btn-cyan btn-block"
+          data-vote-url="https://www.planetminecraft.com/server/YOUR_SERVER_ID/">
+          Vota ora →
+        </button>
       </div>
 
-      <div class="v-card fu d3">
-        <div class="v-icon vi-3"><i class="bi bi-award-fill"></i></div>
-        <div class="v-name">HytaleServers</div>
-        <div class="v-desc">Dedicato ai server Hytale. Doppio impatto!</div>
-        <div class="v-cd"><i class="bi bi-clock"></i> Ogni 12 ore · <span class="v-avail">Disponibile</span></div>
-        <a href="#" class="btn btn-primary btn-sm" style="margin-top:2px">Vota (x2) →</a>
-      </div>
-
-      <div class="v-card fu d1">
-        <div class="v-icon vi-4"><i class="bi bi-star-fill"></i></div>
-        <div class="v-name">TopServerList</div>
-        <div class="v-desc">Classifica globale dei top server.</div>
-        <div class="v-cd"><i class="bi bi-clock"></i> Ogni 24 ore · <span class="v-avail">Disponibile</span></div>
-        <a href="#" class="btn btn-primary btn-sm" style="margin-top:2px">Vota →</a>
-      </div>
-
-      <div class="v-card fu d2">
-        <div class="v-icon vi-1"><i class="bi bi-tree-fill"></i></div>
-        <div class="v-name">GameTracker</div>
-        <div class="v-desc">Prossimamente collegato al sistema.</div>
-        <div class="v-cd"><i class="bi bi-clock"></i> Ogni 24 ore · <span class="v-wait">Presto</span></div>
-        <button class="btn btn-ghost btn-sm" style="margin-top:2px" disabled>Presto</button>
-      </div>
-
-      <div class="v-card fu d3">
-        <div class="v-icon vi-2"><i class="bi bi-gem"></i></div>
-        <div class="v-name">EpicServers</div>
-        <div class="v-desc">Sito europeo con alta presenza italiana.</div>
-        <div class="v-cd"><i class="bi bi-clock"></i> Ogni 24 ore · <span class="v-avail">Disponibile</span></div>
-        <a href="#" class="btn btn-primary btn-sm" style="margin-top:2px">Vota →</a>
+      <div class="card vote-card">
+        <div class="vote-icon">⚡</div>
+        <div class="vote-site">Minecraft-Server.net</div>
+        <div class="vote-desc">Portale europeo di listing. Ogni voto conta per la classifica globale.</div>
+        <div class="vote-reward">🎁 500 monete + Vote Key</div>
+        <button class="btn btn-cyan btn-block"
+          data-vote-url="https://minecraft-server.net/vote/YOUR_SERVER_ID/">
+          Vota ora →
+        </button>
       </div>
 
     </div>
 
-    <!-- Leaderboard -->
-    <div style="font-size:.78rem;font-weight:700;color:var(--text-1);margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid var(--border)"><i class="bi bi-trophy-fill"></i> Top Votatori del Mese</div>
-    <div class="widget-card fu">
-      <table class="wc-table">
-        <thead><tr><th>#</th><th>Username</th><th>Voti</th><th>Premio</th></tr></thead>
-        <tbody>
-          <tr><td><span class="rk g"><i class="bi bi-1-circle-fill"></i> 1</span></td><td><div class="user-cell"><div class="mini-av"><i class="bi bi-person-fill"></i></div>ArcticWolf</div></td><td>48</td><td><span class="bdg bdg-y">Bonus x2</span></td></tr>
-          <tr><td><span class="rk s"><i class="bi bi-2-circle-fill"></i> 2</span></td><td><div class="user-cell"><div class="mini-av"><i class="bi bi-snow"></i></div>FrostByte</div></td><td>41</td><td><span class="bdg bdg-b">Chiave Leg.</span></td></tr>
-          <tr><td><span class="rk b"><i class="bi bi-3-circle-fill"></i> 3</span></td><td><div class="user-cell"><div class="mini-av"><i class="bi bi-hurricane"></i></div>BlizzardX</div></td><td>37</td><td><span class="bdg bdg-b">1000 Coins</span></td></tr>
-          <tr><td><span class="rk">4</span></td><td><div class="user-cell"><div class="mini-av"><i class="bi bi-person-fill"></i></div>NordLight</div></td><td>29</td><td><span class="bdg bdg-b">500 Coins</span></td></tr>
-        </tbody>
-      </table>
+    <!-- Vote leaderboard -->
+    <div style="margin-top:3rem;" class="reveal">
+      <div class="section-header">
+        <h2 class="section-title">Classifica Voti</h2>
+        <span style="font-size:.78rem;color:var(--text-muted);">Aggiornata ogni ora</span>
+      </div>
+      <div class="card">
+        <div class="card-header-bar">🏆 Top Votatori — Questo mese</div>
+        <table class="lb-table">
+          <tr><td class="lb-rank gold">#1</td><td class="lb-name">IceBreaker</td><td class="lb-amount">42 voti</td></tr>
+          <tr><td class="lb-rank silver">#2</td><td class="lb-name">FrostByte</td><td class="lb-amount">38 voti</td></tr>
+          <tr><td class="lb-rank bronze">#3</td><td class="lb-name">NordLight</td><td class="lb-amount">31 voti</td></tr>
+          <tr><td class="lb-rank">#4</td><td class="lb-name">ArcticWolf</td><td class="lb-amount">27 voti</td></tr>
+          <tr><td class="lb-rank">#5</td><td class="lb-name">StarLight</td><td class="lb-amount">19 voti</td></tr>
+        </table>
+      </div>
     </div>
+
+    <div style="margin-bottom:4rem;"></div>
   </div>
-
 </div>
-<script src="assets/components.js"></script>
+
 <script src="assets/main.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => SkyFrost.initVote());</script>
 </body>
 </html>
