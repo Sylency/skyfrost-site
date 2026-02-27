@@ -128,11 +128,12 @@ const API_BASE = 'http://tuodominio.it:3001/api';
 
 ## 🗳️ Vote Links
 
-In `vote.html` sostituisci i placeholder con i tuoi ID reali:
+In `vote.html` sono configurati questi siti:
 ```html
-data-vote-url="https://minecraftservers.net/server/TUO_ID"
-data-vote-url="https://www.planetminecraft.com/server/TUO_ID/"
-data-vote-url="https://minecraft-server.net/vote/TUO_ID/"
+data-vote-url="https://hytaleservers.it/server/86-skyfrost"
+data-vote-url="https://servers.hytale.it/server/40-skyfrost"
+data-vote-url="https://hytalist.com/skyfrost"
+data-vote-url="https://hytale-italia.com/servers/skyfrost"
 ```
 
 ---
