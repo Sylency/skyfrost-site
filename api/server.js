@@ -1,7 +1,7 @@
 /**
  * ═══════════════════════════════════════════════════════════
  *  SKYFROST — api/server.js
- *  Express API server — porta 3001
+ *  Express API server — porta 3000
  *  Avvio: node server.js  oppure  pm2 start server.js
  * ═══════════════════════════════════════════════════════════
  */
