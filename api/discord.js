@@ -21,10 +21,10 @@ const GUILD_ID = '1463926391660871703';
 // Se imposti `roleIds`, verranno usati in modo prioritario.
 // `fallbackNames` serve come fallback quando gli ID non sono impostati.
 const STAFF_ROLE_GROUPS = [
-  { label: 'Owner',      roleIds: [], fallbackNames: ['Owner'] },
-  { label: 'Admin',      roleIds: [], fallbackNames: ['Sr. Admin', 'Admin'] },
-  { label: 'Moderatore', roleIds: [], fallbackNames: ['Moderatore', 'Moderator', 'Staff'] },
-  { label: 'Builder',    roleIds: [], fallbackNames: ['Builder'] },
+  { label: 'Owner',      roleIds: [1463926392109662350], fallbackNames: ['Owner'] },
+  { label: 'Sr. Admin',      roleIds: [1463926392109662348], fallbackNames: ['Sr. Admin'] },
+  { label: 'Admin', roleIds: [1463926392071786576], fallbackNames: ['Admin', 'Moderator', 'Staff'] },
+  { label: 'Staff',    roleIds: [1463926392071786575], fallbackNames: ['Staff'] },
   { label: 'Helper',     roleIds: [], fallbackNames: ['Helper'] }
 ];
 
