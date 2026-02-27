@@ -53,6 +53,10 @@ files.forEach(file => {
   }
 });
 
+// ── ROUTE FORZATE (debug) ──
+app.all('/api/discord', require('./discord.js'));
+app.all('/api/tebex', require('./tebex.js'));
+
 app.listen(PORT, () => {
   console.log('🚀 SkyFrost API running on http://localhost:' + PORT);
 });
