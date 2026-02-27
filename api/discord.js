@@ -17,9 +17,20 @@
 
 const GUILD_ID = '1463926391660871703';
 
-// Nomi ESATTI dei ruoli staff su Discord (case-sensitive)
-const STAFF_ROLES = ['Owner', 'Sr. Admin', 'Admin', 'Staff'];
-const ROLE_PRIORITY = Object.fromEntries(STAFF_ROLES.map((r, i) => [r, i]));
+// Configurazione ruoli staff visualizzati sul sito (dall'alto verso il basso).
+// Se imposti `roleIds`, verranno usati in modo prioritario.
+// `fallbackNames` serve come fallback quando gli ID non sono impostati.
+const STAFF_ROLE_GROUPS = [
+  { label: 'Owner',      roleIds: [], fallbackNames: ['Owner'] },
+  { label: 'Admin',      roleIds: [], fallbackNames: ['Sr. Admin', 'Admin'] },
+  { label: 'Moderatore', roleIds: [], fallbackNames: ['Moderatore', 'Moderator', 'Staff'] },
+  { label: 'Builder',    roleIds: [], fallbackNames: ['Builder'] },
+  { label: 'Helper',     roleIds: [], fallbackNames: ['Helper'] }
+];
+
+const ROLE_PRIORITY = Object.fromEntries(
+  STAFF_ROLE_GROUPS.map((group, i) => [group.label, i])
+);
 
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -41,7 +52,7 @@ module.exports = async function handler(req, res) {
   };
 
   try {
-    // 1. Fetch ruoli → mappa id:nome
+    // 1. Fetch ruoli → mappa id:categoria_sito
     const rolesRes = await fetch(
       `https://discord.com/api/v10/guilds/${GUILD_ID}/roles`,
       { headers }
@@ -51,9 +62,29 @@ module.exports = async function handler(req, res) {
       return res.status(rolesRes.status).json({ error: 'Errore fetch ruoli', details: err });
     }
     const rolesData = await rolesRes.json();
+
+    const roleIdsToLabel = new Map();
+    const roleNamesToLabel = new Map();
+    for (const group of STAFF_ROLE_GROUPS) {
+      for (const roleId of (group.roleIds || [])) {
+        const cleaned = String(roleId || '').trim();
+        if (cleaned) roleIdsToLabel.set(cleaned, group.label);
+      }
+      for (const roleName of (group.fallbackNames || [])) {
+        const cleaned = String(roleName || '').trim();
+        if (cleaned) roleNamesToLabel.set(cleaned, group.label);
+      }
+    }
+
     const roleMap = {};
     for (const role of rolesData) {
-      if (STAFF_ROLES.includes(role.name)) roleMap[role.id] = role.name;
+      if (roleIdsToLabel.has(role.id)) {
+        roleMap[role.id] = roleIdsToLabel.get(role.id);
+        continue;
+      }
+      if (roleNamesToLabel.has(role.name)) {
+        roleMap[role.id] = roleNamesToLabel.get(role.name);
+      }
     }
 
     // 2. Fetch membri
@@ -68,7 +99,7 @@ module.exports = async function handler(req, res) {
     const members = await membersRes.json();
 
     // 3. Raggruppa per ruolo staff con priorità più alta
-    const grouped = Object.fromEntries(STAFF_ROLES.map(r => [r, []]));
+    const grouped = Object.fromEntries(STAFF_ROLE_GROUPS.map(group => [group.label, []]));
 
     for (const member of members) {
       if (member.user?.bot) continue;
