@@ -46,7 +46,10 @@ nano .env   # <-- inserisci i tuoi token reali
 | Variabile              | Dove trovarla                                              |
 |------------------------|------------------------------------------------------------|
 | `DISCORD_BOT_TOKEN`    | discord.com/developers → La tua app → Bot → Token         |
+| `TEBEX_WEBSTORE_TOKEN` | Tebex Dashboard → Headless/Store Token                     |
 | `TEBEX_PUBLIC_TOKEN`   | Tebex Dashboard → API Keys → Public Token                  |
+| `TEBEX_PRIVATE_KEY`    | Tebex Dashboard → API Keys → Private Secret Key            |
+| `TEBEX_STORE_URL`      | (Opzionale) URL negozio pubblico, es. `https://store.skyfrost.it` |
 | `PORT`                 | Lascia 3001 (default)                                      |
 
 ---
