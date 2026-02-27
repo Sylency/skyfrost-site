@@ -126,8 +126,8 @@ SkyFrost.initStaff = async function () {
   }
 
   function renderStaff(data) {
-    const order    = ['Owner', 'Admin', 'Moderatore', 'Builder', 'Helper'];
-    const dotClass = { Owner: 'owner', Admin: 'admin', Moderatore: 'mod', Builder: 'builder', Helper: 'helper' };
+    const order    = ['Owner', 'Sr. Admin', 'Admin', 'Staff'];
+    const dotClass = { Owner: 'owner', 'Sr. Admin': 'sradmin', Admin: 'admin', Staff: 'staff' };
 
     let html = '';
     order.forEach(role => {

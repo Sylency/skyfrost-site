@@ -736,7 +736,9 @@ h4, h5, h6, label, button, .btn { font-family: 'Rajdhani', sans-serif; }
   flex-shrink: 0;
 }
 .role-dot.owner   { background: var(--gold); box-shadow: 0 0 10px var(--gold); }
+.role-dot.sradmin { background: #fb7185; box-shadow: 0 0 10px #fb7185; }
 .role-dot.admin   { background: var(--red);  box-shadow: 0 0 10px var(--red); }
+.role-dot.staff   { background: var(--cyan); box-shadow: 0 0 10px var(--cyan); }
 .role-dot.mod     { background: #818cf8; box-shadow: 0 0 10px #818cf8; }
 .role-dot.builder { background: var(--green); box-shadow: 0 0 10px var(--green); }
 .role-dot.helper  { background: var(--cyan); box-shadow: 0 0 10px var(--cyan); }
@@ -783,7 +785,9 @@ h4, h5, h6, label, button, .btn { font-family: 'Rajdhani', sans-serif; }
   margin-top: 0.35rem;
 }
 .staff-role-badge.owner   { color: var(--gold); }
+.staff-role-badge.sradmin { color: #fb7185; }
 .staff-role-badge.admin   { color: var(--red); }
+.staff-role-badge.staff   { color: var(--cyan); }
 .staff-role-badge.mod     { color: #818cf8; }
 .staff-role-badge.builder { color: var(--green); }
 .staff-role-badge.helper  { color: var(--cyan); }

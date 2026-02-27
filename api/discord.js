@@ -18,14 +18,12 @@
 const GUILD_ID = '1463926391660871703';
 
 // Configurazione ruoli staff visualizzati sul sito (dall'alto verso il basso).
-// Se imposti `roleIds`, verranno usati in modo prioritario.
-// `fallbackNames` serve come fallback quando gli ID non sono impostati.
+// Usa sempre gli ID come stringhe: gli Snowflake Discord non vanno gestiti come Number.
 const STAFF_ROLE_GROUPS = [
-  { label: 'Owner',      roleIds: [1463926392109662350], fallbackNames: ['Owner'] },
-  { label: 'Sr. Admin',      roleIds: [1463926392109662348], fallbackNames: ['Sr. Admin'] },
-  { label: 'Admin', roleIds: [1463926392071786576], fallbackNames: ['Admin', 'Moderator', 'Staff'] },
-  { label: 'Staff',    roleIds: [1463926392071786575], fallbackNames: ['Staff'] },
-  { label: 'Helper',     roleIds: [], fallbackNames: ['Helper'] }
+  { label: 'Owner',     roleIds: ['1463926392109662350'] },
+  { label: 'Sr. Admin', roleIds: ['1463926392109662348'] },
+  { label: 'Admin',     roleIds: ['1463926392071786576'] },
+  { label: 'Staff',     roleIds: ['1463926392071786575'] }
 ];
 
 const ROLE_PRIORITY = Object.fromEntries(
@@ -52,38 +50,12 @@ module.exports = async function handler(req, res) {
   };
 
   try {
-    // 1. Fetch ruoli → mappa id:categoria_sito
-    const rolesRes = await fetch(
-      `https://discord.com/api/v10/guilds/${GUILD_ID}/roles`,
-      { headers }
-    );
-    if (!rolesRes.ok) {
-      const err = await rolesRes.json().catch(() => ({}));
-      return res.status(rolesRes.status).json({ error: 'Errore fetch ruoli', details: err });
-    }
-    const rolesData = await rolesRes.json();
-
+    // 1. Mappa id-ruolo Discord -> categoria sito
     const roleIdsToLabel = new Map();
-    const roleNamesToLabel = new Map();
     for (const group of STAFF_ROLE_GROUPS) {
       for (const roleId of (group.roleIds || [])) {
         const cleaned = String(roleId || '').trim();
         if (cleaned) roleIdsToLabel.set(cleaned, group.label);
-      }
-      for (const roleName of (group.fallbackNames || [])) {
-        const cleaned = String(roleName || '').trim();
-        if (cleaned) roleNamesToLabel.set(cleaned, group.label);
-      }
-    }
-
-    const roleMap = {};
-    for (const role of rolesData) {
-      if (roleIdsToLabel.has(role.id)) {
-        roleMap[role.id] = roleIdsToLabel.get(role.id);
-        continue;
-      }
-      if (roleNamesToLabel.has(role.name)) {
-        roleMap[role.id] = roleNamesToLabel.get(role.name);
       }
     }
 
@@ -106,7 +78,7 @@ module.exports = async function handler(req, res) {
 
       let topRole = null, topPriority = Infinity;
       for (const roleId of (member.roles || [])) {
-        const roleName = roleMap[roleId];
+        const roleName = roleIdsToLabel.get(roleId);
         if (roleName !== undefined && ROLE_PRIORITY[roleName] < topPriority) {
           topRole = roleName;
           topPriority = ROLE_PRIORITY[roleName];
