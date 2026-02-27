@@ -18,7 +18,7 @@
 const GUILD_ID = '1463926391660871703';
 
 // Nomi ESATTI dei ruoli staff su Discord (case-sensitive)
-const STAFF_ROLES = ['Owner', 'Admin', 'Moderatore', 'Builder', 'Helper'];
+const STAFF_ROLES = ['Owner', 'Sr. Admin', 'Admin', 'Staff'];
 const ROLE_PRIORITY = Object.fromEntries(STAFF_ROLES.map((r, i) => [r, i]));
 
 module.exports = async function handler(req, res) {
