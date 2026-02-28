@@ -470,6 +470,9 @@ SkyFrost.initStore = async function () {
 SkyFrost.initStaff = async function () {
   const container = document.getElementById('staff-container');
   if (!container) return;
+  const STAFF_REFRESH_MS = 30000;
+  let hasRendered = false;
+  let requestInFlight = false;
 
   function escapeHtml(value) {
     return String(value ?? '').replace(/[&<>"']/g, (ch) => ({
@@ -485,23 +488,41 @@ SkyFrost.initStaff = async function () {
     return ['online', 'idle', 'dnd', 'offline'].includes(value) ? value : 'offline';
   }
 
-  try {
-    const res = await fetch(`${API_BASE}/discord`);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
-    if (data.error) throw new Error(data.error);
-    renderStaff(data);
-  } catch (err) {
-    console.error('Staff fetch failed:', err);
-    container.innerHTML = `
-      <div style="text-align:center;padding:4rem;color:var(--text-dim);">
-        <div style="font-size:2rem;margin-bottom:1rem;">❄️</div>
-        <p style="color:var(--frost);font-family:'Cinzel',serif;margin-bottom:.5rem;">Impossibile caricare lo staff</p>
-        <p style="font-size:.82rem;color:var(--text-muted);">${escapeHtml(err.message)}</p>
-        <p style="font-size:.78rem;color:var(--text-muted);margin-top:.5rem;">
-          Controlla che il bot sia nel server e che DISCORD_BOT_TOKEN sia configurato in api/.env
-        </p>
-      </div>`;
+  async function loadStaff(showErrorCard) {
+    if (requestInFlight) return;
+    requestInFlight = true;
+    try {
+      const res = await fetch(`${API_BASE}/discord`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      if (data.error) throw new Error(data.error);
+      renderStaff(data);
+      hasRendered = true;
+    } catch (err) {
+      console.error('Staff fetch failed:', err);
+      if (!hasRendered || showErrorCard) {
+        container.innerHTML = `
+          <div style="text-align:center;padding:4rem;color:var(--text-dim);">
+            <div style="font-size:2rem;margin-bottom:1rem;">❄️</div>
+            <p style="color:var(--frost);font-family:'Cinzel',serif;margin-bottom:.5rem;">Impossibile caricare lo staff</p>
+            <p style="font-size:.82rem;color:var(--text-muted);">${escapeHtml(err.message)}</p>
+            <p style="font-size:.78rem;color:var(--text-muted);margin-top:.5rem;">
+              Controlla che il bot sia nel server e che DISCORD_BOT_TOKEN sia configurato in api/.env
+            </p>
+          </div>`;
+      }
+    } finally {
+      requestInFlight = false;
+    }
+  }
+
+  await loadStaff(true);
+  if (!container.dataset.staffRealtimeBound) {
+    container.dataset.staffRealtimeBound = '1';
+    setInterval(() => {
+      if (document.hidden) return;
+      void loadStaff(false);
+    }, STAFF_REFRESH_MS);
   }
 
   function renderStaff(data) {
