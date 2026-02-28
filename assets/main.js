@@ -13,6 +13,8 @@ window.SkyFrost = window.SkyFrost || {};
  */
 const API_BASE = '/api';
 const WEBSTORE_FALLBACK_URL = 'https://store.skyfrost.it';
+const AUTH_API = `${API_BASE}/auth`;
+const TICKETS_API = `${API_BASE}/tickets`;
 
 const CATEGORY_ICONS = {
   vip: '⭐',
@@ -442,37 +444,266 @@ SkyFrost.initStaff = async function () {
   }
 };
 
-/* ── AUTH FORMS ── */
-SkyFrost.initLogin = function () {
-  document.getElementById('login-form')?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const btn = e.target.querySelector('[type=submit]');
-    btn.textContent = 'Accesso in corso…';
-    btn.disabled = true;
-    await new Promise(r => setTimeout(r, 1000));
-    SkyFrost.toast('Funzionalità non ancora attiva.', 'info');
-    btn.textContent = 'Accedi';
-    btn.disabled = false;
+/* ── AUTH (DISCORD) ── */
+function authErrorMessage(code) {
+  const messages = {
+    state_non_valido: 'Sessione OAuth scaduta o non valida. Riprova il login.',
+    configurazione_auth_mancante: 'Configurazione OAuth Discord incompleta sul server.',
+    utente_non_nel_server: 'Per usare il supporto devi essere nel server Discord.',
+    errore_verifica_gilda: 'Impossibile verificare la tua presenza nella gilda Discord.',
+    oauth_fallito: 'Login Discord fallito. Riprova tra qualche secondo.'
+  };
+  return messages[code] || 'Errore durante il login Discord.';
+}
+
+SkyFrost.fetchAuthSession = async function () {
+  const res = await fetch(`${AUTH_API}?action=session`, {
+    credentials: 'include'
   });
+
+  let data = {};
+  try {
+    data = await res.json();
+  } catch {
+    data = {};
+  }
+
+  if (res.status === 401) return { authenticated: false };
+  if (!res.ok) {
+    const message = safeText(data?.error, `HTTP ${res.status}`);
+    throw new Error(message);
+  }
+
+  return {
+    authenticated: Boolean(data?.authenticated),
+    user: data?.user || null
+  };
 };
 
-SkyFrost.initRegister = function () {
-  document.getElementById('register-form')?.addEventListener('submit', async (e) => {
+SkyFrost.startDiscordLogin = function () {
+  window.location.href = `${AUTH_API}?action=start`;
+};
+
+SkyFrost.logoutDiscord = async function () {
+  const res = await fetch(`${AUTH_API}?action=logout`, {
+    method: 'POST',
+    credentials: 'include'
+  });
+
+  if (!res.ok) {
+    let payload = {};
+    try { payload = await res.json(); } catch { payload = {}; }
+    throw new Error(safeText(payload?.error, `HTTP ${res.status}`));
+  }
+};
+
+SkyFrost.initLogin = async function () {
+  const loginBtn = document.getElementById('discord-login-btn');
+  const statusEl = document.getElementById('login-status');
+  const titleEl = document.getElementById('login-title');
+  const params = new URLSearchParams(window.location.search);
+
+  loginBtn?.addEventListener('click', (e) => {
     e.preventDefault();
-    const pwd  = document.getElementById('reg-password').value;
-    const pwd2 = document.getElementById('reg-password2').value;
-    if (pwd !== pwd2) {
-      SkyFrost.toast('Le password non coincidono.', 'error');
+    SkyFrost.startDiscordLogin();
+  });
+
+  const errorCode = safeText(params.get('error'), '');
+  if (errorCode) {
+    const message = authErrorMessage(errorCode);
+    if (statusEl) {
+      statusEl.textContent = message;
+      statusEl.classList.add('error');
+    }
+    SkyFrost.toast(message, 'error');
+  }
+
+  if (params.get('logout') === '1') {
+    SkyFrost.toast('Disconnessione completata.', 'info');
+  }
+
+  try {
+    const session = await SkyFrost.fetchAuthSession();
+    if (!session.authenticated || !session.user) return;
+
+    const displayName = safeText(session.user.displayName, safeText(session.user.username, 'Utente'));
+    if (titleEl) titleEl.textContent = `Sei già connesso, ${displayName}`;
+    if (statusEl) {
+      statusEl.textContent = `Sessione attiva come ${displayName}. Reindirizzamento al supporto...`;
+      statusEl.classList.remove('error');
+      statusEl.classList.add('success');
+    }
+
+    setTimeout(() => {
+      window.location.href = 'supporto.html';
+    }, 900);
+  } catch (err) {
+    console.error('Auth session check failed:', err);
+    if (statusEl && !errorCode) {
+      statusEl.textContent = `Impossibile verificare la sessione: ${safeText(err.message, 'errore')}`;
+      statusEl.classList.add('error');
+    }
+  }
+};
+
+SkyFrost.initSupport = async function () {
+  const form = document.getElementById('support-ticket-form');
+  if (!form) return;
+
+  const stateEl = document.getElementById('support-auth-state');
+  const nameEl = document.getElementById('support-name');
+  const userIdEl = document.getElementById('support-user-id');
+  const avatarEl = document.getElementById('support-avatar');
+  const loginBtn = document.getElementById('support-login-btn');
+  const logoutBtn = document.getElementById('support-logout-btn');
+  const submitBtn = form.querySelector('[type=submit]');
+  const defaultSubmitLabel = submitBtn ? submitBtn.textContent : 'Invia Ticket su Discord';
+
+  let currentUser = null;
+
+  function setStatus(message, type = '') {
+    if (!stateEl) return;
+    stateEl.textContent = message;
+    stateEl.classList.remove('error', 'success');
+    if (type === 'error') stateEl.classList.add('error');
+    if (type === 'success') stateEl.classList.add('success');
+  }
+
+  function setFormEnabled(enabled) {
+    form.querySelectorAll('input, textarea, select, button').forEach((el) => {
+      el.disabled = !enabled;
+    });
+  }
+
+  function renderGuest() {
+    currentUser = null;
+    setStatus('Devi effettuare il login Discord per inviare ticket.', 'error');
+    if (nameEl) nameEl.textContent = 'Non autenticato';
+    if (userIdEl) userIdEl.textContent = 'Accedi con Discord per inviare ticket.';
+    if (avatarEl) avatarEl.src = 'https://cdn.discordapp.com/embed/avatars/0.png';
+    if (loginBtn) loginBtn.style.display = '';
+    if (logoutBtn) logoutBtn.style.display = 'none';
+    setFormEnabled(false);
+  }
+
+  function renderUser(user) {
+    currentUser = user;
+    const displayName = safeText(user.displayName, safeText(user.username, 'Utente'));
+    setStatus(`Connesso come ${displayName}`, 'success');
+    if (nameEl) nameEl.textContent = displayName;
+    if (userIdEl) userIdEl.textContent = `ID Discord: ${safeText(user.id, '-')}`;
+    if (avatarEl) avatarEl.src = safeText(user.avatar, 'https://cdn.discordapp.com/embed/avatars/0.png');
+    if (loginBtn) loginBtn.style.display = 'none';
+    if (logoutBtn) logoutBtn.style.display = '';
+    setFormEnabled(true);
+  }
+
+  loginBtn?.addEventListener('click', (e) => {
+    e.preventDefault();
+    SkyFrost.startDiscordLogin();
+  });
+
+  logoutBtn?.addEventListener('click', async () => {
+    if (!logoutBtn) return;
+    logoutBtn.disabled = true;
+    const previousLabel = logoutBtn.textContent;
+    logoutBtn.textContent = 'Disconnessione...';
+    try {
+      await SkyFrost.logoutDiscord();
+      SkyFrost.toast('Disconnessione completata.', 'info');
+      renderGuest();
+    } catch (err) {
+      console.error('Discord logout failed:', err);
+      SkyFrost.toast(safeText(err.message, 'Logout fallito.'), 'error');
+    } finally {
+      logoutBtn.textContent = previousLabel;
+      logoutBtn.disabled = false;
+    }
+  });
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!currentUser) {
+      SkyFrost.toast('Effettua prima il login Discord.', 'error');
       return;
     }
-    const btn = e.target.querySelector('[type=submit]');
-    btn.textContent = 'Registrazione…';
-    btn.disabled = true;
-    await new Promise(r => setTimeout(r, 1000));
-    SkyFrost.toast('Funzionalità non ancora attiva.', 'info');
-    btn.textContent = 'Registrati';
-    btn.disabled = false;
+
+    const category = safeText(document.getElementById('ticket-category')?.value, 'Generale');
+    const priority = safeText(document.getElementById('ticket-priority')?.value, 'Normale');
+    const subject = safeText(document.getElementById('ticket-subject')?.value, '');
+    const message = safeText(document.getElementById('ticket-message')?.value, '');
+
+    if (!subject) {
+      SkyFrost.toast('Inserisci un oggetto per il ticket.', 'error');
+      return;
+    }
+    if (message.length < 20) {
+      SkyFrost.toast('La descrizione deve avere almeno 20 caratteri.', 'error');
+      return;
+    }
+
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Invio ticket...';
+    }
+
+    try {
+      const res = await fetch(TICKETS_API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ category, priority, subject, message })
+      });
+
+      let data = {};
+      try { data = await res.json(); } catch { data = {}; }
+      if (!res.ok) {
+        throw new Error(safeText(data?.error, `HTTP ${res.status}`));
+      }
+
+      const ticketId = safeText(data?.ticketId, '');
+      SkyFrost.toast(
+        ticketId ? `Ticket inviato con successo (${ticketId}).` : 'Ticket inviato con successo.',
+        'success'
+      );
+      form.reset();
+      document.getElementById('ticket-category').value = 'Generale';
+      document.getElementById('ticket-priority').value = 'Normale';
+    } catch (err) {
+      console.error('Ticket submit failed:', err);
+      SkyFrost.toast(safeText(err.message, 'Invio ticket fallito.'), 'error');
+    } finally {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = defaultSubmitLabel;
+      }
+    }
   });
+
+  const params = new URLSearchParams(window.location.search);
+  const loginError = safeText(params.get('error'), '');
+  if (params.get('login') === 'ok') {
+    SkyFrost.toast('Login Discord completato.', 'success');
+  }
+  if (loginError) {
+    SkyFrost.toast(authErrorMessage(loginError), 'error');
+  }
+
+  setStatus('Verifica sessione Discord in corso...');
+  setFormEnabled(false);
+
+  try {
+    const session = await SkyFrost.fetchAuthSession();
+    if (session.authenticated && session.user) {
+      renderUser(session.user);
+    } else {
+      renderGuest();
+    }
+  } catch (err) {
+    console.error('Support session fetch failed:', err);
+    renderGuest();
+    setStatus(`Errore sessione: ${safeText(err.message, 'sconosciuto')}`, 'error');
+  }
 };
 
 /* ── VOTE PAGE ── */

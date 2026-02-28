@@ -29,12 +29,13 @@
         ${navLink('store.html',     'Store',     active)}
         ${navLink('staff.html',     'Staff',     active)}
         ${navLink('vote.html',      'Vota',      active)}
-        ${navLink('dashboard.html', 'Dashboard', active)}
+        ${navLink('supporto.html',  'Supporto',  active)}
+        ${navLink('wiki.html',      'Wiki',      active)}
       </ul>
 
       <div class="nav-ctas">
         <a href="login.html"    class="btn btn-ghost btn-sm">Accedi</a>
-        <a href="register.html" class="btn btn-primary btn-sm">Registrati</a>
+        <a href="supporto.html" class="btn btn-primary btn-sm">Apri Ticket</a>
       </div>
 
       <button class="nav-hamburger" id="hamburger" aria-label="Menu">
@@ -52,10 +53,11 @@
       <a href="store.html">Store</a>
       <a href="staff.html">Staff</a>
       <a href="vote.html">Vota</a>
-      <a href="dashboard.html">Dashboard</a>
+      <a href="supporto.html">Supporto</a>
+      <a href="wiki.html">Wiki</a>
       <div style="display:flex;gap:.75rem;margin-top:1rem;">
         <a href="login.html"    class="btn btn-ghost">Accedi</a>
-        <a href="register.html" class="btn btn-primary">Registrati</a>
+        <a href="supporto.html" class="btn btn-primary">Apri Ticket</a>
       </div>
     `;
     document.body.appendChild(overlay);
@@ -85,14 +87,15 @@
             <li><a href="store.html">Store</a></li>
             <li><a href="staff.html">Staff</a></li>
             <li><a href="vote.html">Vota</a></li>
+            <li><a href="wiki.html">Wiki</a></li>
           </ul>
         </div>
         <div class="footer-col">
           <h4>Community</h4>
           <ul>
             <li><a href="https://discord.com/invite/MfseZ57sPd" target="_blank">Discord</a></li>
-            <li><a href="dashboard.html">Dashboard</a></li>
-            <li><a href="register.html">Registrati</a></li>
+            <li><a href="supporto.html">Supporto Ticket</a></li>
+            <li><a href="login.html">Login Discord</a></li>
           </ul>
         </div>
       </div>

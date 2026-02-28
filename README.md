@@ -8,8 +8,8 @@
 ├── store.html
 ├── staff.html
 ├── login.html
-├── register.html
-├── dashboard.html
+├── supporto.html
+├── wiki.html
 ├── vote.html
 ├── assets/
 │   ├── style.css       ← tutti gli stili
@@ -18,6 +18,8 @@
 └── api/
     ├── server.js        ← Express server (porta 3001)
     ├── discord.js       ← GET /api/discord
+    ├── auth.js          ← OAuth Discord + sessione (GET/POST /api/auth)
+    ├── tickets.js       ← POST /api/tickets (invio ticket su webhook)
     ├── tebex.js         ← GET /api/tebex
     ├── .env             ← token segreti (NON caricare su GitHub!)
     ├── .env.example     ← template .env
@@ -46,10 +48,18 @@ nano .env   # <-- inserisci i tuoi token reali
 | Variabile              | Dove trovarla                                              |
 |------------------------|------------------------------------------------------------|
 | `DISCORD_BOT_TOKEN`    | discord.com/developers → La tua app → Bot → Token         |
+| `DISCORD_GUILD_ID`     | ID server Discord (click destro server con Dev Mode)      |
+| `DISCORD_CLIENT_ID`    | Discord Developer Portal → OAuth2 → Client ID             |
+| `DISCORD_CLIENT_SECRET`| Discord Developer Portal → OAuth2 → Client Secret         |
+| `DISCORD_WEBHOOK_URL`  | URL webhook canale ticket su Discord                       |
+| `AUTH_SECRET`          | Stringa lunga random per firmare cookie sessione          |
 | `TEBEX_WEBSTORE_TOKEN` | Tebex Dashboard → Headless/Store Token                     |
 | `TEBEX_PUBLIC_TOKEN`   | Tebex Dashboard → API Keys → Public Token                  |
 | `TEBEX_PRIVATE_KEY`    | Tebex Dashboard → API Keys → Private Secret Key            |
 | `TEBEX_STORE_URL`      | (Opzionale) URL negozio pubblico, es. `https://store.skyfrost.it` |
+| `AUTH_SUCCESS_REDIRECT`| (Opzionale) Redirect post-login, default `/supporto.html`  |
+| `AUTH_LOGIN_REDIRECT`  | (Opzionale) Redirect error login, default `/login.html`    |
+| `DISCORD_REDIRECT_URI` | (Opzionale) callback OAuth, default `<dominio>/api/auth`   |
 | `PORT`                 | Lascia 3001 (default)                                      |
 
 ---
@@ -91,6 +101,7 @@ Test che funzioni:
 ```bash
 curl http://localhost:3001/api/health
 curl http://localhost:3001/api/discord
+curl http://localhost:3001/api/auth?action=session
 ```
 
 ---

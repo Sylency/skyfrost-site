@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Supporto — SkyFrost</title>
+  <link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+<script src="assets/components.js"></script>
+
+<div class="page-hero">
+  <p class="page-hero-eyebrow">Assistenza Community</p>
+  <h1 class="page-hero-title">Apri un <span class="glow">Ticket</span></h1>
+  <p class="page-hero-sub">
+    Invia una richiesta al team staff: il ticket verrà consegnato direttamente sul tuo server Discord.
+  </p>
+</div>
+
+<div class="page-wrap">
+  <div class="container">
+    <section class="section-sm">
+      <div class="support-layout">
+
+        <aside class="card support-user-card">
+          <div class="card-header-bar">👤 Account Discord</div>
+          <div class="card-body">
+            <div id="support-auth-state" class="support-auth-state">Verifica sessione in corso...</div>
+
+            <div class="support-profile" id="support-profile">
+              <img class="support-avatar" id="support-avatar" src="https://cdn.discordapp.com/embed/avatars/0.png" alt="Avatar utente" />
+              <div>
+                <div class="support-name" id="support-name">Non autenticato</div>
+                <div class="support-id" id="support-user-id">Accedi con Discord per inviare ticket.</div>
+              </div>
+            </div>
+
+            <div class="support-actions">
+              <a id="support-login-btn" href="/api/auth?action=start" class="btn btn-cyan btn-block" style="justify-content:center;">
+                Login Discord
+              </a>
+              <button id="support-logout-btn" type="button" class="btn btn-ghost btn-block" style="display:none;">
+                Disconnetti
+              </button>
+            </div>
+          </div>
+        </aside>
+
+        <main class="card">
+          <div class="card-header-bar">🎫 Nuovo Ticket</div>
+          <div class="card-body">
+            <form id="support-ticket-form">
+              <div class="ticket-form-grid">
+                <div class="form-group">
+                  <label for="ticket-category">Categoria</label>
+                  <select id="ticket-category" class="form-control" required>
+                    <option value="Generale">Generale</option>
+                    <option value="Bug">Bug</option>
+                    <option value="Store">Store</option>
+                    <option value="Ban Appeal">Ban Appeal</option>
+                    <option value="Partnership">Partnership</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="ticket-priority">Priorità</label>
+                  <select id="ticket-priority" class="form-control" required>
+                    <option value="Normale">Normale</option>
+                    <option value="Alta">Alta</option>
+                    <option value="Critica">Critica</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="ticket-subject">Oggetto</label>
+                <input id="ticket-subject" class="form-control" type="text" maxlength="120" placeholder="Es. Problema acquisto VIP+" required />
+              </div>
+
+              <div class="form-group">
+                <label for="ticket-message">Descrizione</label>
+                <textarea id="ticket-message" class="form-control support-textarea" minlength="20" maxlength="2000" placeholder="Descrivi il problema in modo dettagliato..." required></textarea>
+                <div class="form-hint">Minimo 20 caratteri, massimo 2000.</div>
+              </div>
+
+              <button type="submit" class="btn btn-cyan btn-lg">Invia Ticket su Discord</button>
+            </form>
+          </div>
+        </main>
+
+      </div>
+    </section>
+  </div>
+</div>
+
+<script src="assets/main.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => SkyFrost.initSupport());</script>
+</body>
+</html>
