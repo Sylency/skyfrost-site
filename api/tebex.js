@@ -59,6 +59,44 @@ function shortText(value, maxLen = 180) {
   return txt.length > maxLen ? `${txt.slice(0, maxLen - 1)}...` : txt;
 }
 
+function decodeHtmlEntities(value) {
+  const txt = safeText(value, '');
+  if (!txt) return '';
+  return txt
+    .replace(/&#(\d+);/g, (_, dec) => {
+      const code = Number.parseInt(dec, 10);
+      return Number.isFinite(code) ? String.fromCharCode(code) : '';
+    })
+    .replace(/&#x([0-9a-f]+);/gi, (_, hex) => {
+      const code = Number.parseInt(hex, 16);
+      return Number.isFinite(code) ? String.fromCharCode(code) : '';
+    })
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/&amp;/gi, '&')
+    .replace(/&lt;/gi, '<')
+    .replace(/&gt;/gi, '>')
+    .replace(/&quot;/gi, '"')
+    .replace(/&#39;/gi, "'");
+}
+
+function cleanDescription(value, maxLen = 180) {
+  const txt = safeText(value, '');
+  if (!txt) return '';
+  const plain = decodeHtmlEntities(
+    txt
+      .replace(/<br\s*\/?>/gi, '\n')
+      .replace(/<\/p>/gi, '\n')
+      .replace(/<\/li>/gi, '\n')
+      .replace(/<li[^>]*>/gi, '- ')
+      .replace(/<[^>]*>/g, ' ')
+  )
+    .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/gi, '$1')
+    .replace(/[*_`~]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+  return shortText(plain, maxLen);
+}
+
 function getIn(obj, path) {
   return path.split('.').reduce((acc, key) => {
     if (acc === null || acc === undefined) return undefined;
@@ -101,12 +139,40 @@ function normalizeCategory(raw) {
   const id = safeText(pick(raw, ['id', 'category_id', 'identifier']), '');
   const name = safeText(pick(raw, ['name', 'title']), 'Altro');
   const orderRaw = toNumber(pick(raw, ['order', 'sort_order'], NaN));
+  const parentRaw = pick(raw, ['parent.id', 'parent_id', 'parentId', 'parent.category_id'], null);
+  let parentId = parentRaw !== null && parentRaw !== undefined
+    ? String(parentRaw).trim()
+    : '';
+  if (!parentId && raw?.parent && typeof raw.parent === 'object') {
+    parentId = safeText(pick(raw.parent, ['id', 'category_id', 'identifier'], ''), '');
+  }
+  if (parentId === '0' || parentId === id) parentId = '';
   return {
     id: id || name,
     name,
     slug: slugify(name),
+    parentId: parentId || null,
     order: Number.isFinite(orderRaw) ? orderRaw : Number.MAX_SAFE_INTEGER
   };
+}
+
+function resolveRootCategory(categoryId, categoriesById) {
+  const visited = new Set();
+  let currentId = safeText(categoryId, '');
+  let current = null;
+
+  while (currentId && !visited.has(currentId)) {
+    visited.add(currentId);
+    const category = categoriesById.get(currentId);
+    if (!category) break;
+
+    current = category;
+    const parentId = safeText(category.parentId, '');
+    if (!parentId || !categoriesById.has(parentId)) break;
+    currentId = parentId;
+  }
+
+  return current;
 }
 
 function packageUrl(raw, fallbackStoreUrl) {
@@ -124,7 +190,7 @@ function packageUrl(raw, fallbackStoreUrl) {
 function normalizePackage(raw, categoriesById, fallbackStoreUrl) {
   const id = safeText(pick(raw, ['id', 'package_id', 'identifier']), '');
   const name = safeText(pick(raw, ['name', 'title']), 'Pacchetto');
-  const description = shortText(pick(raw, ['description', 'meta.description', 'teaser'], ''), 190);
+  const description = cleanDescription(pick(raw, ['description', 'meta.description', 'teaser'], ''), 190);
   const categoryIdRaw = pick(raw, ['category.id', 'category_id', 'categoryId'], null);
   const categoryId = categoryIdRaw !== null && categoryIdRaw !== undefined
     ? String(categoryIdRaw)
@@ -133,6 +199,10 @@ function normalizePackage(raw, categoriesById, fallbackStoreUrl) {
   const categoryFromMap = categoriesById.get(categoryId);
   const categoryName = explicitCategoryName || categoryFromMap?.name || 'Altro';
   const categorySlug = slugify(categoryName);
+  const rootCategory = resolveRootCategory(categoryId, categoriesById);
+  const rootCategoryName = rootCategory?.name || categoryName;
+  const rootCategorySlug = slugify(rootCategoryName);
+  const rootCategoryId = rootCategory?.id || categoryId || null;
   const price = toNumber(pick(raw, ['total_price', 'price', 'base_price', 'price.amount', 'amount'], NaN));
   const currency = safeText(pick(raw, ['currency.iso_4217', 'currency', 'price.currency'], 'EUR'), 'EUR');
   const priceFormatted = safeText(
@@ -153,6 +223,9 @@ function normalizePackage(raw, categoriesById, fallbackStoreUrl) {
     categoryId: categoryId || null,
     categoryName,
     categorySlug,
+    rootCategoryId,
+    rootCategoryName,
+    rootCategorySlug,
     price: Number.isFinite(price) ? price : null,
     priceFormatted: priceFormatted || 'Prezzo su Tebex',
     currency,
@@ -348,19 +421,51 @@ module.exports = async function handler(req, res) {
         .map((pkg) => normalizePackage(pkg, categoriesById, STORE_URL))
         .sort((a, b) => a.order - b.order || a.name.localeCompare(b.name));
 
-      if (queryType === 'store') {
-        const counts = packages.reduce((acc, pkg) => {
+      const rootCategories = categories
+        .filter((cat) => {
+          const parentId = safeText(cat.parentId, '');
+          return !parentId || !categoriesById.has(parentId);
+        })
+        .sort((a, b) => a.order - b.order || a.name.localeCompare(b.name));
+
+      const countsByRootId = packages.reduce((acc, pkg) => {
+        const key = safeText(pkg.rootCategoryId, '');
+        if (!key) return acc;
+        acc[key] = (acc[key] || 0) + 1;
+        return acc;
+      }, {});
+
+      let storeCategories = rootCategories
+        .map((cat) => ({
+          ...cat,
+          count: countsByRootId[cat.id] || 0
+        }))
+        .filter((cat) => cat.count > 0);
+
+      if (!storeCategories.length) {
+        const fallbackCounts = packages.reduce((acc, pkg) => {
           acc[pkg.categorySlug] = (acc[pkg.categorySlug] || 0) + 1;
           return acc;
         }, {});
+        const seen = new Set();
+        storeCategories = categories
+          .filter((cat) => {
+            if (seen.has(cat.slug)) return false;
+            seen.add(cat.slug);
+            return true;
+          })
+          .map((cat) => ({
+            ...cat,
+            count: fallbackCounts[cat.slug] || 0
+          }))
+          .filter((cat) => cat.count > 0);
+      }
 
+      if (queryType === 'store') {
         res.setHeader('Cache-Control', 'public, max-age=300');
         return res.status(200).json({
           storeUrl: STORE_URL,
-          categories: categories.map((cat) => ({
-            ...cat,
-            count: counts[cat.slug] || 0
-          })),
+          categories: storeCategories,
           packages,
           featuredPackage: pickFeaturedPackage(packages, null, STORE_URL)
         });
@@ -424,10 +529,7 @@ module.exports = async function handler(req, res) {
       res.setHeader('Cache-Control', 'public, max-age=120');
       return res.status(200).json({
         storeUrl: STORE_URL,
-        categories: categories.map((cat) => ({
-          ...cat,
-          count: packages.filter((pkg) => pkg.categorySlug === cat.slug).length
-        })),
+        categories: storeCategories,
         packages,
         featuredPackage,
         topDonators: fallbackTop,

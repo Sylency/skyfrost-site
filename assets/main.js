@@ -17,6 +17,9 @@ const AUTH_API = `${API_BASE}/auth`;
 const TICKETS_API = `${API_BASE}/tickets`;
 
 const CATEGORY_ICONS = {
+  survival: '🌲',
+  faction: '⚔️',
+  kitpvp: '🛡️',
   vip: '⭐',
   rank: '👑',
   cosmetic: '🎨',
@@ -49,6 +52,65 @@ function truncate(text, max = 150) {
   const value = safeText(text, '');
   if (!value || value.length <= max) return value;
   return `${value.slice(0, max - 1)}...`;
+}
+
+function decodeHtmlEntities(value) {
+  const txt = safeText(value, '');
+  if (!txt) return '';
+  return txt
+    .replace(/&#(\d+);/g, (_, dec) => {
+      const code = Number.parseInt(dec, 10);
+      return Number.isFinite(code) ? String.fromCharCode(code) : '';
+    })
+    .replace(/&#x([0-9a-f]+);/gi, (_, hex) => {
+      const code = Number.parseInt(hex, 16);
+      return Number.isFinite(code) ? String.fromCharCode(code) : '';
+    })
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/&amp;/gi, '&')
+    .replace(/&lt;/gi, '<')
+    .replace(/&gt;/gi, '>')
+    .replace(/&quot;/gi, '"')
+    .replace(/&#39;/gi, "'");
+}
+
+function stripHtml(value) {
+  const txt = safeText(value, '');
+  if (!txt) return '';
+  return decodeHtmlEntities(
+    txt
+      .replace(/<br\s*\/?>/gi, '\n')
+      .replace(/<\/p>/gi, '\n')
+      .replace(/<\/li>/gi, '\n')
+      .replace(/<li[^>]*>/gi, '- ')
+      .replace(/<[^>]*>/g, ' ')
+  )
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function plainDescription(value, fallback = '') {
+  const text = stripHtml(value)
+    .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/gi, '$1')
+    .replace(/[*_`~]/g, '')
+    .trim();
+  return text || fallback;
+}
+
+function humanizeSlug(slug) {
+  return safeText(slug, '')
+    .split('-')
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(' ');
+}
+
+function packageCategorySlug(pkg) {
+  return safeText(pkg?.rootCategorySlug, safeText(pkg?.categorySlug, 'altro'));
+}
+
+function packageCategoryName(pkg) {
+  return safeText(pkg?.rootCategoryName, safeText(pkg?.categoryName, 'Altro'));
 }
 
 function formatMoney(value, currency = 'EUR') {
@@ -96,7 +158,7 @@ function packagePerks(pkg) {
   if (Array.isArray(pkg?.perks) && pkg.perks.length) {
     return pkg.perks.map((perk) => safeText(perk, '')).filter(Boolean).slice(0, 5);
   }
-  const desc = safeText(pkg?.description, '');
+  const desc = plainDescription(pkg?.description, '');
   if (!desc) return ['Pacchetto disponibile nello store ufficiale Tebex.'];
   return [truncate(desc, 120)];
 }
@@ -255,23 +317,67 @@ SkyFrost.initStore = async function () {
       .map((perk) => `<li>${escapeHtml(perk)}</li>`)
       .join('');
     featuredLink.href = safeText(featured?.url, fallbackUrl);
-    featuredMeta.textContent = safeText(featured?.categoryName, 'Consegna immediata');
+    featuredMeta.textContent = safeText(
+      featured?.rootCategoryName,
+      safeText(featured?.categoryName, 'Consegna immediata')
+    );
   }
 
   function renderCategories(categories, products) {
     const totalCount = products.length;
     const categoryRows = Array.isArray(categories) ? categories : [];
+    const countsBySlug = products.reduce((acc, pkg) => {
+      const slug = packageCategorySlug(pkg);
+      if (!slug) return acc;
+      acc[slug] = (acc[slug] || 0) + 1;
+      return acc;
+    }, {});
     const allRow = `<li><a href="#" class="active" data-cat="all">🌐 Tutti i prodotti <span class="count">${totalCount}</span></a></li>`;
-    const rows = categoryRows.map((cat) => {
+    const merged = new Map();
+
+    categoryRows.forEach((cat) => {
       const slug = safeText(cat.slug, 'altro');
-      const icon = categoryIcon(cat.name);
+      const name = safeText(cat.name, humanizeSlug(slug) || 'Altro');
       const count = Number.isFinite(Number(cat.count))
         ? Number(cat.count)
-        : products.filter((pkg) => pkg.categorySlug === slug).length;
-      return `<li>
-        <a href="#" data-cat="${escapeHtml(slug)}">${icon} ${escapeHtml(safeText(cat.name, 'Altro'))} <span class="count">${count}</span></a>
+        : (countsBySlug[slug] || 0);
+      const order = Number.isFinite(Number(cat.order))
+        ? Number(cat.order)
+        : Number.MAX_SAFE_INTEGER;
+      const prev = merged.get(slug);
+      if (!prev) {
+        merged.set(slug, {
+          slug,
+          name,
+          order,
+          count: Math.max(count, countsBySlug[slug] || 0)
+        });
+        return;
+      }
+      prev.count = Math.max(prev.count, count, countsBySlug[slug] || 0);
+    });
+
+    Object.entries(countsBySlug).forEach(([slug, count]) => {
+      if (merged.has(slug)) return;
+      merged.set(slug, {
+        slug,
+        name: humanizeSlug(slug) || 'Altro',
+        order: Number.MAX_SAFE_INTEGER,
+        count
+      });
+    });
+
+    const rows = Array.from(merged.values())
+      .filter((cat) => cat.count > 0)
+      .sort((a, b) => a.order - b.order || a.name.localeCompare(b.name, 'it'))
+      .map((cat) => {
+        const icon = categoryIcon(cat.name);
+        return `<li>
+        <a href="#" data-cat="${escapeHtml(cat.slug)}">${icon} ${escapeHtml(cat.name)} <span class="count">${cat.count}</span></a>
       </li>`;
-    }).join('');
+      })
+      .join('');
+
     categoryList.innerHTML = `${allRow}${rows}`;
   }
 
@@ -293,10 +399,13 @@ SkyFrost.initStore = async function () {
     }
 
     productGrid.innerHTML = products.map((pkg) => {
-      const slug = safeText(pkg.categorySlug, 'altro');
-      const category = safeText(pkg.categoryName, 'Altro');
+      const slug = packageCategorySlug(pkg);
+      const category = packageCategoryName(pkg);
       const name = safeText(pkg.name, 'Pacchetto');
-      const desc = truncate(safeText(pkg.description, 'Pacchetto disponibile su Tebex.'), 150);
+      const desc = truncate(
+        plainDescription(pkg.description, 'Pacchetto disponibile su Tebex.'),
+        150
+      );
       const price = safeText(pkg.priceFormatted, formatMoney(pkg.price, pkg.currency || 'EUR'));
       const icon = categoryIcon(category);
       const link = safeText(pkg.url, safeText(storeUrl, WEBSTORE_FALLBACK_URL));
