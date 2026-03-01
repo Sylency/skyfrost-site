@@ -169,41 +169,60 @@ function normalizeSidebarPayload(payload) {
       ? module.data
       : module;
     const dataObj = data && typeof data === 'object' && !Array.isArray(data) ? data : null;
+    const candidate = dataObj || module;
 
     if (!normalized.topCustomer) {
-      const isTopCustomerModule = moduleType === 'top_customer';
+      const isTopCustomerModule = ['top_customer', 'top_donor', 'top_donator'].includes(moduleType);
       const looksLikeTopCustomer = Boolean(
-        dataObj &&
-        safeText(pick(dataObj, ['username', 'name', 'ign'], ''), '') &&
-        pick(dataObj, ['total', 'amount'], undefined) !== undefined
+        candidate &&
+        safeText(
+          pick(candidate, ['username', 'name', 'ign', 'player.name', 'player.username'], ''),
+          ''
+        ) &&
+        pick(candidate, ['total', 'amount', 'price', 'price.amount', 'value'], undefined) !== undefined
       );
       if (isTopCustomerModule || looksLikeTopCustomer) {
-        normalized.topCustomer = dataObj || module;
+        normalized.topCustomer = candidate;
       }
     }
 
     if (!normalized.recentPayments.length) {
       const modulePayments = Array.isArray(data)
         ? data
-        : collection(dataObj, ['payments', 'recent_payments', 'items', 'data']);
-      const isRecentPaymentsModule = moduleType === 'recent_payments';
+        : collection(dataObj, [
+            'payments',
+            'recent_payments',
+            'recentPurchases',
+            'recent_purchases',
+            'items',
+            'data',
+            'transactions',
+            'entries',
+            'purchases'
+          ]);
+      const isRecentPaymentsModule = [
+        'recent_payments',
+        'recent_purchases',
+        'recent_donations',
+        'recent_transactions'
+      ].includes(moduleType);
       if (isRecentPaymentsModule || modulePayments.length) {
         normalized.recentPayments = modulePayments;
       }
     }
 
     if (!normalized.featuredPackage) {
-      const isFeaturedPackageModule = moduleType === 'featured_package';
-      const embedded = dataObj ? pick(dataObj, ['package', 'featured_package'], null) : null;
+      const isFeaturedPackageModule = ['featured_package', 'featured', 'featured_product'].includes(moduleType);
+      const embedded = dataObj ? pick(dataObj, ['package', 'featured_package', 'product'], null) : null;
       const looksLikePackage = Boolean(
-        dataObj &&
+        candidate &&
         safeText(
-          pick(dataObj, ['name', 'title', 'package.name', 'package.title'], ''),
+          pick(candidate, ['name', 'title', 'package.name', 'package.title', 'product.name', 'product.title'], ''),
           ''
         )
       );
       if (isFeaturedPackageModule || looksLikePackage) {
-        normalized.featuredPackage = embedded || dataObj || module;
+        normalized.featuredPackage = embedded || candidate;
       }
     }
   }
@@ -460,6 +479,7 @@ module.exports = async function handler(req, res) {
 
   const { type = '', id = '', category = '' } = req.query;
   const queryType = safeText(type, '');
+  const debugMode = safeText(req.query.debug, '') === '1';
 
   const needsHeadless = ['categories', 'packages', 'package', 'store', 'dashboard'].includes(queryType);
   if (needsHeadless && !HEADLESS_TOKEN) {
@@ -572,15 +592,23 @@ module.exports = async function handler(req, res) {
 
       let payments = [];
       let sidebarData = null;
+      let sidebarError = null;
+      let pluginPaymentsError = null;
 
       const sidebarPromise = tebexFetch(
         `${HEADLESS_BASE}/accounts/${encodeURIComponent(HEADLESS_TOKEN)}/sidebar`
-      ).catch(() => null);
+      ).catch((err) => {
+        sidebarError = safeText(err?.message, 'sidebar_fetch_failed');
+        return null;
+      });
 
       const paymentsPromise = PRIVATE_KEY
         ? tebexFetch(`${PLUGIN_BASE}/payments?limit=100`, {
             headers: { 'X-Tebex-Secret': PRIVATE_KEY }
-          }).catch(() => null)
+          }).catch((err) => {
+            pluginPaymentsError = safeText(err?.message, 'payments_fetch_failed');
+            return null;
+          })
         : Promise.resolve(null);
 
       const [sidebarPayload, paymentsPayload] = await Promise.all([sidebarPromise, paymentsPromise]);
@@ -623,8 +651,22 @@ module.exports = async function handler(req, res) {
         }];
       }
 
+      const warnings = [];
+      if (!PRIVATE_KEY) {
+        warnings.push('TEBEX_PRIVATE_KEY non configurato: classifica donatori e acquisti recenti dipendono solo dalla sidebar Tebex.');
+      }
+      if (pluginPaymentsError) {
+        warnings.push('Impossibile leggere i pagamenti da plugin.tebex.io: controlla TEBEX_PRIVATE_KEY e permessi API.');
+      }
+      if (sidebarError) {
+        warnings.push('Impossibile leggere la sidebar Tebex: controlla TEBEX_WEBSTORE_TOKEN/TEBEX_PUBLIC_TOKEN.');
+      }
+      if (!fallbackTop.length && !recentPurchases.length) {
+        warnings.push('Nessun dato donazioni disponibile dalle fonti Tebex configurate.');
+      }
+
       res.setHeader('Cache-Control', 'public, max-age=120');
-      return res.status(200).json({
+      const response = {
         storeUrl: STORE_URL,
         categories: storeCategories,
         packages,
@@ -636,7 +678,19 @@ module.exports = async function handler(req, res) {
           pluginPayments: Boolean(paymentsPayload),
           sidebar: Boolean(sidebarPayload)
         }
-      });
+      };
+
+      if (warnings.length) response.warnings = warnings;
+      if (debugMode) {
+        response.diagnostics = {
+          hasPrivateKey: Boolean(PRIVATE_KEY),
+          sidebarError,
+          pluginPaymentsError,
+          sidebarRecentCount: sidebarData?.recentPayments?.length || 0,
+          paymentsCount: payments.length
+        };
+      }
+      return res.status(200).json(response);
     }
 
     if (queryType === 'payments') {

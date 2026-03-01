@@ -250,9 +250,15 @@ SkyFrost.loadIndexStoreData = async function () {
 
   if (!topTable || !recentWrap || !featuredName || !featuredPrice || !featuredPerks || !featuredLink) return;
 
-  function renderTop(topDonators) {
+  function firstWarningMessage(warnings) {
+    if (!Array.isArray(warnings) || !warnings.length) return '';
+    return truncate(safeText(warnings[0], ''), 80);
+  }
+
+  function renderTop(topDonators, warningMessage = '') {
     if (!Array.isArray(topDonators) || !topDonators.length) {
-      topTable.innerHTML = '<tr><td class="lb-rank">#-</td><td class="lb-name">Nessuna donazione recente</td><td class="lb-amount">--</td></tr>';
+      const label = warningMessage || 'Nessuna donazione recente';
+      topTable.innerHTML = `<tr><td class="lb-rank">#-</td><td class="lb-name">${escapeHtml(label)}</td><td class="lb-amount">--</td></tr>`;
       return;
     }
     topTable.innerHTML = topDonators.slice(0, 4).map((row, idx) => {
@@ -266,9 +272,10 @@ SkyFrost.loadIndexStoreData = async function () {
     }).join('');
   }
 
-  function renderRecent(recentPurchases) {
+  function renderRecent(recentPurchases, warningMessage = '') {
     if (!Array.isArray(recentPurchases) || !recentPurchases.length) {
-      recentWrap.innerHTML = '<div class="purchase-row"><div><div class="purchase-user">Nessun acquisto recente</div><div class="purchase-cat">Tebex</div></div><span class="purchase-item">--</span></div>';
+      const label = warningMessage || 'Nessun acquisto recente';
+      recentWrap.innerHTML = `<div class="purchase-row"><div><div class="purchase-user">${escapeHtml(label)}</div><div class="purchase-cat">Tebex</div></div><span class="purchase-item">--</span></div>`;
       return;
     }
     recentWrap.innerHTML = recentPurchases.slice(0, 4).map((row) => {
@@ -304,8 +311,12 @@ SkyFrost.loadIndexStoreData = async function () {
 
   try {
     const data = await SkyFrost.fetchTebex('dashboard', { topLimit: 4, recentLimit: 4 });
-    renderTop(data.topDonators);
-    renderRecent(data.recentPurchases);
+    const warningMessage = firstWarningMessage(data?.warnings);
+    if (Array.isArray(data?.warnings) && data.warnings.length) {
+      console.warn('Tebex dashboard warnings:', data.warnings, data?.diagnostics || null);
+    }
+    renderTop(data.topDonators, warningMessage);
+    renderRecent(data.recentPurchases, warningMessage);
     renderFeatured(data.featuredPackage, data.storeUrl);
   } catch (err) {
     console.error('Home Tebex fetch failed:', err);
