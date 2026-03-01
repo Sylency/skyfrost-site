@@ -11,18 +11,28 @@
 ├── supporto.html
 ├── wiki.html
 ├── vote.html
+├── privacy.html
+├── cookie.html
+├── terms.html
+├── robots.txt
+├── sitemap.xml
+├── site.webmanifest
+├── favicon.svg
 ├── assets/
 │   ├── style.css       ← tutti gli stili
 │   ├── components.js   ← navbar, footer, canvas
-│   └── main.js         ← logica pagine
+│   ├── main.js         ← logica pagine
+│   └── og-cover.svg    ← preview social
 └── api/
     ├── server.js        ← Express server (porta 3001)
     ├── discord.js       ← GET /api/discord
     ├── auth.js          ← OAuth Discord + sessione (GET/POST /api/auth)
     ├── tickets.js       ← POST /api/tickets (invio ticket su webhook)
     ├── tebex.js         ← GET /api/tebex
+    ├── status.js        ← GET /api/status (player count)
     ├── .env             ← token segreti (NON caricare su GitHub!)
     ├── .env.example     ← template .env
+    ├── tests/           ← test automatici Node.js
     └── package.json
 ```
 
@@ -60,6 +70,13 @@ nano .env   # <-- inserisci i tuoi token reali
 | `AUTH_SUCCESS_REDIRECT`| (Opzionale) Redirect post-login, default `/supporto.html`  |
 | `AUTH_LOGIN_REDIRECT`  | (Opzionale) Redirect error login, default `/login.html`    |
 | `DISCORD_REDIRECT_URI` | (Opzionale) callback OAuth, default `<dominio>/api/auth`   |
+| `GAME_SERVER_ADDRESS`  | (Opzionale) indirizzo server gioco, default `play.skyfrost.it` |
+| `SERVER_STATUS_API_URL`| (Opzionale) endpoint status, usa `{server}` nel template URL |
+| `STATUS_CACHE_TTL_MS`  | (Opzionale) cache endpoint status in millisecondi |
+| `ONLINE_COUNT_FALLBACK`| (Opzionale) fallback player count se provider status non raggiungibile |
+| `ALLOWED_ORIGINS`      | (Opzionale) origini CORS consentite, separate da virgola |
+| `API_RATE_WINDOW_MS`   | (Opzionale) finestra rate-limit API (ms) |
+| `API_RATE_MAX`         | (Opzionale) max richieste per IP nella finestra |
 | `PORT`                 | Lascia 3001 (default)                                      |
 
 ---
@@ -73,9 +90,14 @@ nano .env   # <-- inserisci i tuoi token reali
    - ✅ **PRESENCE INTENT** (per lo stato online)
 4. Assicurati che il bot sia **nel tuo server Discord**
 
-I nomi dei ruoli in `api/discord.js` devono corrispondere **esattamente** ai tuoi ruoli Discord:
+I gruppi ruolo in `api/discord.js` usano gli **ID ruolo Discord**:
 ```js
-const STAFF_ROLES = ['Owner', 'Admin', 'Moderatore', 'Builder', 'Helper'];
+const STAFF_ROLE_GROUPS = [
+  { label: 'Owner', roleIds: ['...'] },
+  { label: 'Sr. Admin', roleIds: ['...'] },
+  { label: 'Admin', roleIds: ['...'] },
+  { label: 'Staff', roleIds: ['...'] }
+];
 ```
 
 ---
@@ -102,6 +124,14 @@ Test che funzioni:
 curl http://localhost:3001/api/health
 curl http://localhost:3001/api/discord
 curl http://localhost:3001/api/auth?action=session
+curl http://localhost:3001/api/status
+```
+
+Controllo sintassi + test:
+```bash
+cd /var/www/Sito/skyfrost-site/api
+npm run check
+npm test
 ```
 
 ---
@@ -122,6 +152,7 @@ server {
         proxy_set_header   Host              $host;
         proxy_set_header   X-Real-IP         $remote_addr;
         proxy_set_header   X-Forwarded-For   $proxy_add_x_forwarded_for;
+        proxy_set_header   X-Forwarded-Proto $scheme;
     }
 }
 ```

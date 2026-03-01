@@ -4,7 +4,9 @@ const {
   SESSION_COOKIE_NAME,
   parseCookies,
   verifySessionToken,
-  getAuthSecret
+  getAuthSecret,
+  isAllowedOrigin,
+  applyCors
 } = require('./auth-utils.cjs');
 
 function safeText(value, fallback = '') {
@@ -16,15 +18,8 @@ function clamp(text, maxLen) {
   return String(text || '').slice(0, maxLen);
 }
 
-function setCors(req, res) {
-  const origin = safeText(req.headers.origin, '');
-  if (origin) {
-    res.setHeader('Access-Control-Allow-Origin', origin);
-    res.setHeader('Vary', 'Origin');
-  }
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+function sanitizeForDiscord(text, maxLen) {
+  return clamp(String(text || '').replace(/@/g, '@\u200b'), maxLen);
 }
 
 function getSession(req) {
@@ -50,10 +45,20 @@ function readablePriority(value) {
 }
 
 module.exports = async function handler(req, res) {
-  setCors(req, res);
+  applyCors(req, res, {
+    methods: 'POST, OPTIONS',
+    headers: 'Content-Type',
+    credentials: true
+  });
+  res.setHeader('Cache-Control', 'no-store');
 
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+
+  const origin = safeText(req.headers.origin, '');
+  if (origin && !isAllowedOrigin(req, origin)) {
+    return res.status(403).json({ error: 'Origin non autorizzata' });
+  }
 
   const webhookUrl = safeText(process.env.DISCORD_WEBHOOK_URL, '');
   if (!webhookUrl) {
@@ -69,14 +74,15 @@ module.exports = async function handler(req, res) {
 
   const category = readableCategory(req.body?.category);
   const priority = readablePriority(req.body?.priority);
-  const subject = clamp(safeText(req.body?.subject, ''), 120);
-  const message = clamp(safeText(req.body?.message, ''), 2000);
+  const subject = sanitizeForDiscord(safeText(req.body?.subject, ''), 120);
+  const message = sanitizeForDiscord(safeText(req.body?.message, ''), 2000);
 
   if (!subject) return res.status(400).json({ error: 'Oggetto ticket obbligatorio' });
   if (message.length < 20) return res.status(400).json({ error: 'Descrizione troppo corta (minimo 20 caratteri)' });
 
   const userId = safeText(session.sub, '');
   const username = safeText(session.globalName, safeText(session.username, 'DiscordUser'));
+  const safeUsername = sanitizeForDiscord(username, 80);
   const ticketId = `SF-${Date.now().toString(36).toUpperCase()}`;
   const supportRoleId = safeText(process.env.DISCORD_SUPPORT_ROLE_ID, '');
 
@@ -93,7 +99,7 @@ module.exports = async function handler(req, res) {
         color: 6215679,
         description: message,
         fields: [
-          { name: 'Utente', value: `${username} (\`${userId}\`)`, inline: false },
+          { name: 'Utente', value: `${safeUsername} (\`${userId}\`)`, inline: false },
           { name: 'Categoria', value: category, inline: true },
           { name: 'Priorità', value: priority, inline: true }
         ],

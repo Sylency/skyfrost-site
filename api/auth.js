@@ -13,6 +13,8 @@ const {
   inferDiscordClientId,
   isSecureRequest,
   resolveBaseUrl,
+  isAllowedOrigin,
+  applyCors,
   buildDiscordAvatarUrl
 } = require('./auth-utils.cjs');
 
@@ -42,15 +44,12 @@ function withQuery(url, params = {}) {
   return q ? `${base}?${q}` : base;
 }
 
-function setCors(req, res) {
+function ensureAllowedOrigin(req, res) {
   const origin = safeText(req.headers.origin, '');
-  if (origin) {
-    res.setHeader('Access-Control-Allow-Origin', origin);
-    res.setHeader('Vary', 'Origin');
-  }
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  if (!origin) return true;
+  if (isAllowedOrigin(req, origin)) return true;
+  res.status(403).json({ error: 'Origin non autorizzata' });
+  return false;
 }
 
 function getAuthRedirect() {
@@ -274,9 +273,15 @@ function logout(req, res) {
 }
 
 module.exports = async function handler(req, res) {
-  setCors(req, res);
+  applyCors(req, res, {
+    methods: 'GET, POST, OPTIONS',
+    headers: 'Content-Type',
+    credentials: true
+  });
+  res.setHeader('Cache-Control', 'no-store');
 
   if (req.method === 'OPTIONS') return res.status(200).end();
+  if (!ensureAllowedOrigin(req, res)) return;
 
   if (req.method === 'GET' && req.query.code) {
     return completeAuth(req, res);
@@ -290,7 +295,7 @@ module.exports = async function handler(req, res) {
   }
 
   if (action === 'logout') {
-    if (!['POST', 'GET'].includes(req.method)) return res.status(405).json({ error: 'Method not allowed' });
+    if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
     return logout(req, res);
   }
 

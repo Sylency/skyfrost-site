@@ -5,6 +5,11 @@ const crypto = require('crypto');
 const SESSION_COOKIE_NAME = 'sf_session';
 const OAUTH_STATE_COOKIE_NAME = 'sf_oauth_state';
 
+function safeText(value, fallback = '') {
+  const text = String(value ?? '').trim();
+  return text || fallback;
+}
+
 function base64UrlEncode(value) {
   const input = Buffer.isBuffer(value) ? value : Buffer.from(String(value));
   return input.toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
@@ -158,6 +163,56 @@ function resolveBaseUrl(req) {
   return `${protocol}://${host}`;
 }
 
+function configuredAllowedOrigins() {
+  const raw = safeText(process.env.ALLOWED_ORIGINS, '');
+  if (!raw) return [];
+  return raw
+    .split(',')
+    .map((entry) => entry.trim())
+    .filter(Boolean);
+}
+
+function resolveRequestOrigin(req) {
+  const origin = safeText(req?.headers?.origin, '');
+  if (origin) return origin;
+  return safeText(resolveBaseUrl(req), '');
+}
+
+function isAllowedOrigin(req, origin) {
+  const candidate = safeText(origin, '');
+  if (!candidate) return false;
+
+  const sameOrigin = safeText(resolveBaseUrl(req), '');
+  if (sameOrigin && sameOrigin === candidate) return true;
+
+  const allowed = configuredAllowedOrigins();
+  if (!allowed.length) return true;
+  if (allowed.includes('*')) return true;
+  return allowed.includes(candidate);
+}
+
+function applyCors(req, res, options = {}) {
+  const methods = safeText(options.methods, 'GET, OPTIONS');
+  const headers = safeText(options.headers, 'Content-Type');
+  const credentials = Boolean(options.credentials);
+  const requestOrigin = safeText(req?.headers?.origin, '');
+
+  if (requestOrigin) {
+    if (isAllowedOrigin(req, requestOrigin)) {
+      res.setHeader('Access-Control-Allow-Origin', requestOrigin);
+      res.setHeader('Vary', 'Origin');
+    } else {
+      res.setHeader('Vary', 'Origin');
+    }
+  }
+
+  if (credentials) {
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+  }
+  res.setHeader('Access-Control-Allow-Methods', methods);
+  res.setHeader('Access-Control-Allow-Headers', headers);
+}
+
 function buildDiscordAvatarUrl(user) {
   const userId = String(user?.id || '').trim();
   const hash = String(user?.avatar || '').trim();
@@ -182,5 +237,8 @@ module.exports = {
   inferDiscordClientId,
   isSecureRequest,
   resolveBaseUrl,
+  resolveRequestOrigin,
+  isAllowedOrigin,
+  applyCors,
   buildDiscordAvatarUrl
 };

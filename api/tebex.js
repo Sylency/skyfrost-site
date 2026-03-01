@@ -18,6 +18,8 @@
 
 'use strict';
 
+const { applyCors, isAllowedOrigin } = require('./auth-utils.cjs');
+
 const HEADLESS_BASE = 'https://headless.tebex.io/api';
 const PLUGIN_BASE = 'https://plugin.tebex.io';
 const DEFAULT_STORE_URL = 'https://store.skyfrost.it';
@@ -350,9 +352,12 @@ async function tebexFetch(url, options = {}) {
 }
 
 module.exports = async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  applyCors(req, res, { methods: 'GET, OPTIONS', headers: 'Content-Type' });
+  const origin = safeText(req.headers.origin, '');
   if (req.method === 'OPTIONS') return res.status(200).end();
+  if (origin && !isAllowedOrigin(req, origin)) {
+    return res.status(403).json({ error: 'Origin non autorizzata' });
+  }
   if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
 
   const HEADLESS_TOKEN = safeText(

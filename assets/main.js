@@ -15,6 +15,7 @@ const API_BASE = '/api';
 const WEBSTORE_FALLBACK_URL = 'https://store.skyfrost.it';
 const AUTH_API = `${API_BASE}/auth`;
 const TICKETS_API = `${API_BASE}/tickets`;
+const STATUS_API = `${API_BASE}/status`;
 
 const CATEGORY_ICONS = {
   survival: '🌲',
@@ -180,20 +181,42 @@ SkyFrost.fetchTebex = async function (type, params = {}) {
   return data;
 };
 
-/* ── ONLINE COUNTER (placeholder finché non hai API server) ── */
-SkyFrost.initCounter = function (el, base, variance) {
+/* ── ONLINE COUNTER ── */
+SkyFrost.loadServerStatus = function (el) {
   if (!el) return;
-  let current = base + Math.floor(Math.random() * variance);
-  el.textContent = current;
+  const REFRESH_MS = 30000;
+
+  function renderCount(value) {
+    const num = Number(value);
+    el.textContent = Number.isFinite(num) && num >= 0 ? String(Math.floor(num)) : 'N/D';
+  }
+
+  async function refresh() {
+    try {
+      const res = await fetch(STATUS_API, { cache: 'no-store' });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      renderCount(data?.onlinePlayers);
+    } catch (err) {
+      console.error('Server status fetch failed:', err);
+      renderCount(null);
+    }
+  }
+
+  renderCount(null);
+  void refresh();
   setInterval(() => {
-    current = Math.max(0, current + (Math.random() > 0.5 ? 1 : -1));
-    el.textContent = current;
-  }, 8000);
+    if (document.hidden) return;
+    void refresh();
+  }, REFRESH_MS);
 };
 
 /* ── INDEX PAGE ── */
 SkyFrost.initIndex = function () {
-  SkyFrost.initCounter(document.getElementById('online-count'), 24, 12);
+  SkyFrost.loadServerStatus(document.getElementById('online-count'));
+  document.getElementById('copy-ip-btn')?.addEventListener('click', () => {
+    void SkyFrost.copyIP();
+  });
 
   const pages = document.querySelectorAll('.news-page');
   const dots   = document.querySelectorAll('.page-dot');
@@ -391,7 +414,7 @@ SkyFrost.initStore = async function () {
           <div class="product-desc">Controlla che categorie e pacchetti siano attivi nel tuo pannello Tebex.</div>
           <div class="product-footer">
             <div class="product-price">--</div>
-            <a href="${escapeHtml(safeText(storeUrl, WEBSTORE_FALLBACK_URL))}" target="_blank" class="btn btn-cyan btn-sm">Apri Tebex</a>
+            <a href="${escapeHtml(safeText(storeUrl, WEBSTORE_FALLBACK_URL))}" target="_blank" rel="noopener noreferrer" class="btn btn-cyan btn-sm">Apri Tebex</a>
           </div>
         </div>
       </div>`;
@@ -422,7 +445,7 @@ SkyFrost.initStore = async function () {
           <div class="product-desc">${escapeHtml(desc)}</div>
           <div class="product-footer">
             <div class="product-price">${escapeHtml(price)}</div>
-            <a href="${escapeHtml(link)}" target="_blank" class="btn btn-cyan btn-sm">Acquista</a>
+            <a href="${escapeHtml(link)}" target="_blank" rel="noopener noreferrer" class="btn btn-cyan btn-sm">Acquista</a>
           </div>
         </div>
       </div>`;

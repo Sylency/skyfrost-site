@@ -3,9 +3,41 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="SkyFrost — Il server Hytale italiano. Esplora un mondo di ghiaccio eterno." />
-  <title>SkyFrost — Hytale Server</title>
+  <title>SkyFrost — Server Hytale Italiano</title>
+  <meta name="description" content="SkyFrost: il server Hytale italiano. News, store ufficiale, staff, votazioni e supporto ticket con login Discord." />
+  <meta name="robots" content="index,follow" />
+  <meta name="theme-color" content="#060a14" />
+  <link rel="canonical" href="http://skyfrost.it/" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="SkyFrost" />
+  <meta property="og:title" content="SkyFrost — Server Hytale Italiano" />
+  <meta property="og:description" content="Entra nel mondo di SkyFrost: community italiana, aggiornamenti live, store e supporto rapido." />
+  <meta property="og:url" content="http://skyfrost.it/" />
+  <meta property="og:image" content="http://skyfrost.it/assets/og-cover.svg" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="SkyFrost — Server Hytale Italiano" />
+  <meta name="twitter:description" content="News, store, staff, votazioni e supporto ticket del server SkyFrost." />
+  <meta name="twitter:image" content="http://skyfrost.it/assets/og-cover.svg" />
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="manifest" href="/site.webmanifest" />
   <link rel="stylesheet" href="assets/style.css" />
+
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "SkyFrost",
+      "url": "http://skyfrost.it/",
+      "logo": "http://skyfrost.it/favicon.svg",
+      "sameAs": [
+        "https://discord.com/invite/MfseZ57sPd",
+        "https://store.skyfrost.it"
+      ]
+    }
+  </script>
 </head>
 <body>
 <script src="assets/components.js"></script>
@@ -20,7 +52,7 @@
 
   <div class="hero-actions">
     <a href="login.html" class="btn btn-cyan btn-lg">Accedi Discord</a>
-    <button onclick="SkyFrost.copyIP()" class="btn btn-outline btn-lg">
+    <button type="button" id="copy-ip-btn" class="btn btn-outline btn-lg">
       📋 play.Skyfrost.it
     </button>
     <a href="store.html" class="btn btn-ghost btn-lg">Vai allo Store</a>
@@ -33,7 +65,7 @@
     </div>
     <div class="status-pill">
       <span class="status-dot online"></span>
-      <span><a href="https://discord.com/invite/MfseZ57sPd" target="_blank" style="color:inherit;text-decoration:none;">discord.com/invite/MfseZ57sPd</a></span>
+      <span><a href="https://discord.com/invite/MfseZ57sPd" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none;">discord.com/invite/MfseZ57sPd</a></span>
     </div>
   </div>
 
@@ -169,7 +201,7 @@
             <div style="font-size:4rem;opacity:.15;flex-shrink:0;">🌟</div>
           </div>
           <div style="padding:1.5rem;">
-            <a href="https://store.skyfrost.it" target="_blank" class="btn btn-cyan btn-block btn-lg" id="index-featured-link">
+            <a href="https://store.skyfrost.it" target="_blank" rel="noopener noreferrer" class="btn btn-cyan btn-block btn-lg" id="index-featured-link">
               Acquista su Tebex →
             </a>
           </div>
@@ -211,3 +243,4 @@
 </script>
 </body>
 </html>
+

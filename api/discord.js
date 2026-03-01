@@ -6,6 +6,7 @@
  *
  *  SETUP nel file api/.env:
  *    DISCORD_BOT_TOKEN=il-tuo-token-qui
+ *    DISCORD_GUILD_ID=id-della-tua-gilda
  *    (Opzionale ma consigliato) npm i discord.js  ← per presence real-time
  *
  *  Abilita nel Discord Developer Portal → Bot → Privileged Intents:
@@ -16,7 +17,9 @@
 
 'use strict';
 
-const GUILD_ID = '1463926391660871703';
+const { applyCors, isAllowedOrigin } = require('./auth-utils.cjs');
+
+const GUILD_ID = String(process.env.DISCORD_GUILD_ID || '1463926391660871703').trim();
 const MEMBERS_PAGE_SIZE = 1000;
 const GATEWAY_BATCH_SIZE = 100;
 const VALID_STATUSES = new Set(['online', 'idle', 'dnd', 'offline']);
@@ -38,6 +41,11 @@ let discordJsLib = undefined;
 let discordClient = null;
 let discordClientBootPromise = null;
 let warnedMissingDiscordJs = false;
+
+function safeText(value, fallback = '') {
+  const text = String(value ?? '').trim();
+  return text || fallback;
+}
 
 function normalizeStatus(value) {
   return VALID_STATUSES.has(value) ? value : null;
@@ -192,10 +200,13 @@ async function fetchPresenceMap(botToken, userIds) {
 }
 
 module.exports = async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  applyCors(req, res, { methods: 'GET, OPTIONS', headers: 'Content-Type' });
+  const origin = safeText(req.headers.origin, '');
   if (req.method === 'OPTIONS') return res.status(200).end();
-  if (req.method !== 'GET')    return res.status(405).json({ error: 'Method not allowed' });
+  if (origin && !isAllowedOrigin(req, origin)) {
+    return res.status(403).json({ error: 'Origin non autorizzata' });
+  }
+  if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
 
   const BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
   if (!BOT_TOKEN) {
