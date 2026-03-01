@@ -137,6 +137,80 @@ function collection(payload, keys = []) {
   return [];
 }
 
+function normalizeSidebarPayload(payload) {
+  const normalized = {
+    topCustomer: null,
+    recentPayments: [],
+    featuredPackage: null
+  };
+
+  if (!payload || typeof payload !== 'object') return normalized;
+
+  const legacyTop = pick(payload, ['top_customer'], null);
+  const legacyRecent = collection(payload, ['recent_payments']);
+  const legacyFeatured = pick(payload, ['featured_package'], null);
+  if (legacyTop || legacyRecent.length || legacyFeatured) {
+    normalized.topCustomer = legacyTop || null;
+    normalized.recentPayments = legacyRecent;
+    normalized.featuredPackage = legacyFeatured || null;
+    return normalized;
+  }
+
+  const modules = collection(payload, ['modules', 'items', 'data']);
+  for (const module of modules) {
+    if (!module || typeof module !== 'object') continue;
+
+    const moduleType = safeText(
+      pick(module, ['type', 'module', 'data.type'], ''),
+      ''
+    ).toLowerCase();
+
+    const data = Object.prototype.hasOwnProperty.call(module, 'data')
+      ? module.data
+      : module;
+    const dataObj = data && typeof data === 'object' && !Array.isArray(data) ? data : null;
+
+    if (!normalized.topCustomer) {
+      const isTopCustomerModule = moduleType === 'top_customer';
+      const looksLikeTopCustomer = Boolean(
+        dataObj &&
+        safeText(pick(dataObj, ['username', 'name', 'ign'], ''), '') &&
+        pick(dataObj, ['total', 'amount'], undefined) !== undefined
+      );
+      if (isTopCustomerModule || looksLikeTopCustomer) {
+        normalized.topCustomer = dataObj || module;
+      }
+    }
+
+    if (!normalized.recentPayments.length) {
+      const modulePayments = Array.isArray(data)
+        ? data
+        : collection(dataObj, ['payments', 'recent_payments', 'items', 'data']);
+      const isRecentPaymentsModule = moduleType === 'recent_payments';
+      if (isRecentPaymentsModule || modulePayments.length) {
+        normalized.recentPayments = modulePayments;
+      }
+    }
+
+    if (!normalized.featuredPackage) {
+      const isFeaturedPackageModule = moduleType === 'featured_package';
+      const embedded = dataObj ? pick(dataObj, ['package', 'featured_package'], null) : null;
+      const looksLikePackage = Boolean(
+        dataObj &&
+        safeText(
+          pick(dataObj, ['name', 'title', 'package.name', 'package.title'], ''),
+          ''
+        )
+      );
+      if (isFeaturedPackageModule || looksLikePackage) {
+        normalized.featuredPackage = embedded || dataObj || module;
+      }
+    }
+  }
+
+  return normalized;
+}
+
 function normalizeCategory(raw) {
   const id = safeText(pick(raw, ['id', 'category_id', 'identifier']), '');
   const name = safeText(pick(raw, ['name', 'title']), 'Altro');
@@ -249,17 +323,34 @@ function normalizePayment(raw) {
   const amount = toNumber(pick(raw, ['amount', 'price.amount', 'price', 'total'], NaN));
   const currency = safeText(pick(raw, ['currency.iso_4217', 'currency', 'price.currency'], 'EUR'), 'EUR');
   const packageName = safeText(
-    pick(firstPackage, ['name', 'title'], pick(raw, ['package.name', 'package', 'package_name'], 'Pacchetto')),
+    pick(
+      firstPackage,
+      ['name', 'title'],
+      pick(raw, ['package.name', 'package.title', 'package', 'package_name', 'name'], 'Pacchetto')
+    ),
     'Pacchetto'
   );
   const categoryName = safeText(
-    pick(firstPackage, ['category.name', 'category'], pick(raw, ['category.name', 'category'], 'Store')),
+    pick(
+      firstPackage,
+      ['category.name', 'category'],
+      pick(raw, ['category.name', 'category', 'category_name', 'categoryName'], 'Store')
+    ),
     'Store'
   );
-  const when = pick(raw, ['date', 'created_at', 'createdAt', 'paid_at', 'timestamp'], null);
+  const when = pick(raw, ['date', 'created_at', 'createdAt', 'paid_at', 'timestamp', 'time'], null);
   let dateISO = null;
-  if (when) {
-    const parsed = new Date(when);
+  if (when !== null && when !== undefined && when !== '') {
+    let parsed = null;
+    if (typeof when === 'number' && Number.isFinite(when)) {
+      parsed = new Date(when > 1e12 ? when : when * 1000);
+    } else if (typeof when === 'string' && /^\d{10,13}$/.test(when.trim())) {
+      const epoch = Number.parseInt(when.trim(), 10);
+      const millis = when.trim().length === 13 ? epoch : epoch * 1000;
+      parsed = new Date(millis);
+    } else {
+      parsed = new Date(when);
+    }
     if (!Number.isNaN(parsed.getTime())) dateISO = parsed.toISOString();
   }
 
@@ -493,12 +584,13 @@ module.exports = async function handler(req, res) {
         : Promise.resolve(null);
 
       const [sidebarPayload, paymentsPayload] = await Promise.all([sidebarPromise, paymentsPromise]);
-      sidebarData = sidebarPayload;
+      sidebarData = normalizeSidebarPayload(sidebarPayload);
 
       if (paymentsPayload) {
         payments = collection(paymentsPayload, ['payments', 'data']).map(normalizePayment);
-      } else if (sidebarData) {
-        payments = collection(sidebarData, ['recent_payments']).map(normalizePayment);
+      }
+      if (!payments.length && sidebarData?.recentPayments?.length) {
+        payments = sidebarData.recentPayments.map(normalizePayment);
       }
       payments.sort((a, b) => {
         const ad = a?.date ? Date.parse(a.date) : NaN;
@@ -511,17 +603,17 @@ module.exports = async function handler(req, res) {
 
       const topDonators = topDonatorsFromPayments(payments, topLimit);
       const recentPurchases = payments.slice(0, recentLimit);
-      const featuredFromSidebar = sidebarData ? pick(sidebarData, ['featured_package'], null) : null;
+      const featuredFromSidebar = sidebarData?.featuredPackage || null;
       const featuredPackage = pickFeaturedPackage(packages, featuredFromSidebar, STORE_URL);
 
       let fallbackTop = topDonators;
-      if (!fallbackTop.length && sidebarData?.top_customer) {
-        const topAmount = toNumber(pick(sidebarData.top_customer, ['amount', 'total'], 0));
-        const topCurrency = safeText(pick(sidebarData.top_customer, ['currency'], 'EUR'), 'EUR');
+      if (!fallbackTop.length && sidebarData?.topCustomer) {
+        const topAmount = toNumber(pick(sidebarData.topCustomer, ['amount', 'total'], 0));
+        const topCurrency = safeText(pick(sidebarData.topCustomer, ['currency'], 'EUR'), 'EUR');
         fallbackTop = [{
           rank: 1,
           username: safeText(
-            pick(sidebarData.top_customer, ['name', 'username', 'ign'], 'Top Donator'),
+            pick(sidebarData.topCustomer, ['name', 'username', 'ign'], 'Top Donator'),
             'Top Donator'
           ),
           total: Number.isFinite(topAmount) ? topAmount : 0,
@@ -542,7 +634,7 @@ module.exports = async function handler(req, res) {
         sources: {
           headless: true,
           pluginPayments: Boolean(paymentsPayload),
-          sidebar: Boolean(sidebarData)
+          sidebar: Boolean(sidebarPayload)
         }
       });
     }
