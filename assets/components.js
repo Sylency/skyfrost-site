@@ -129,7 +129,6 @@
     canvas.id = 'bg-canvas';
     document.body.prepend(canvas);
     const ctx = canvas.getContext('2d');
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     function resize() {
       canvas.width  = window.innerWidth;
@@ -177,10 +176,6 @@
         if (p.x > canvas.width + 5) p.x = -5;
       });
       requestAnimationFrame(animate);
-    }
-    if (reducedMotion) {
-      drawBg();
-      return;
     }
     animate();
   }
