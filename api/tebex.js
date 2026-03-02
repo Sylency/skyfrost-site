@@ -137,6 +137,17 @@ function collection(payload, keys = []) {
   return [];
 }
 
+function parseSecrets(value) {
+  return safeText(value, '')
+    .split(/[\s,;]+/g)
+    .map((entry) => entry.trim())
+    .filter(Boolean);
+}
+
+function uniqueStrings(values) {
+  return Array.from(new Set(asArray(values).map((value) => safeText(value, '')).filter(Boolean)));
+}
+
 function normalizeSidebarPayload(payload) {
   const normalized = {
     topCustomer: null,
@@ -334,6 +345,10 @@ function normalizePackage(raw, categoriesById, fallbackStoreUrl) {
 function normalizePayment(raw) {
   const packages = asArray(pick(raw, ['packages', 'products', 'items'], []));
   const firstPackage = packages[0] || {};
+  const paymentId = safeText(
+    pick(raw, ['id', 'payment_id', 'txn_id', 'transaction_id', 'transid'], ''),
+    ''
+  );
 
   const username = safeText(
     pick(raw, ['player.name', 'player.username', 'ign', 'username', 'name'], 'Player'),
@@ -374,6 +389,7 @@ function normalizePayment(raw) {
   }
 
   return {
+    paymentId: paymentId || null,
     username,
     amount: Number.isFinite(amount) ? amount : 0,
     currency,
@@ -381,6 +397,67 @@ function normalizePayment(raw) {
     packageName,
     categoryName,
     date: dateISO
+  };
+}
+
+function dedupePayments(payments) {
+  const seen = new Set();
+  const out = [];
+
+  for (const payment of asArray(payments)) {
+    const idKey = safeText(payment?.paymentId, '');
+    const fallbackKey = [
+      safeText(payment?.username, '').toLowerCase(),
+      Number.isFinite(payment?.amount) ? payment.amount.toFixed(2) : '0.00',
+      safeText(payment?.currency, ''),
+      safeText(payment?.packageName, ''),
+      safeText(payment?.date, '')
+    ].join('|');
+    const key = idKey || fallbackKey;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push(payment);
+  }
+
+  return out;
+}
+
+async function fetchPaymentsFromPluginKeys(privateKeys, limit = 100) {
+  const keys = uniqueStrings(privateKeys);
+  if (!keys.length) return { payments: [], successCount: 0, failures: [] };
+
+  const tasks = keys.map((secret) =>
+    tebexFetch(`${PLUGIN_BASE}/payments?limit=${limit}`, {
+      headers: { 'X-Tebex-Secret': secret }
+    })
+      .then((payload) => ({ ok: true, payload }))
+      .catch((err) => ({
+        ok: false,
+        error: safeText(err?.message, 'payments_fetch_failed')
+      }))
+  );
+
+  const results = await Promise.all(tasks);
+  const mergedPayments = [];
+  const failures = [];
+  let successCount = 0;
+
+  results.forEach((result, index) => {
+    if (result.ok) {
+      successCount += 1;
+      mergedPayments.push(...collection(result.payload, ['payments', 'data']).map(normalizePayment));
+      return;
+    }
+    failures.push({
+      keyIndex: index + 1,
+      message: safeText(result.error, 'payments_fetch_failed')
+    });
+  });
+
+  return {
+    payments: dedupePayments(mergedPayments),
+    successCount,
+    failures
   };
 }
 
@@ -474,7 +551,10 @@ module.exports = async function handler(req, res) {
     process.env.TEBEX_WEBSTORE_TOKEN || process.env.TEBEX_PUBLIC_TOKEN,
     ''
   );
-  const PRIVATE_KEY = safeText(process.env.TEBEX_PRIVATE_KEY, '');
+  const PRIVATE_KEYS = uniqueStrings([
+    ...parseSecrets(process.env.TEBEX_PRIVATE_KEYS),
+    ...parseSecrets(process.env.TEBEX_PRIVATE_KEY)
+  ]);
   const STORE_URL = safeText(process.env.TEBEX_STORE_URL, DEFAULT_STORE_URL);
 
   const { type = '', id = '', category = '' } = req.query;
@@ -490,10 +570,10 @@ module.exports = async function handler(req, res) {
   }
 
   const needsPrivate = ['payments'].includes(queryType);
-  if (needsPrivate && !PRIVATE_KEY) {
+  if (needsPrivate && !PRIVATE_KEYS.length) {
     return res.status(500).json({
       error: 'TEBEX_PRIVATE_KEY non configurato.',
-      hint: 'Aggiungilo in api/.env per leggere pagamenti e classifica donatori.'
+      hint: 'Imposta la Secret Key da Tebex > Integrations > Game Servers in TEBEX_PRIVATE_KEY (o TEBEX_PRIVATE_KEYS separate da virgola).'
     });
   }
 
@@ -593,7 +673,8 @@ module.exports = async function handler(req, res) {
       let payments = [];
       let sidebarData = null;
       let sidebarError = null;
-      let pluginPaymentsError = null;
+      let pluginPaymentsFailures = [];
+      let pluginPaymentsSuccessCount = 0;
 
       const sidebarPromise = tebexFetch(
         `${HEADLESS_BASE}/accounts/${encodeURIComponent(HEADLESS_TOKEN)}/sidebar`
@@ -602,20 +683,21 @@ module.exports = async function handler(req, res) {
         return null;
       });
 
-      const paymentsPromise = PRIVATE_KEY
-        ? tebexFetch(`${PLUGIN_BASE}/payments?limit=100`, {
-            headers: { 'X-Tebex-Secret': PRIVATE_KEY }
-          }).catch((err) => {
-            pluginPaymentsError = safeText(err?.message, 'payments_fetch_failed');
-            return null;
-          })
-        : Promise.resolve(null);
+      const paymentsPromise = PRIVATE_KEYS.length
+        ? fetchPaymentsFromPluginKeys(PRIVATE_KEYS, 100).catch((err) => ({
+            payments: [],
+            successCount: 0,
+            failures: [{ keyIndex: 0, message: safeText(err?.message, 'payments_fetch_failed') }]
+          }))
+        : Promise.resolve({ payments: [], successCount: 0, failures: [] });
 
-      const [sidebarPayload, paymentsPayload] = await Promise.all([sidebarPromise, paymentsPromise]);
+      const [sidebarPayload, pluginPaymentsResult] = await Promise.all([sidebarPromise, paymentsPromise]);
       sidebarData = normalizeSidebarPayload(sidebarPayload);
+      pluginPaymentsFailures = asArray(pluginPaymentsResult?.failures);
+      pluginPaymentsSuccessCount = Number(pluginPaymentsResult?.successCount) || 0;
 
-      if (paymentsPayload) {
-        payments = collection(paymentsPayload, ['payments', 'data']).map(normalizePayment);
+      if (Array.isArray(pluginPaymentsResult?.payments) && pluginPaymentsResult.payments.length) {
+        payments = pluginPaymentsResult.payments;
       }
       if (!payments.length && sidebarData?.recentPayments?.length) {
         payments = sidebarData.recentPayments.map(normalizePayment);
@@ -652,11 +734,13 @@ module.exports = async function handler(req, res) {
       }
 
       const warnings = [];
-      if (!PRIVATE_KEY) {
+      if (!PRIVATE_KEYS.length) {
         warnings.push('TEBEX_PRIVATE_KEY non configurato: classifica donatori e acquisti recenti dipendono solo dalla sidebar Tebex.');
       }
-      if (pluginPaymentsError) {
-        warnings.push('Impossibile leggere i pagamenti da plugin.tebex.io: controlla TEBEX_PRIVATE_KEY e permessi API.');
+      if (pluginPaymentsFailures.length && pluginPaymentsSuccessCount === 0) {
+        warnings.push('Impossibile leggere i pagamenti da plugin.tebex.io: controlla la Secret Key in Integrations > Game Servers.');
+      } else if (pluginPaymentsFailures.length) {
+        warnings.push('Alcune Secret Key Tebex non hanno risposto correttamente: sto usando solo quelle valide.');
       }
       if (sidebarError) {
         warnings.push('Impossibile leggere la sidebar Tebex: controlla TEBEX_WEBSTORE_TOKEN/TEBEX_PUBLIC_TOKEN.');
@@ -675,7 +759,7 @@ module.exports = async function handler(req, res) {
         recentPurchases,
         sources: {
           headless: true,
-          pluginPayments: Boolean(paymentsPayload),
+          pluginPayments: pluginPaymentsSuccessCount > 0,
           sidebar: Boolean(sidebarPayload)
         }
       };
@@ -683,9 +767,12 @@ module.exports = async function handler(req, res) {
       if (warnings.length) response.warnings = warnings;
       if (debugMode) {
         response.diagnostics = {
-          hasPrivateKey: Boolean(PRIVATE_KEY),
+          hasPrivateKey: PRIVATE_KEYS.length > 0,
+          privateKeysConfigured: PRIVATE_KEYS.length,
+          pluginPaymentsSuccessCount,
+          pluginPaymentsFailureCount: pluginPaymentsFailures.length,
+          pluginPaymentsFailures,
           sidebarError,
-          pluginPaymentsError,
           sidebarRecentCount: sidebarData?.recentPayments?.length || 0,
           paymentsCount: payments.length
         };
@@ -695,13 +782,21 @@ module.exports = async function handler(req, res) {
 
     if (queryType === 'payments') {
       const limit = Math.max(1, Math.min(100, Number.parseInt(req.query.limit, 10) || 20));
-      const payload = await tebexFetch(`${PLUGIN_BASE}/payments?limit=${limit}`, {
-        headers: { 'X-Tebex-Secret': PRIVATE_KEY }
-      });
-      const payments = collection(payload, ['payments', 'data']).map(normalizePayment);
+      const pluginPaymentsResult = await fetchPaymentsFromPluginKeys(PRIVATE_KEYS, limit);
+      const payments = pluginPaymentsResult.payments;
       const topDonators = topDonatorsFromPayments(payments, 10);
       res.setHeader('Cache-Control', 'private, max-age=60');
-      return res.status(200).json({ payments, topDonators });
+      return res.status(200).json({
+        payments,
+        topDonators,
+        sources: {
+          pluginPayments: pluginPaymentsResult.successCount > 0,
+          privateKeysConfigured: PRIVATE_KEYS.length
+        },
+        warnings: pluginPaymentsResult.failures.length
+          ? ['Una o piu Secret Key Tebex non valide/non autorizzate.']
+          : []
+      });
     }
 
     return res.status(400).json({

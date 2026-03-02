@@ -65,7 +65,8 @@ nano .env   # <-- inserisci i tuoi token reali
 | `AUTH_SECRET`          | Stringa lunga random per firmare cookie sessione          |
 | `TEBEX_WEBSTORE_TOKEN` | Tebex Dashboard → Headless/Store Token                     |
 | `TEBEX_PUBLIC_TOKEN`   | Tebex Dashboard → API Keys → Public Token                  |
-| `TEBEX_PRIVATE_KEY`    | Tebex Dashboard → API Keys → Private Secret Key            |
+| `TEBEX_PRIVATE_KEY`    | Tebex Dashboard → Integrations → Game Servers → Secret Key |
+| `TEBEX_PRIVATE_KEYS`   | (Opzionale) più Secret Key separate da virgola (multi-server) |
 | `TEBEX_STORE_URL`      | (Opzionale) URL negozio pubblico, es. `https://store.skyfrost.it` |
 | `AUTH_SUCCESS_REDIRECT`| (Opzionale) Redirect post-login, default `/supporto.html`  |
 | `AUTH_LOGIN_REDIRECT`  | (Opzionale) Redirect error login, default `/login.html`    |
