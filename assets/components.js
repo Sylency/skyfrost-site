@@ -13,7 +13,13 @@
   }
 
   function navLink(href, label, active) {
-    return `<li><a href="${href}"${active === href ? ' class="active"' : ''}>${label}</a></li>`;
+    const isActive = active === href;
+    return `<li><a href="${href}"${isActive ? ' class="active" aria-current="page"' : ''}>${label}</a></li>`;
+  }
+
+  function mobileLink(href, label, active) {
+    const isActive = active === href;
+    return `<a href="${href}"${isActive ? ' class="active" aria-current="page"' : ''}>${label}</a>`;
   }
 
   /* ── NAVBAR ── */
@@ -38,7 +44,14 @@
         <a href="supporto.html" class="btn btn-primary btn-sm">Apri Ticket</a>
       </div>
 
-      <button class="nav-hamburger" id="hamburger" aria-label="Menu">
+      <button
+        class="nav-hamburger"
+        id="hamburger"
+        aria-label="Menu"
+        aria-controls="mobile-overlay"
+        aria-expanded="false"
+        aria-haspopup="dialog"
+      >
         <span></span><span></span><span></span>
       </button>
     `;
@@ -48,13 +61,17 @@
     const overlay = document.createElement('div');
     overlay.className = 'nav-mobile-overlay';
     overlay.id = 'mobile-overlay';
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-modal', 'true');
+    overlay.setAttribute('aria-label', 'Menu principale');
+    overlay.hidden = true;
     overlay.innerHTML = `
-      <a href="index.html">Home</a>
-      <a href="store.html">Store</a>
-      <a href="staff.html">Staff</a>
-      <a href="vote.html">Vota</a>
-      <a href="supporto.html">Supporto</a>
-      <a href="wiki.html">Wiki</a>
+      ${mobileLink('index.html', 'Home', active)}
+      ${mobileLink('store.html', 'Store', active)}
+      ${mobileLink('staff.html', 'Staff', active)}
+      ${mobileLink('vote.html', 'Vota', active)}
+      ${mobileLink('supporto.html', 'Supporto', active)}
+      ${mobileLink('wiki.html', 'Wiki', active)}
       <div style="display:flex;gap:.75rem;margin-top:1rem;">
         <a href="login.html"    class="btn btn-ghost">Accedi</a>
         <a href="supporto.html" class="btn btn-primary">Apri Ticket</a>
@@ -62,11 +79,76 @@
     `;
     document.body.appendChild(overlay);
 
-    document.getElementById('hamburger').addEventListener('click', () => {
-      overlay.classList.toggle('open');
+    const hamburger = document.getElementById('hamburger');
+    let lastFocusedElement = null;
+
+    function menuFocusableElements() {
+      return Array.from(overlay.querySelectorAll('a, button, [tabindex]:not([tabindex="-1"])'))
+        .filter((el) => !el.hasAttribute('disabled') && !el.getAttribute('aria-hidden'));
+    }
+
+    function setMenuOpen(isOpen) {
+      overlay.classList.toggle('open', isOpen);
+      overlay.hidden = !isOpen;
+      hamburger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      document.body.style.overflow = isOpen ? 'hidden' : '';
+
+      if (isOpen) {
+        lastFocusedElement = document.activeElement;
+        const first = menuFocusableElements()[0];
+        if (first) first.focus();
+        return;
+      }
+
+      if (lastFocusedElement && typeof lastFocusedElement.focus === 'function') {
+        lastFocusedElement.focus();
+      } else {
+        hamburger.focus();
+      }
+    }
+
+    hamburger.addEventListener('click', () => {
+      setMenuOpen(!overlay.classList.contains('open'));
     });
+
+    overlay.addEventListener('click', (event) => {
+      if (event.target === overlay) setMenuOpen(false);
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (!overlay.classList.contains('open')) return;
+
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        setMenuOpen(false);
+        return;
+      }
+
+      if (event.key !== 'Tab') return;
+      const focusable = menuFocusableElements();
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+        return;
+      }
+      if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    });
+
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 768 && overlay.classList.contains('open')) {
+        setMenuOpen(false);
+      }
+    });
+
     overlay.querySelectorAll('a').forEach(a => {
-      a.addEventListener('click', () => overlay.classList.remove('open'));
+      a.addEventListener('click', () => setMenuOpen(false));
     });
   }
 
@@ -137,7 +219,13 @@
     resize();
     window.addEventListener('resize', resize);
 
-    const COUNT = 70;
+    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const saveData = Boolean(window.navigator?.connection?.saveData);
+    const isSmallScreen = window.matchMedia && window.matchMedia('(max-width: 768px)').matches;
+    const density = (reduceMotion || saveData) ? 0.45 : (isSmallScreen ? 0.75 : 1);
+    const speed = (reduceMotion || saveData) ? 0.55 : 1;
+    const frameDelayMs = saveData ? 42 : (reduceMotion ? 34 : 0);
+    const COUNT = Math.max(24, Math.round(70 * density));
     const particles = Array.from({ length: COUNT }, () => ({
       x: Math.random() * window.innerWidth,
       y: Math.random() * window.innerHeight,
@@ -159,15 +247,25 @@
       ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
 
-    function animate() {
+    let lastFrameAt = 0;
+    function animate(now = 0) {
+      if (frameDelayMs && (now - lastFrameAt) < frameDelayMs) {
+        requestAnimationFrame(animate);
+        return;
+      }
+      lastFrameAt = now;
+      if (document.hidden) {
+        requestAnimationFrame(animate);
+        return;
+      }
       drawBg();
       particles.forEach(p => {
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(94,231,255,${p.alpha})`;
         ctx.fill();
-        p.x += p.vx;
-        p.y += p.vy;
+        p.x += p.vx * speed;
+        p.y += p.vy * speed;
         if (p.y < -5) {
           p.y = canvas.height + 5;
           p.x = Math.random() * canvas.width;

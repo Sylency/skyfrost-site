@@ -2,8 +2,6 @@
    SKYFROST — MAIN STYLESHEET
    ═══════════════════════════════════════════════ */
 
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Rajdhani:wght@300;400;500;600;700&display=swap');
-
 /* ── RESET & BASE ── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; font-size: 16px; }
@@ -239,7 +237,8 @@ h4, h5, h6, label, button, .btn { font-family: 'Rajdhani', sans-serif; }
   padding: 0.75rem 2rem;
   transition: color var(--transition);
 }
-.nav-mobile-overlay a:hover { color: var(--cyan); }
+.nav-mobile-overlay a:hover,
+.nav-mobile-overlay a.active { color: var(--cyan); }
 
 /* ══════════════════════════════════════════════
    FOOTER
@@ -1181,6 +1180,15 @@ h4, h5, h6, label, button, .btn { font-family: 'Rajdhani', sans-serif; }
 .reveal-delay-1 { transition-delay: 0.1s; }
 .reveal-delay-2 { transition-delay: 0.2s; }
 .reveal-delay-3 { transition-delay: 0.3s; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
 
 /* ══════════════════════════════════════════════
    RESPONSIVE

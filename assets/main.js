@@ -339,6 +339,12 @@ SkyFrost.initStore = async function () {
 
   if (!categoryList || !productGrid) return;
 
+  function categoryHref(cat) {
+    const slug = safeText(cat, 'all');
+    if (slug === 'all') return 'store.html';
+    return `store.html?cat=${encodeURIComponent(slug)}`;
+  }
+
   function renderStoreFeatured(featured, storeUrl) {
     if (!featuredName || !featuredPrice || !featuredPerks || !featuredLink || !featuredMeta) return;
     const fallbackUrl = safeText(storeUrl, WEBSTORE_FALLBACK_URL);
@@ -366,7 +372,7 @@ SkyFrost.initStore = async function () {
       acc[slug] = (acc[slug] || 0) + 1;
       return acc;
     }, {});
-    const allRow = `<li><a href="#" class="active" data-cat="all">🌐 Tutti i prodotti <span class="count">${totalCount}</span></a></li>`;
+    const allRow = `<li><a href="${categoryHref('all')}" class="active" data-cat="all">🌐 Tutti i prodotti <span class="count">${totalCount}</span></a></li>`;
     const merged = new Map();
 
     categoryRows.forEach((cat) => {
@@ -407,7 +413,7 @@ SkyFrost.initStore = async function () {
       .map((cat) => {
         const icon = categoryIcon(cat.name);
         return `<li>
-        <a href="#" data-cat="${escapeHtml(cat.slug)}">${icon} ${escapeHtml(cat.name)} <span class="count">${cat.count}</span></a>
+        <a href="${categoryHref(cat.slug)}" data-cat="${escapeHtml(cat.slug)}">${icon} ${escapeHtml(cat.name)} <span class="count">${cat.count}</span></a>
       </li>`;
       })
       .join('');
@@ -463,19 +469,32 @@ SkyFrost.initStore = async function () {
     }).join('');
   }
 
-  function bindFilters() {
+  function bindFilters(initialCat = 'all') {
     const links = Array.from(document.querySelectorAll('.sidebar-nav a[data-cat]'));
+    if (!links.length) return;
+
+    const validCats = new Set(links.map((link) => safeText(link.dataset.cat, 'all')));
+
+    function applyFilter(cat, syncUrl) {
+      const currentCat = validCats.has(cat) ? cat : 'all';
+      links.forEach((entry) => entry.classList.toggle('active', safeText(entry.dataset.cat, 'all') === currentCat));
+      document.querySelectorAll('.product-card[data-cat]').forEach((card) => {
+        card.style.display = (currentCat === 'all' || card.dataset.cat === currentCat) ? '' : 'none';
+      });
+      if (syncUrl) {
+        window.history.replaceState({}, '', categoryHref(currentCat));
+      }
+    }
+
     links.forEach((link) => {
       link.addEventListener('click', (e) => {
         e.preventDefault();
         const cat = safeText(link.dataset.cat, 'all');
-        links.forEach((entry) => entry.classList.remove('active'));
-        link.classList.add('active');
-        document.querySelectorAll('.product-card[data-cat]').forEach((card) => {
-          card.style.display = (cat === 'all' || card.dataset.cat === cat) ? '' : 'none';
-        });
+        applyFilter(cat, true);
       });
     });
+
+    applyFilter(safeText(initialCat, 'all'), false);
   }
 
   try {
@@ -489,12 +508,13 @@ SkyFrost.initStore = async function () {
     renderCategories(categories, products);
     renderProducts(products, storeUrl);
     if (totalLabel) totalLabel.textContent = `${products.length} articoli`;
-    bindFilters();
+    const initialCat = safeText(new URLSearchParams(window.location.search).get('cat'), 'all');
+    bindFilters(initialCat);
   } catch (err) {
     console.error('Store Tebex fetch failed:', err);
     if (totalLabel) totalLabel.textContent = '0 articoli';
     renderStoreFeatured(null, WEBSTORE_FALLBACK_URL);
-    categoryList.innerHTML = '<li><a href="#" class="active" data-cat="all">🌐 Tutti i prodotti <span class="count">0</span></a></li>';
+    categoryList.innerHTML = `<li><a href="${categoryHref('all')}" class="active" data-cat="all">🌐 Tutti i prodotti <span class="count">0</span></a></li>`;
     renderProducts([], WEBSTORE_FALLBACK_URL);
     bindFilters();
   }
