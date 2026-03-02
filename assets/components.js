@@ -219,19 +219,13 @@
     resize();
     window.addEventListener('resize', resize);
 
-    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const saveData = Boolean(window.navigator?.connection?.saveData);
-    const isSmallScreen = window.matchMedia && window.matchMedia('(max-width: 768px)').matches;
-    const density = (reduceMotion || saveData) ? 0.45 : (isSmallScreen ? 0.75 : 1);
-    const speed = (reduceMotion || saveData) ? 0.55 : 1;
-    const frameDelayMs = saveData ? 42 : (reduceMotion ? 34 : 0);
-    const COUNT = Math.max(24, Math.round(70 * density));
+    const COUNT = 70;
     const particles = Array.from({ length: COUNT }, () => ({
       x: Math.random() * window.innerWidth,
       y: Math.random() * window.innerHeight,
       r: Math.random() * 1.3 + 0.3,
       vx: (Math.random() - 0.5) * 0.2,
-      vy: -Math.random() * 0.35 - 0.08,
+      vy: Math.random() * 0.35 + 0.08,
       alpha: Math.random() * 0.45 + 0.08
     }));
 
@@ -247,27 +241,17 @@
       ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
 
-    let lastFrameAt = 0;
-    function animate(now = 0) {
-      if (frameDelayMs && (now - lastFrameAt) < frameDelayMs) {
-        requestAnimationFrame(animate);
-        return;
-      }
-      lastFrameAt = now;
-      if (document.hidden) {
-        requestAnimationFrame(animate);
-        return;
-      }
+    function animate() {
       drawBg();
       particles.forEach(p => {
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(94,231,255,${p.alpha})`;
         ctx.fill();
-        p.x += p.vx * speed;
-        p.y += p.vy * speed;
-        if (p.y < -5) {
-          p.y = canvas.height + 5;
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.y > canvas.height + 5) {
+          p.y = -5;
           p.x = Math.random() * canvas.width;
         }
         if (p.x < -5) p.x = canvas.width + 5;
