@@ -175,7 +175,7 @@
         <div class="footer-col">
           <h4>Community</h4>
           <ul>
-            <li><a href="https://discord.com/invite/MfseZ57sPd" target="_blank" rel="noopener noreferrer">Discord</a></li>
+            <li><a href="https://discord.com/invite/MfseZ57sPd" target="_blank" rel="noopener noreferrer">discord.skyfrost.it</a></li>
             <li><a href="supporto.html">Supporto Ticket</a></li>
             <li><a href="login.html">Login Discord</a></li>
           </ul>
@@ -191,7 +191,10 @@
         </div>
       </div>
       <div class="footer-bottom" style="margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--border);max-width:1200px;margin-left:auto;margin-right:auto;display:flex;align-items:center;justify-content:space-between;">
-        <span class="footer-copy">© 2026 SkyFrost — Tutti i diritti riservati</span>
+        <div class="footer-legal">
+          <span class="footer-copy">© 2026 SkyFrost — Tutti i diritti riservati</span>
+          <span class="footer-disclaimer">Questo sito non e affiliato ad Hypixel Studios.</span>
+        </div>
         <div class="footer-social">
           <a href="https://discord.com/invite/MfseZ57sPd" target="_blank" rel="noopener noreferrer" title="Discord">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
