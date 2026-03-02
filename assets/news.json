@@ -1,0 +1,53 @@
+{
+  "updatedAt": "2026-03-02",
+  "items": [
+    {
+      "badge": "Aggiornamento",
+      "badgeClass": "badge-cyan",
+      "title": "Benvenuto sul nuovo sito di SkyFrost!",
+      "description": "Abbiamo completamente rinnovato il portale. Nuova UI, store migliorato, pagina staff aggiornata e dashboard interattiva.",
+      "author": "SkyFrostOwner",
+      "date": "2026-02-20"
+    },
+    {
+      "badge": "Patch 1.3",
+      "badgeClass": "badge-cyan",
+      "title": "Nuove zone e bilanciamento classi",
+      "description": "Tre nuove zone esplorabili, decine di mob inediti e sistema di bilanciamento per le classi. Nuovi boss e drop esclusivi.",
+      "author": "CodeFrost",
+      "date": "2026-02-18"
+    },
+    {
+      "badge": "Evento",
+      "badgeClass": "badge-gold",
+      "title": "Evento Primavera — Ricompense esclusive",
+      "description": "Quest stagionali, fiori rari e cosmetic esclusivi disponibili solo per un periodo limitato. Non perdere l'occasione!",
+      "author": "ArcticAdmin",
+      "date": "2026-02-15"
+    },
+    {
+      "badge": "Manutenzione",
+      "badgeClass": "badge-green",
+      "title": "Manutenzione programmata — 5 marzo",
+      "description": "Il server sarà offline dalle 03:00 alle 05:00 per aggiornamenti infrastrutturali. Ci scusiamo per il disagio.",
+      "author": "SkyFrostOwner",
+      "date": "2026-02-10"
+    },
+    {
+      "badge": "Sistema",
+      "badgeClass": "badge-cyan",
+      "title": "Nuovo sistema di crafting introdotto",
+      "description": "Il rework del crafting è ora live: ricette più intuitive, materiali ribilanciati e nuovi oggetti leggendari.",
+      "author": "CodeFrost",
+      "date": "2026-02-08"
+    },
+    {
+      "badge": "Evento",
+      "badgeClass": "badge-gold",
+      "title": "Torneo PvP — Iscrizioni aperte",
+      "description": "Il primo torneo PvP ufficiale di SkyFrost è ufficialmente aperto. Premi esclusivi per i top 3.",
+      "author": "ArcticAdmin",
+      "date": "2026-02-05"
+    }
+  ]
+}

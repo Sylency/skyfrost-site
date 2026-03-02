@@ -184,4 +184,33 @@ data-vote-url="https://hytale-italia.com/servers/skyfrost"
 
 ---
 
+## 📰 News Home da JSON
+
+La sezione **Annunci** in `index.html` viene popolata da `assets/news.json`.
+
+Formato base:
+```json
+{
+  "updatedAt": "2026-03-02",
+  "items": [
+    {
+      "badge": "Aggiornamento",
+      "badgeClass": "badge-cyan",
+      "title": "Titolo annuncio",
+      "description": "Testo breve dell'annuncio",
+      "author": "NomeStaff",
+      "date": "2026-03-02"
+    }
+  ]
+}
+```
+
+Campi supportati:
+- `badgeClass`: `badge-cyan`, `badge-gold`, `badge-green`, `badge-red`, `badge-dim`
+- `date`: formato `YYYY-MM-DD` (viene formattata automaticamente lato frontend)
+
+Se `assets/news.json` non è disponibile o vuoto, il sito usa un fallback locale.
+
+---
+
 *SkyFrost © 2026*

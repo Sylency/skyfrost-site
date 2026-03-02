@@ -13,6 +13,7 @@ window.SkyFrost = window.SkyFrost || {};
  */
 const API_BASE = '/api';
 const WEBSTORE_FALLBACK_URL = 'https://store.skyfrost.it';
+const NEWS_JSON_URL = '/assets/news.json';
 const AUTH_API = `${API_BASE}/auth`;
 const TICKETS_API = `${API_BASE}/tickets`;
 const STATUS_API = `${API_BASE}/status`;
@@ -31,6 +32,57 @@ const CATEGORY_ICONS = {
   pet: '🐾',
   default: '❄️'
 };
+
+const FALLBACK_INDEX_NEWS = [
+  {
+    badge: 'Aggiornamento',
+    badgeClass: 'badge-cyan',
+    title: 'Benvenuto sul nuovo sito di SkyFrost!',
+    description: 'Abbiamo completamente rinnovato il portale. Nuova UI, store migliorato, pagina staff aggiornata e dashboard interattiva.',
+    author: 'SkyFrostOwner',
+    date: '2026-02-20'
+  },
+  {
+    badge: 'Patch 1.3',
+    badgeClass: 'badge-cyan',
+    title: 'Nuove zone e bilanciamento classi',
+    description: 'Tre nuove zone esplorabili, decine di mob inediti e sistema di bilanciamento per le classi. Nuovi boss e drop esclusivi.',
+    author: 'CodeFrost',
+    date: '2026-02-18'
+  },
+  {
+    badge: 'Evento',
+    badgeClass: 'badge-gold',
+    title: 'Evento Primavera — Ricompense esclusive',
+    description: "Quest stagionali, fiori rari e cosmetic esclusivi disponibili solo per un periodo limitato. Non perdere l'occasione!",
+    author: 'ArcticAdmin',
+    date: '2026-02-15'
+  },
+  {
+    badge: 'Manutenzione',
+    badgeClass: 'badge-green',
+    title: 'Manutenzione programmata — 5 marzo',
+    description: 'Il server sarà offline dalle 03:00 alle 05:00 per aggiornamenti infrastrutturali. Ci scusiamo per il disagio.',
+    author: 'SkyFrostOwner',
+    date: '2026-02-10'
+  },
+  {
+    badge: 'Sistema',
+    badgeClass: 'badge-cyan',
+    title: 'Nuovo sistema di crafting introdotto',
+    description: 'Il rework del crafting è ora live: ricette più intuitive, materiali ribilanciati e nuovi oggetti leggendari.',
+    author: 'CodeFrost',
+    date: '2026-02-08'
+  },
+  {
+    badge: 'Evento',
+    badgeClass: 'badge-gold',
+    title: 'Torneo PvP — Iscrizioni aperte',
+    description: 'Il primo torneo PvP ufficiale di SkyFrost è ufficialmente aperto. Premi esclusivi per i top 3.',
+    author: 'ArcticAdmin',
+    date: '2026-02-05'
+  }
+];
 
 function safeText(value, fallback = '') {
   if (value === null || value === undefined) return fallback;
@@ -164,6 +216,66 @@ function packagePerks(pkg) {
   return [truncate(desc, 120)];
 }
 
+function chunkArray(items, size) {
+  const out = [];
+  for (let i = 0; i < items.length; i += size) {
+    out.push(items.slice(i, i + size));
+  }
+  return out;
+}
+
+function authorInitials(value) {
+  const text = safeText(value, '');
+  if (!text) return 'SF';
+  const words = text.split(/\s+/).filter(Boolean);
+  if (words.length >= 2) {
+    return `${words[0][0]}${words[1][0]}`.toUpperCase();
+  }
+  return text.slice(0, 2).toUpperCase();
+}
+
+function normalizeBadgeClass(value) {
+  const raw = safeText(value, 'badge-cyan');
+  const allowed = new Set(['badge-cyan', 'badge-gold', 'badge-green', 'badge-red', 'badge-dim']);
+  return allowed.has(raw) ? raw : 'badge-cyan';
+}
+
+function newsItemsFromPayload(payload) {
+  if (Array.isArray(payload)) return payload;
+  if (Array.isArray(payload?.items)) return payload.items;
+  return [];
+}
+
+function normalizeNewsItem(raw, index = 0) {
+  const author = safeText(raw?.author, 'SkyFrost');
+  const dateLabel = safeText(raw?.dateLabel, formatDate(raw?.date));
+
+  return {
+    badge: safeText(raw?.badge, 'Aggiornamento'),
+    badgeClass: normalizeBadgeClass(raw?.badgeClass),
+    title: safeText(raw?.title, `Annuncio ${index + 1}`),
+    description: safeText(raw?.description, 'Nuovo aggiornamento disponibile.'),
+    author,
+    authorInitials: safeText(raw?.authorInitials, authorInitials(author)),
+    dateLabel: safeText(dateLabel, '-')
+  };
+}
+
+function renderNewsCard(newsItem) {
+  return `<article class="card news-card card-body">
+    <span class="badge ${escapeHtml(newsItem.badgeClass)}">${escapeHtml(newsItem.badge)}</span>
+    <h3>${escapeHtml(newsItem.title)}</h3>
+    <p>${escapeHtml(newsItem.description)}</p>
+    <div class="news-meta">
+      <div class="news-author">
+        <div class="author-avatar">${escapeHtml(newsItem.authorInitials)}</div>
+        <span>${escapeHtml(newsItem.author)}</span>
+      </div>
+      <span>${escapeHtml(newsItem.dateLabel)}</span>
+    </div>
+  </article>`;
+}
+
 SkyFrost.fetchTebex = async function (type, params = {}) {
   const query = new URLSearchParams({ type, ...params });
   const res = await fetch(`${API_BASE}/tebex?${query.toString()}`);
@@ -217,27 +329,94 @@ SkyFrost.initIndex = function () {
   document.getElementById('copy-ip-btn')?.addEventListener('click', () => {
     void SkyFrost.copyIP();
   });
+  void SkyFrost.initIndexNews();
+  SkyFrost.loadIndexStoreData();
+};
 
-  const pages = document.querySelectorAll('.news-page');
-  const dots   = document.querySelectorAll('.page-dot');
+SkyFrost.fetchNews = async function () {
+  const res = await fetch(NEWS_JSON_URL, { cache: 'no-store' });
+  let payload = {};
+  try {
+    payload = await res.json();
+  } catch {
+    payload = {};
+  }
+  if (!res.ok) {
+    throw new Error(`HTTP ${res.status}`);
+  }
+  return newsItemsFromPayload(payload)
+    .map((entry, index) => normalizeNewsItem(entry, index))
+    .filter((entry) => safeText(entry.title, '') && safeText(entry.description, ''));
+};
+
+SkyFrost.initIndexNews = async function () {
+  const pagesWrap = document.getElementById('index-news-pages');
+  const dotsWrap = document.getElementById('news-dots');
+  const pagination = document.getElementById('news-pagination');
+  const prevBtn = document.getElementById('news-prev');
+  const nextBtn = document.getElementById('news-next');
+
+  if (!pagesWrap || !dotsWrap || !pagination || !prevBtn || !nextBtn) return;
+
+  let pages = [];
+  let dots = [];
   let current = 0;
 
-  function showPage(n) {
-    pages.forEach((p, i) => { p.style.display = i === n ? '' : 'none'; });
-    dots.forEach((d, i) => { d.classList.toggle('active', i === n); });
-    current = n;
+  function showPage(index) {
+    if (!pages.length) return;
+    const nextIndex = (index + pages.length) % pages.length;
+    pages.forEach((page, i) => { page.style.display = i === nextIndex ? '' : 'none'; });
+    dots.forEach((dot, i) => { dot.classList.toggle('active', i === nextIndex); });
+    current = nextIndex;
   }
 
-  document.getElementById('news-prev')?.addEventListener('click', () => {
-    showPage((current - 1 + pages.length) % pages.length);
-  });
-  document.getElementById('news-next')?.addEventListener('click', () => {
-    showPage((current + 1) % pages.length);
-  });
-  dots.forEach((d, i) => d.addEventListener('click', () => showPage(i)));
-  if (pages.length) showPage(0);
+  function render(newsItems) {
+    const rows = Array.isArray(newsItems) && newsItems.length
+      ? newsItems
+      : [normalizeNewsItem({
+        badge: 'Avviso',
+        badgeClass: 'badge-dim',
+        title: 'Nessun annuncio disponibile',
+        description: 'Aggiungi contenuti in assets/news.json per mostrare le news in home.',
+        author: 'SkyFrost'
+      })];
 
-  SkyFrost.loadIndexStoreData();
+    const chunked = chunkArray(rows, 3);
+    pagesWrap.innerHTML = chunked.map((chunk, pageIndex) => `<div class="news-page"${pageIndex === 0 ? '' : ' style="display:none;"'}>
+      <div class="grid-3">${chunk.map((item) => renderNewsCard(item)).join('')}</div>
+    </div>`).join('');
+
+    dotsWrap.innerHTML = chunked.map((_, idx) => `<button
+      class="page-dot${idx === 0 ? ' active' : ''}"
+      type="button"
+      aria-label="Pagina news ${idx + 1}"
+      style="width:8px;height:8px;border-radius:50%;border:none;background:var(--border);cursor:pointer;transition:background .2s;"
+    ></button>`).join('');
+
+    pages = Array.from(pagesWrap.querySelectorAll('.news-page'));
+    dots = Array.from(dotsWrap.querySelectorAll('.page-dot'));
+    dots.forEach((dot, idx) => {
+      dot.addEventListener('click', () => showPage(idx));
+    });
+
+    const multiplePages = pages.length > 1;
+    pagination.style.display = multiplePages ? 'flex' : 'none';
+    prevBtn.disabled = !multiplePages;
+    nextBtn.disabled = !multiplePages;
+    showPage(0);
+  }
+
+  prevBtn.onclick = () => showPage(current - 1);
+  nextBtn.onclick = () => showPage(current + 1);
+
+  try {
+    const newsItems = await SkyFrost.fetchNews();
+    if (!newsItems.length) throw new Error('Nessuna news valida trovata');
+    render(newsItems);
+  } catch (err) {
+    console.warn('News feed fallback:', err);
+    render(FALLBACK_INDEX_NEWS.map((item, index) => normalizeNewsItem(item, index)));
+  }
 };
 
 SkyFrost.loadIndexStoreData = async function () {

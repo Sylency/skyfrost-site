@@ -92,91 +92,30 @@
         <a href="wiki.html" class="section-link">Tutti →</a>
       </div>
 
-      <!-- Page 1 -->
-      <div class="news-page">
-        <div class="grid-3">
-
-          <article class="card news-card card-body">
-            <span class="badge badge-cyan">Aggiornamento</span>
-            <h3>Benvenuto sul nuovo sito di SkyFrost!</h3>
-            <p>Abbiamo completamente rinnovato il portale. Nuova UI, store migliorato, pagina staff aggiornata e dashboard interattiva.</p>
-            <div class="news-meta">
-              <div class="news-author">
-                <div class="author-avatar">SF</div>
-                <span>SkyFrostOwner</span>
+      <div id="index-news-pages">
+        <div class="news-page">
+          <div class="grid-3">
+            <article class="card news-card card-body">
+              <span class="badge badge-cyan">Caricamento</span>
+              <h3>Carico gli annunci...</h3>
+              <p>Sto leggendo le ultime news da <code>assets/news.json</code>.</p>
+              <div class="news-meta">
+                <div class="news-author">
+                  <div class="author-avatar">SF</div>
+                  <span>SkyFrost</span>
+                </div>
+                <span>Adesso</span>
               </div>
-              <span>20 feb 2026</span>
-            </div>
-          </article>
-
-          <article class="card news-card card-body">
-            <span class="badge badge-cyan">Patch 1.3</span>
-            <h3>Nuove zone e bilanciamento classi</h3>
-            <p>Tre nuove zone esplorabili, decine di mob inediti e sistema di bilanciamento per le classi. Nuovi boss e drop esclusivi.</p>
-            <div class="news-meta">
-              <div class="news-author">
-                <div class="author-avatar">CF</div>
-                <span>CodeFrost</span>
-              </div>
-              <span>18 feb 2026</span>
-            </div>
-          </article>
-
-          <article class="card news-card card-body">
-            <span class="badge badge-gold">Evento</span>
-            <h3>Evento Primavera — Ricompense esclusive</h3>
-            <p>Quest stagionali, fiori rari e cosmetic esclusivi disponibili solo per un periodo limitato. Non perdere l'occasione!</p>
-            <div class="news-meta">
-              <div class="news-author">
-                <div class="author-avatar">AA</div>
-                <span>ArcticAdmin</span>
-              </div>
-              <span>15 feb 2026</span>
-            </div>
-          </article>
-
+            </article>
+          </div>
         </div>
-      </div><!-- /page1 -->
-
-      <!-- Page 2 -->
-      <div class="news-page" style="display:none;">
-        <div class="grid-3">
-          <article class="card news-card card-body">
-            <span class="badge badge-green">Manutenzione</span>
-            <h3>Manutenzione programmata — 5 marzo</h3>
-            <p>Il server sarà offline dalle 03:00 alle 05:00 per aggiornamenti infrastrutturali. Ci scusiamo per il disagio.</p>
-            <div class="news-meta">
-              <div class="news-author"><div class="author-avatar">SF</div><span>SkyFrostOwner</span></div>
-              <span>10 feb 2026</span>
-            </div>
-          </article>
-          <article class="card news-card card-body">
-            <span class="badge badge-cyan">Sistema</span>
-            <h3>Nuovo sistema di crafting introdotto</h3>
-            <p>Il rework del crafting è ora live: ricette più intuitive, materiali ribilanciati e nuovi oggetti leggendari.</p>
-            <div class="news-meta">
-              <div class="news-author"><div class="author-avatar">CF</div><span>CodeFrost</span></div>
-              <span>8 feb 2026</span>
-            </div>
-          </article>
-          <article class="card news-card card-body">
-            <span class="badge badge-gold">Evento</span>
-            <h3>Torneo PvP — Iscrizioni aperte</h3>
-            <p>Il primo torneo PvP ufficiale di SkyFrost è ufficialmente aperto. Premi esclusivi per i top 3.</p>
-            <div class="news-meta">
-              <div class="news-author"><div class="author-avatar">AA</div><span>ArcticAdmin</span></div>
-              <span>5 feb 2026</span>
-            </div>
-          </article>
-        </div>
-      </div><!-- /page2 -->
+      </div>
 
       <!-- Pagination -->
-      <div style="display:flex;align-items:center;justify-content:center;gap:1.5rem;margin-top:2rem;">
+      <div id="news-pagination" style="display:flex;align-items:center;justify-content:center;gap:1.5rem;margin-top:2rem;">
         <button id="news-prev" class="btn btn-ghost btn-sm">‹ Prec</button>
-        <div style="display:flex;gap:.5rem;">
-          <button class="page-dot" style="width:8px;height:8px;border-radius:50%;border:none;background:var(--cyan);cursor:pointer;transition:background .2s;"></button>
-          <button class="page-dot" style="width:8px;height:8px;border-radius:50%;border:none;background:var(--border);cursor:pointer;transition:background .2s;"></button>
+        <div id="news-dots" style="display:flex;gap:.5rem;">
+          <button class="page-dot active" aria-label="Pagina news 1" style="width:8px;height:8px;border-radius:50%;border:none;background:var(--cyan);cursor:pointer;transition:background .2s;"></button>
         </div>
         <button id="news-next" class="btn btn-ghost btn-sm">Succ ›</button>
       </div>
