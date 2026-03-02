@@ -6,19 +6,37 @@
 (function () {
   'use strict';
 
+  const ROUTE_PATHS = {
+    home: '/',
+    store: '/store',
+    staff: '/staff',
+    vote: '/vote',
+    supporto: '/supporto',
+    wiki: '/wiki',
+    login: '/login',
+    privacy: '/privacy',
+    cookie: '/cookie',
+    terms: '/terms'
+  };
+
   /* ── ACTIVE PAGE DETECTION ── */
   function getActivePage() {
-    const p = window.location.pathname.split('/').pop() || 'index.html';
-    return p;
+    const cleanedPath = window.location.pathname.replace(/\/+$/, '');
+    if (!cleanedPath) return 'home';
+    const lastSegment = cleanedPath.split('/').pop().toLowerCase();
+    const withoutExt = lastSegment.endsWith('.html') ? lastSegment.slice(0, -5) : lastSegment;
+    return withoutExt === 'index' || !withoutExt ? 'home' : withoutExt;
   }
 
-  function navLink(href, label, active) {
-    const isActive = active === href;
+  function navLink(page, label, active) {
+    const href = ROUTE_PATHS[page] || '/';
+    const isActive = active === page;
     return `<li><a href="${href}"${isActive ? ' class="active" aria-current="page"' : ''}>${label}</a></li>`;
   }
 
-  function mobileLink(href, label, active) {
-    const isActive = active === href;
+  function mobileLink(page, label, active) {
+    const href = ROUTE_PATHS[page] || '/';
+    const isActive = active === page;
     return `<a href="${href}"${isActive ? ' class="active" aria-current="page"' : ''}>${label}</a>`;
   }
 
@@ -28,20 +46,20 @@
     const nav = document.createElement('nav');
     nav.id = 'site-nav';
     nav.innerHTML = `
-      <a class="nav-logo" href="index.html">Sky<span>Frost</span></a>
+      <a class="nav-logo" href="${ROUTE_PATHS.home}">Sky<span>Frost</span></a>
 
       <ul class="nav-links">
-        ${navLink('index.html',     'Home',      active)}
-        ${navLink('store.html',     'Store',     active)}
-        ${navLink('staff.html',     'Staff',     active)}
-        ${navLink('vote.html',      'Vota',      active)}
-        ${navLink('supporto.html',  'Supporto',  active)}
-        ${navLink('wiki.html',      'Wiki',      active)}
+        ${navLink('home',     'Home',      active)}
+        ${navLink('store',    'Store',     active)}
+        ${navLink('staff',    'Staff',     active)}
+        ${navLink('vote',     'Vota',      active)}
+        ${navLink('supporto', 'Supporto',  active)}
+        ${navLink('wiki',     'Wiki',      active)}
       </ul>
 
       <div class="nav-ctas">
-        <a href="login.html"    class="btn btn-ghost btn-sm">Accedi</a>
-        <a href="supporto.html" class="btn btn-primary btn-sm">Apri Ticket</a>
+        <a href="${ROUTE_PATHS.login}" class="btn btn-ghost btn-sm">Accedi</a>
+        <a href="${ROUTE_PATHS.supporto}" class="btn btn-primary btn-sm">Apri Ticket</a>
       </div>
 
       <button
@@ -66,15 +84,15 @@
     overlay.setAttribute('aria-label', 'Menu principale');
     overlay.hidden = true;
     overlay.innerHTML = `
-      ${mobileLink('index.html', 'Home', active)}
-      ${mobileLink('store.html', 'Store', active)}
-      ${mobileLink('staff.html', 'Staff', active)}
-      ${mobileLink('vote.html', 'Vota', active)}
-      ${mobileLink('supporto.html', 'Supporto', active)}
-      ${mobileLink('wiki.html', 'Wiki', active)}
+      ${mobileLink('home', 'Home', active)}
+      ${mobileLink('store', 'Store', active)}
+      ${mobileLink('staff', 'Staff', active)}
+      ${mobileLink('vote', 'Vota', active)}
+      ${mobileLink('supporto', 'Supporto', active)}
+      ${mobileLink('wiki', 'Wiki', active)}
       <div style="display:flex;gap:.75rem;margin-top:1rem;">
-        <a href="login.html"    class="btn btn-ghost">Accedi</a>
-        <a href="supporto.html" class="btn btn-primary">Apri Ticket</a>
+        <a href="${ROUTE_PATHS.login}" class="btn btn-ghost">Accedi</a>
+        <a href="${ROUTE_PATHS.supporto}" class="btn btn-primary">Apri Ticket</a>
       </div>
     `;
     document.body.appendChild(overlay);
@@ -159,33 +177,33 @@
     footer.innerHTML = `
       <div class="footer-inner">
         <div class="footer-brand">
-          <a href="index.html" class="footer-logo">SkyFrost</a>
+          <a href="${ROUTE_PATHS.home}" class="footer-logo">SkyFrost</a>
           <p>Il server Hytale italiano. Entra nel gelo e lascia il tuo segno.</p>
         </div>
         <div class="footer-col">
           <h4>Navigazione</h4>
           <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="store.html">Store</a></li>
-            <li><a href="staff.html">Staff</a></li>
-            <li><a href="vote.html">Vota</a></li>
-            <li><a href="wiki.html">Wiki</a></li>
+            <li><a href="${ROUTE_PATHS.home}">Home</a></li>
+            <li><a href="${ROUTE_PATHS.store}">Store</a></li>
+            <li><a href="${ROUTE_PATHS.staff}">Staff</a></li>
+            <li><a href="${ROUTE_PATHS.vote}">Vota</a></li>
+            <li><a href="${ROUTE_PATHS.wiki}">Wiki</a></li>
           </ul>
         </div>
         <div class="footer-col">
           <h4>Community</h4>
           <ul>
             <li><a href="https://discord.com/invite/MfseZ57sPd" target="_blank" rel="noopener noreferrer">discord.skyfrost.it</a></li>
-            <li><a href="supporto.html">Supporto Ticket</a></li>
-            <li><a href="login.html">Login Discord</a></li>
+            <li><a href="${ROUTE_PATHS.supporto}">Supporto Ticket</a></li>
+            <li><a href="${ROUTE_PATHS.login}">Login Discord</a></li>
           </ul>
         </div>
         <div class="footer-col">
           <h4>Legale</h4>
           <ul>
-            <li><a href="privacy.html">Privacy Policy</a></li>
-            <li><a href="cookie.html">Cookie Policy</a></li>
-            <li><a href="terms.html">Termini di Servizio</a></li>
+            <li><a href="${ROUTE_PATHS.privacy}">Privacy Policy</a></li>
+            <li><a href="${ROUTE_PATHS.cookie}">Cookie Policy</a></li>
+            <li><a href="${ROUTE_PATHS.terms}">Termini di Servizio</a></li>
             <li><a href="sitemap.xml">Sitemap</a></li>
           </ul>
         </div>

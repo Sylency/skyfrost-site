@@ -520,8 +520,8 @@ SkyFrost.initStore = async function () {
 
   function categoryHref(cat) {
     const slug = safeText(cat, 'all');
-    if (slug === 'all') return 'store.html';
-    return `store.html?cat=${encodeURIComponent(slug)}`;
+    if (slug === 'all') return '/store';
+    return `/store?cat=${encodeURIComponent(slug)}`;
   }
 
   function renderStoreFeatured(featured, storeUrl) {
@@ -898,7 +898,7 @@ SkyFrost.initLogin = async function () {
     }
 
     setTimeout(() => {
-      window.location.href = 'supporto.html';
+      window.location.href = '/supporto';
     }, 900);
   } catch (err) {
     console.error('Auth session check failed:', err);
@@ -1075,7 +1075,7 @@ SkyFrost.initVote = function () {
     btn.addEventListener('click', () => {
       const url = (btn.dataset.voteUrl || '').trim();
       if (!url || url.includes('YOUR_SERVER_ID')) {
-        SkyFrost.toast('Link di voto non configurato. Aggiorna gli URL in vote.html.', 'error');
+        SkyFrost.toast('Link di voto non configurato. Aggiorna gli URL nella pagina Vota.', 'error');
         return;
       }
       const popup = window.open(url, '_blank', 'noopener,noreferrer');

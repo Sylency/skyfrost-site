@@ -68,8 +68,8 @@ nano .env   # <-- inserisci i tuoi token reali
 | `TEBEX_PRIVATE_KEY`    | Tebex Dashboard → Integrations → Game Servers → Secret Key |
 | `TEBEX_PRIVATE_KEYS`   | (Opzionale) più Secret Key separate da virgola (multi-server) |
 | `TEBEX_STORE_URL`      | (Opzionale) URL negozio pubblico, es. `https://store.skyfrost.it` |
-| `AUTH_SUCCESS_REDIRECT`| (Opzionale) Redirect post-login, default `/supporto.html`  |
-| `AUTH_LOGIN_REDIRECT`  | (Opzionale) Redirect error login, default `/login.html`    |
+| `AUTH_SUCCESS_REDIRECT`| (Opzionale) Redirect post-login, default `/supporto`  |
+| `AUTH_LOGIN_REDIRECT`  | (Opzionale) Redirect error login, default `/login`    |
 | `DISCORD_REDIRECT_URI` | (Opzionale) callback OAuth, default `<dominio>/api/auth`   |
 | `GAME_SERVER_ADDRESS`  | (Opzionale) indirizzo server gioco, default `play.skyfrost.it` |
 | `SERVER_STATUS_API_URL`| (Opzionale) endpoint status, usa `{server}` nel template URL |
@@ -137,14 +137,30 @@ npm test
 
 ---
 
-## 🌐 Nginx — Proxy /api/*
+## 🌐 Nginx — Clean URLs + Proxy /api/*
 
 Se nginx serve i tuoi file statici, aggiungi questo blocco al tuo config nginx
 (`/etc/nginx/sites-available/skyfrost` o simile):
 
 ```nginx
 server {
-    # ... la tua config esistente ...
+    # ... la tua config esistente (listen/server_name/ssl) ...
+
+    root  /var/www/Sito/skyfrost-site;
+    index index.html;
+
+    # Redirect URL legacy *.html -> URL pulita
+    location = /index.html {
+        return 301 /;
+    }
+    location ~ ^/(.+)\.html$ {
+        return 301 /$1$is_args$args;
+    }
+
+    # URL pulite: /wiki -> /wiki.html, /supporto -> /supporto.html, ecc.
+    location / {
+        try_files $uri $uri/ $uri.html =404;
+    }
 
     # Proxy delle chiamate API verso Express
     location /api/ {

@@ -53,11 +53,11 @@ function ensureAllowedOrigin(req, res) {
 }
 
 function getAuthRedirect() {
-  return normalizedPath(process.env.AUTH_SUCCESS_REDIRECT, '/supporto.html');
+  return normalizedPath(process.env.AUTH_SUCCESS_REDIRECT, '/supporto');
 }
 
 function getLoginRedirect() {
-  return normalizedPath(process.env.AUTH_LOGIN_REDIRECT, '/login.html');
+  return normalizedPath(process.env.AUTH_LOGIN_REDIRECT, '/login');
 }
 
 function buildRedirectUri(req) {
