@@ -9,9 +9,9 @@
   "theme_color": "#060a14",
   "icons": [
     {
-      "src": "/favicon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
+      "src": "/assets/skyfrost-logo.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
       "purpose": "any"
     }
   ]

@@ -1273,7 +1273,7 @@ h4, h5, h6, label, button, .btn { font-family: 'Rajdhani', sans-serif; }
   --radius-lg: 24px;
   --radius-xl: 34px;
   --nav-h: 72px;
-  --brand-logo-url: url('/assets/skyfrost-crest.svg');
+  --brand-logo-url: url('/assets/skyfrost-logo.png');
 }
 
 body {

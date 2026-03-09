@@ -17,12 +17,11 @@
 ├── robots.txt
 ├── sitemap.xml
 ├── site.webmanifest
-├── favicon.svg
 ├── assets/
-│   ├── style.css       ← tutti gli stili
-│   ├── components.js   ← navbar, footer, canvas
-│   ├── main.js         ← logica pagine
-│   └── og-cover.svg    ← preview social
+│   ├── skyfrost-logo.png ← logo principale e favicon
+│   ├── style.css         ← tutti gli stili
+│   ├── components.js     ← navbar, footer, canvas
+│   └── main.js           ← logica pagine
 └── api/
     ├── server.js        ← Express server (porta 3001)
     ├── discord.js       ← GET /api/discord
