@@ -18,7 +18,27 @@
     cookie: '/cookie',
     terms: '/terms'
   };
-  const BRAND_CREST = '/assets/skyfrost-crest.svg';
+  const BRAND_LOGO_PRIMARY = '/assets/skyfrost-logo.png';
+  const BRAND_LOGO_FALLBACK = '/assets/skyfrost-crest.svg';
+
+  function applyBrandLogo(src) {
+    document.documentElement.style.setProperty('--brand-logo-url', `url('${src}')`);
+    document.querySelectorAll('img[data-brand-logo]').forEach((img) => {
+      img.src = src;
+      img.onerror = function () {
+        if (this.dataset.brandFallbackApplied === '1') return;
+        this.dataset.brandFallbackApplied = '1';
+        this.src = BRAND_LOGO_FALLBACK;
+      };
+    });
+  }
+
+  function hydrateBrandLogo() {
+    const probe = new Image();
+    probe.onload = () => applyBrandLogo(BRAND_LOGO_PRIMARY);
+    probe.onerror = () => applyBrandLogo(BRAND_LOGO_FALLBACK);
+    probe.src = `${BRAND_LOGO_PRIMARY}?v=1`;
+  }
 
   /* ── ACTIVE PAGE DETECTION ── */
   function getActivePage() {
@@ -49,7 +69,7 @@
     nav.innerHTML = `
       <a class="nav-logo" href="${ROUTE_PATHS.home}">
         <span class="nav-logo-mark" aria-hidden="true">
-          <img src="${BRAND_CREST}" alt="" />
+          <img data-brand-logo src="${BRAND_LOGO_FALLBACK}" alt="" />
         </span>
         <span class="nav-logo-wordmark">Sky<span>Frost</span></span>
       </a>
@@ -185,7 +205,7 @@
         <div class="footer-brand">
           <a href="${ROUTE_PATHS.home}" class="footer-logo">
             <span class="footer-brand-mark" aria-hidden="true">
-              <img src="${BRAND_CREST}" alt="" />
+              <img data-brand-logo src="${BRAND_LOGO_FALLBACK}" alt="" />
             </span>
             <span class="footer-logo-wordmark">SkyFrost</span>
           </a>
@@ -344,6 +364,7 @@
     initCanvas();
     injectNav();
     injectFooter();
+    hydrateBrandLogo();
     initReveal();
   });
 
