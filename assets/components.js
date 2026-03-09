@@ -18,6 +18,7 @@
     cookie: '/cookie',
     terms: '/terms'
   };
+  const BRAND_CREST = '/assets/skyfrost-crest.svg';
 
   /* ── ACTIVE PAGE DETECTION ── */
   function getActivePage() {
@@ -46,7 +47,12 @@
     const nav = document.createElement('nav');
     nav.id = 'site-nav';
     nav.innerHTML = `
-      <a class="nav-logo" href="${ROUTE_PATHS.home}">Sky<span>Frost</span></a>
+      <a class="nav-logo" href="${ROUTE_PATHS.home}">
+        <span class="nav-logo-mark" aria-hidden="true">
+          <img src="${BRAND_CREST}" alt="" />
+        </span>
+        <span class="nav-logo-wordmark">Sky<span>Frost</span></span>
+      </a>
 
       <ul class="nav-links">
         ${navLink('home',     'Home',      active)}
@@ -177,7 +183,12 @@
     footer.innerHTML = `
       <div class="footer-inner">
         <div class="footer-brand">
-          <a href="${ROUTE_PATHS.home}" class="footer-logo">SkyFrost</a>
+          <a href="${ROUTE_PATHS.home}" class="footer-logo">
+            <span class="footer-brand-mark" aria-hidden="true">
+              <img src="${BRAND_CREST}" alt="" />
+            </span>
+            <span class="footer-logo-wordmark">SkyFrost</span>
+          </a>
           <p>Il server Hytale italiano. Entra nel gelo e lascia il tuo segno.</p>
         </div>
         <div class="footer-col">
@@ -240,25 +251,41 @@
     resize();
     window.addEventListener('resize', resize);
 
-    const COUNT = 70;
+    const COUNT = 88;
     const particles = Array.from({ length: COUNT }, () => ({
       x: Math.random() * window.innerWidth,
       y: Math.random() * window.innerHeight,
-      r: Math.random() * 1.3 + 0.3,
-      vx: (Math.random() - 0.5) * 0.2,
-      vy: Math.random() * 0.35 + 0.08,
-      alpha: Math.random() * 0.45 + 0.08
+      r: Math.random() * 1.7 + 0.35,
+      vx: (Math.random() - 0.5) * 0.28,
+      vy: Math.random() * 0.45 + 0.08,
+      alpha: Math.random() * 0.48 + 0.08
     }));
 
     function drawBg() {
-      const g = ctx.createRadialGradient(
-        canvas.width * 0.5, canvas.height * 0.25, 0,
-        canvas.width * 0.5, canvas.height * 0.25, canvas.width * 0.9
+      const sky = ctx.createLinearGradient(0, 0, 0, canvas.height);
+      sky.addColorStop(0, 'rgba(10,27,62,1)');
+      sky.addColorStop(0.36, 'rgba(5,16,39,1)');
+      sky.addColorStop(1, 'rgba(2,8,21,1)');
+      ctx.fillStyle = sky;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      const aurora = ctx.createRadialGradient(
+        canvas.width * 0.36, canvas.height * 0.12, 0,
+        canvas.width * 0.36, canvas.height * 0.12, canvas.width * 0.62
       );
-      g.addColorStop(0, 'rgba(10,20,50,1)');
-      g.addColorStop(0.45, 'rgba(8,13,26,1)');
-      g.addColorStop(1, 'rgba(5,8,16,1)');
-      ctx.fillStyle = g;
+      aurora.addColorStop(0, 'rgba(120,214,255,0.22)');
+      aurora.addColorStop(0.4, 'rgba(64,126,255,0.12)');
+      aurora.addColorStop(1, 'rgba(4,10,24,0)');
+      ctx.fillStyle = aurora;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      const rim = ctx.createRadialGradient(
+        canvas.width * 0.8, canvas.height * 0.2, 0,
+        canvas.width * 0.8, canvas.height * 0.2, canvas.width * 0.5
+      );
+      rim.addColorStop(0, 'rgba(149,235,255,0.12)');
+      rim.addColorStop(1, 'rgba(4,10,24,0)');
+      ctx.fillStyle = rim;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
 
@@ -267,7 +294,7 @@
       particles.forEach(p => {
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(94,231,255,${p.alpha})`;
+        ctx.fillStyle = `rgba(138,229,255,${p.alpha})`;
         ctx.fill();
         p.x += p.vx;
         p.y += p.vy;
@@ -313,6 +340,7 @@
 
   /* ── INIT ── */
   document.addEventListener('DOMContentLoaded', () => {
+    document.body.dataset.page = getActivePage();
     initCanvas();
     injectNav();
     injectFooter();

@@ -50,30 +50,62 @@
      HERO
 ══════════════════════════════════ -->
 <div class="hero">
-  <p class="hero-eyebrow">⟡ Hytale Server Italiano ⟡</p>
-  <h1 class="hero-title">Sky<span class="glow">Frost</span></h1>
-  <p class="hero-subtitle">Esplora un mondo di ghiaccio eterno. Sfida il destino e lascia il tuo segno sulla tundra.</p>
+  <div class="hero-shell">
+    <div class="hero-copy">
+      <p class="hero-eyebrow">⟡ Hytale Server Italiano ⟡</p>
+      <h1 class="hero-title">Sky<span class="glow">Frost</span></h1>
+      <p class="hero-subtitle">Un'identita glaciale, un logo che domina la scena e un hub pensato per far sembrare il server vivo ancora prima di entrare in gioco.</p>
 
-  <div class="hero-actions">
-    <a href="/login" class="btn btn-cyan btn-lg">Accedi Discord</a>
-    <button type="button" id="copy-ip-btn" class="btn btn-outline btn-lg">
-      <i class="bi bi-hdd-network" aria-hidden="true"></i>
-      <span>play.Skyfrost.it</span>
-    </button>
-    <a href="/store" class="btn btn-ghost btn-lg">Vai allo Store</a>
-  </div>
+      <div class="hero-actions">
+        <a href="/login" class="btn btn-cyan btn-lg">Accedi Discord</a>
+        <button type="button" id="copy-ip-btn" class="btn btn-outline btn-lg">
+          <i class="bi bi-hdd-network" aria-hidden="true"></i>
+          <span>play.Skyfrost.it</span>
+        </button>
+        <a href="/store" class="btn btn-ghost btn-lg">Vai allo Store</a>
+      </div>
 
-  <div class="hero-status">
-    <div class="status-pill">
-      <span class="status-dot online"></span>
-      <span>Server Online &nbsp;—&nbsp; <strong id="online-count">…</strong> giocatori</span>
+      <div class="hero-status">
+        <div class="status-pill">
+          <span class="status-dot online"></span>
+          <span>Server Online &nbsp;—&nbsp; <strong id="online-count">…</strong> giocatori</span>
+        </div>
+        <div class="status-pill">
+          <span class="status-dot online"></span>
+          <span>
+            <i class="bi bi-discord" aria-hidden="true"></i>
+            <a href="https://discord.com/invite/MfseZ57sPd" target="_blank" rel="noopener noreferrer" class="status-pill-link">discord.skyfrost.it</a>
+          </span>
+        </div>
+      </div>
+
+      <div class="hero-trust-row">
+        <div class="hero-trust-card">
+          <span class="hero-trust-label">Frost Core</span>
+          <strong>Direzione visiva coerente tra home, store e supporto.</strong>
+        </div>
+        <div class="hero-trust-card">
+          <span class="hero-trust-label">Community</span>
+          <strong>Discord, ticket e news integrati in un'unica esperienza.</strong>
+        </div>
+        <div class="hero-trust-card">
+          <span class="hero-trust-label">Identity</span>
+          <strong>Logo e dettagli ghiacciati distribuiti nei punti che contano.</strong>
+        </div>
+      </div>
     </div>
-    <div class="status-pill">
-      <span class="status-dot online"></span>
-      <span>
-        <i class="bi bi-discord" aria-hidden="true"></i>
-        <a href="https://discord.com/invite/MfseZ57sPd" target="_blank" rel="noopener noreferrer" class="status-pill-link">discord.skyfrost.it</a>
-      </span>
+
+    <div class="hero-stage" aria-hidden="true">
+      <div class="hero-stage-ring"></div>
+      <img class="hero-stage-logo" src="/assets/skyfrost-crest.svg" alt="" />
+      <div class="hero-stage-card hero-stage-card-top">
+        <span class="hero-stage-label">Dragon Crest</span>
+        <strong>Brand mark ispirato al logo che hai inviato</strong>
+      </div>
+      <div class="hero-stage-card hero-stage-card-bottom">
+        <span class="hero-stage-label">Ice Network</span>
+        <strong>Glow, cristalli e superfici piu forti in tutto il sito</strong>
+      </div>
     </div>
   </div>
 
@@ -145,7 +177,7 @@
                 <li>Caricamento pacchetto in corso...</li>
               </ul>
             </div>
-            <div style="font-size:4rem;opacity:.15;flex-shrink:0;">🌟</div>
+            <img class="featured-crest" src="/assets/skyfrost-crest.svg" alt="Logo SkyFrost" />
           </div>
           <div style="padding:1.5rem;">
             <a href="https://store.skyfrost.it" target="_blank" rel="noopener noreferrer" class="btn btn-cyan btn-block btn-lg" id="index-featured-link">
