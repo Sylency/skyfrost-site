@@ -2351,11 +2351,14 @@ body[data-page='home'] .hero::after {
 
 .hero-title {
   font-size: clamp(4.2rem, 10vw, 8.3rem);
+  line-height: 1.05;
 }
 
 .hero-title .glow,
 .page-hero-title .glow {
-  color: inherit;
+  background: linear-gradient(180deg, #ffffff 0%, #effbff 28%, #c7f4ff 58%, #83ddff 78%, #5f8cff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   text-shadow:
     0 0 22px rgba(139, 238, 255, 0.18),
