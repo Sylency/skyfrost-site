@@ -1438,11 +1438,12 @@ body::after {
 
 .section-title::before {
   content: '';
-  width: 34px;
-  height: 34px;
+  width: 10px;
+  height: 10px;
   flex-shrink: 0;
-  background: var(--brand-logo-url) center/contain no-repeat;
-  filter: drop-shadow(0 8px 14px rgba(139, 238, 255, 0.24));
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(139, 238, 255, 0.9), rgba(74, 137, 255, 0.9));
+  box-shadow: 0 0 12px rgba(139, 238, 255, 0.35);
 }
 
 .section-title::after {
@@ -1657,8 +1658,8 @@ body::after {
   margin: 0 auto;
   padding: calc(var(--nav-h) + 3.75rem) 2rem 3rem;
   display: grid;
-  grid-template-columns: 132px minmax(0, 1fr);
-  gap: 1.7rem;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.2rem;
   align-items: center;
   text-align: left;
 }
@@ -1753,15 +1754,7 @@ body::after {
 .brand-cta-card::after,
 .brand-side-card::after,
 .brand-banner::after {
-  content: '';
-  position: absolute;
-  right: 1rem;
-  bottom: 1rem;
-  width: 88px;
-  height: 88px;
-  background: var(--brand-logo-url) center/contain no-repeat;
-  opacity: 0.06;
-  pointer-events: none;
+  content: none;
 }
 
 .store-featured {
@@ -1770,15 +1763,7 @@ body::after {
 }
 
 .store-featured::after {
-  content: '';
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  width: 180px;
-  height: 180px;
-  background: var(--brand-logo-url) center/contain no-repeat;
-  opacity: 0.11;
-  pointer-events: none;
+  content: none;
 }
 
 .featured-top {
@@ -1831,14 +1816,7 @@ body::after {
 }
 
 .product-img-placeholder::after {
-  content: '';
-  position: absolute;
-  right: 0.9rem;
-  bottom: 0.9rem;
-  width: 70px;
-  height: 70px;
-  background: var(--brand-logo-url) center/contain no-repeat;
-  opacity: 0.08;
+  content: none;
 }
 
 .product-name { font-size: 1.03rem; }
@@ -1871,14 +1849,7 @@ body::after {
 }
 
 .staff-card::after {
-  content: '';
-  position: absolute;
-  top: 0.95rem;
-  right: 0.95rem;
-  width: 64px;
-  height: 64px;
-  background: var(--brand-logo-url) center/contain no-repeat;
-  opacity: 0.05;
+  content: none;
 }
 
 .staff-avatar {
@@ -2134,17 +2105,7 @@ body::after {
 }
 
 body[data-page='home'] .hero::after {
-  content: '';
-  position: absolute;
-  right: -8%;
-  top: 6%;
-  width: min(54vw, 760px);
-  aspect-ratio: 1;
-  background: url('/assets/skyfrost-logo.png') center/contain no-repeat;
-  opacity: 0.05;
-  filter: drop-shadow(0 0 40px rgba(139, 238, 255, 0.16));
-  transform: rotate(-11deg);
-  pointer-events: none;
+  content: none;
 }
 
 .nav-logo-wordmark,
