@@ -321,11 +321,24 @@ module.exports = async function handler(req, res) {
       if (client) {
         const guild = await client.guilds.fetch(GUILD_ID);
         guildStats.total = guild.memberCount;
-        guildStats.online = guild.approximatePresenceCount;
+
+        // `approximatePresenceCount` è valorizzato solo per gilde grandi (>1000 membri).
+        // Per le gilde più piccole, è `null` e dobbiamo contare manualmente.
+        if (guild.approximatePresenceCount) {
+          guildStats.online = guild.approximatePresenceCount;
+        } else {
+          // Fallback per gilde piccole. Richiede gli intent `GUILD_MEMBERS` e `GUILD_PRESENCES`.
+          // Contiamo i membri (non bot) la cui presenza non è 'offline'.
+          const members = await guild.members.fetch({ withPresences: true });
+          guildStats.online = members.filter(
+            (member) => !member.user.bot && member.presence?.status !== 'offline'
+          ).size;
+        }
       }
     } catch (e) {
       // Non blocca la richiesta, i conteggi saranno null.
       // L'errore (es. discord.js non installato) è già loggato da altre parti.
+      console.warn('[/api/discord] Impossibile recuperare le statistiche della gilda:', e.message);
     }
 
     const responseData = {
