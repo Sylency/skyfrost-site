@@ -355,7 +355,6 @@ SkyFrost.loadDiscordStatus = function (el) {
 
 /* ── INDEX PAGE ── */
 SkyFrost.initIndex = function () {
-  SkyFrost.loadServerStatus(document.getElementById('online-count'));
   SkyFrost.loadDiscordStatus(document.getElementById('discord-online-count'));
   document.getElementById('copy-ip-btn')?.addEventListener('click', () => {
     void SkyFrost.copyIP();
