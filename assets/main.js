@@ -1090,7 +1090,7 @@ SkyFrost.initVote = function () {
 
 /* ── COPY IP ── */
 SkyFrost.copyIP = async function () {
-  const ip = 'play.Skyfrost.it';
+  const ip = 'play.skyfrost.it';
   if (!navigator.clipboard || typeof navigator.clipboard.writeText !== 'function') {
     SkyFrost.toast(`Copia manuale: ${ip}`, 'info');
     return;

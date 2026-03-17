@@ -33,6 +33,14 @@ const STAFF_ROLE_GROUPS = [
   { label: 'Staff',     roleIds: ['1463926392071786575'] }
 ];
 
+// Cache in memoria per evitare Rate Limit di Discord
+let internalCache = {
+  data: null,
+  presenceAvailable: false,
+  lastFetch: 0
+};
+const CACHE_TTL_MS = 60 * 1000; // 1 minuto di cache server-side
+
 const ROLE_PRIORITY = Object.fromEntries(
   STAFF_ROLE_GROUPS.map((group, i) => [group.label, i])
 );
@@ -208,6 +216,15 @@ module.exports = async function handler(req, res) {
   }
   if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
 
+  // Controllo Cache in memoria
+  const now = Date.now();
+  if (internalCache.data && (now - internalCache.lastFetch < CACHE_TTL_MS)) {
+    res.setHeader('X-Discord-Presence', internalCache.presenceAvailable ? 'available' : 'missing');
+    res.setHeader('X-Cache-Status', 'HIT');
+    res.setHeader('Cache-Control', 'public, max-age=30');
+    return res.status(200).json(internalCache.data);
+  }
+
   const BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
   if (!BOT_TOKEN) {
     return res.status(500).json({
@@ -297,7 +314,15 @@ module.exports = async function handler(req, res) {
       console.warn('[/api/discord] Presence fetch fallback offline:', presenceErr.message);
     }
 
+    // Aggiornamento Cache
+    internalCache = {
+      data: grouped,
+      presenceAvailable: membersWithPresence > 0,
+      lastFetch: Date.now()
+    };
+
     res.setHeader('X-Discord-Presence', membersWithPresence > 0 ? 'available' : 'missing');
+    res.setHeader('X-Cache-Status', 'MISS');
     res.setHeader('Cache-Control', 'public, max-age=30');
     return res.status(200).json(grouped);
 

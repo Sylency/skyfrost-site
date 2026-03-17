@@ -794,7 +794,7 @@ module.exports = async function handler(req, res) {
           privateKeysConfigured: PRIVATE_KEYS.length
         },
         warnings: pluginPaymentsResult.failures.length
-          ? ['Una o piu Secret Key Tebex non valide/non autorizzate.']
+          ? ['Una o più Secret Key Tebex non valide/non autorizzate.']
           : []
       });
     }
