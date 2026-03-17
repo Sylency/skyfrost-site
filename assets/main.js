@@ -323,9 +323,40 @@ SkyFrost.loadServerStatus = function (el) {
   }, REFRESH_MS);
 };
 
+/* ── DISCORD COUNTER ── */
+SkyFrost.loadDiscordStatus = function (el) {
+  if (!el) return;
+  const REFRESH_MS = 60000; // 1 minuto, come la cache API
+
+  function renderCount(value) {
+    const num = Number(value);
+    el.textContent = Number.isFinite(num) && num >= 0 ? String(Math.floor(num)) : 'N/D';
+  }
+
+  async function refresh() {
+    try {
+      const res = await fetch(`${API_BASE}/discord`, { cache: 'no-store' });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      renderCount(data?.guild?.online);
+    } catch (err) {
+      console.error('Discord status fetch failed:', err);
+      renderCount(null);
+    }
+  }
+
+  renderCount(null);
+  void refresh();
+  setInterval(() => {
+    if (document.hidden) return;
+    void refresh();
+  }, REFRESH_MS);
+};
+
 /* ── INDEX PAGE ── */
 SkyFrost.initIndex = function () {
   SkyFrost.loadServerStatus(document.getElementById('online-count'));
+  SkyFrost.loadDiscordStatus(document.getElementById('discord-online-count'));
   document.getElementById('copy-ip-btn')?.addEventListener('click', () => {
     void SkyFrost.copyIP();
   });
@@ -729,7 +760,8 @@ SkyFrost.initStaff = async function () {
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
       if (data.error) throw new Error(data.error);
-      renderStaff(data);
+      // La risposta ora è { staff: {...}, guild: {...} }. Usiamo data.staff.
+      renderStaff(data.staff || data);
       hasRendered = true;
     } catch (err) {
       console.error('Staff fetch failed:', err);

@@ -314,17 +314,36 @@ module.exports = async function handler(req, res) {
       console.warn('[/api/discord] Presence fetch fallback offline:', presenceErr.message);
     }
 
+    // 5. Statistiche gilda (membri totali/online)
+    let guildStats = { total: null, online: null };
+    try {
+      const client = await getDiscordClient(BOT_TOKEN);
+      if (client) {
+        const guild = await client.guilds.fetch(GUILD_ID);
+        guildStats.total = guild.memberCount;
+        guildStats.online = guild.approximatePresenceCount;
+      }
+    } catch (e) {
+      // Non blocca la richiesta, i conteggi saranno null.
+      // L'errore (es. discord.js non installato) è già loggato da altre parti.
+    }
+
+    const responseData = {
+      staff: grouped,
+      guild: guildStats
+    };
+
     // Aggiornamento Cache
     internalCache = {
-      data: grouped,
-      presenceAvailable: membersWithPresence > 0,
+      data: responseData,
+      presenceAvailable: membersWithPresence > 0 || (guildStats.online !== null),
       lastFetch: Date.now()
     };
 
-    res.setHeader('X-Discord-Presence', membersWithPresence > 0 ? 'available' : 'missing');
+    res.setHeader('X-Discord-Presence', internalCache.presenceAvailable ? 'available' : 'missing');
     res.setHeader('X-Cache-Status', 'MISS');
     res.setHeader('Cache-Control', 'public, max-age=30');
-    return res.status(200).json(grouped);
+    return res.status(200).json(responseData);
 
   } catch (err) {
     if (err?.httpStatus) {
