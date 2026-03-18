@@ -8,6 +8,14 @@
 
 'use strict';
 
+// ── Cattura errori non gestiti per evitare crash silenziosi ──
+process.on('uncaughtException', (err) => {
+  console.error('💀 UNCAUGHT EXCEPTION:', err);
+});
+process.on('unhandledRejection', (reason) => {
+  console.error('💀 UNHANDLED REJECTION:', reason);
+});
+
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
@@ -165,6 +173,18 @@ files.forEach((file) => {
   }
 });
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log('🚀 SkyFrost API running on http://localhost:' + PORT);
+});
+
+server.on('error', (err) => {
+  if (err.code === 'EADDRINUSE') {
+    console.error(`❌ Porta ${PORT} già in uso. Riprovo tra 3 secondi...`);
+    setTimeout(() => {
+      server.close();
+      server.listen(PORT);
+    }, 3000);
+  } else {
+    console.error('❌ Server error:', err);
+  }
 });
