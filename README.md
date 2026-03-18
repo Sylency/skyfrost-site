@@ -70,10 +70,7 @@ nano .env   # <-- inserisci i tuoi token reali
 | `AUTH_SUCCESS_REDIRECT`| (Opzionale) Redirect post-login, default `/supporto`  |
 | `AUTH_LOGIN_REDIRECT`  | (Opzionale) Redirect error login, default `/login`    |
 | `DISCORD_REDIRECT_URI` | (Opzionale) callback OAuth, default `<dominio>/api/auth`   |
-| `GAME_SERVER_ADDRESS`  | (Opzionale) indirizzo server gioco, default `play.skyfrost.it` |
-| `SERVER_STATUS_API_URL`| (Opzionale) endpoint status, usa `{server}` nel template URL |
-| `STATUS_CACHE_TTL_MS`  | (Opzionale) cache endpoint status in millisecondi |
-| `ONLINE_COUNT_FALLBACK`| (Opzionale) fallback player count se provider status non raggiungibile |
+
 | `ALLOWED_ORIGINS`      | (Opzionale) origini CORS consentite, separate da virgola |
 | `API_RATE_WINDOW_MS`   | (Opzionale) finestra rate-limit API (ms) |
 | `API_RATE_MAX`         | (Opzionale) max richieste per IP nella finestra |

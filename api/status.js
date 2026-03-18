@@ -4,7 +4,7 @@ const { applyCors, isAllowedOrigin } = require('./auth-utils.cjs');
 
 const DEFAULT_SERVER_ADDRESS = 'play.skyfrost.it';
 const DEFAULT_STATUS_URL_TEMPLATE = 'https://api.mcsrvstat.us/3/{server}';
-const CACHE_TTL_MS = Math.max(5000, Number.parseInt(process.env.STATUS_CACHE_TTL_MS, 10) || 30000);
+const CACHE_TTL_MS = 30000;
 
 let cachedStatus = null;
 let cacheExpiresAt = 0;
@@ -20,7 +20,7 @@ function asNumber(value) {
 }
 
 function resolveStatusUrl(serverAddress) {
-  const template = safeText(process.env.SERVER_STATUS_API_URL, DEFAULT_STATUS_URL_TEMPLATE);
+  const template = DEFAULT_STATUS_URL_TEMPLATE;
   if (template.includes('{server}')) {
     return template.replace('{server}', encodeURIComponent(serverAddress));
   }
@@ -65,7 +65,7 @@ async function fetchLiveStatus(serverAddress) {
 }
 
 function fallbackStatus(serverAddress, reason = '') {
-  const fallbackOnline = asNumber(process.env.ONLINE_COUNT_FALLBACK);
+  const fallbackOnline = null;
   return {
     ok: false,
     serverAddress,
@@ -87,7 +87,7 @@ module.exports = async function handler(req, res) {
   }
   if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
 
-  const serverAddress = safeText(process.env.GAME_SERVER_ADDRESS, DEFAULT_SERVER_ADDRESS);
+  const serverAddress = DEFAULT_SERVER_ADDRESS;
   const now = Date.now();
   if (cachedStatus && cacheExpiresAt > now) {
     res.setHeader('Cache-Control', `public, max-age=${Math.max(1, Math.floor(CACHE_TTL_MS / 1000))}`);
