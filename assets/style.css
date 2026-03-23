@@ -2515,6 +2515,93 @@ body[data-page='home'] .hero::after {
   background: linear-gradient(145deg, rgba(141, 236, 255, 0.08), rgba(56, 103, 217, 0.08));
 }
 
+/* ══════════════════════════════════════════════
+   LICENSES
+══════════════════════════════════════════════ */
+.license-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.license-table thead th {
+  font-family: 'Oxanium', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding: 0.75rem 0.8rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+.license-table tbody td {
+  padding: 0.7rem 0.8rem;
+  border-bottom: 1px solid rgba(94,231,255,0.05);
+  vertical-align: middle;
+}
+.license-table tbody tr:hover {
+  background: rgba(94,231,255,0.03);
+}
+.license-table tbody tr.license-revoked {
+  opacity: 0.55;
+}
+.license-key-cell {
+  font-family: 'Oxanium', sans-serif;
+  font-size: 0.78rem;
+  color: var(--cyan);
+  background: rgba(94,231,255,0.06);
+  padding: 0.2rem 0.55rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(94,231,255,0.12);
+  word-break: break-all;
+}
+.license-key-display {
+  font-family: 'Oxanium', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--cyan);
+  background: rgba(94,231,255,0.08);
+  padding: 0.45rem 0.9rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(94,231,255,0.18);
+  letter-spacing: 0.08em;
+}
+.license-result {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+}
+.license-result-icon {
+  font-size: 1.4rem;
+  flex-shrink: 0;
+  line-height: 1;
+  margin-top: 0.1rem;
+}
+.license-valid {
+  background: rgba(74,222,128,0.06);
+  border-color: rgba(74,222,128,0.18);
+}
+.license-invalid {
+  background: rgba(248,113,113,0.06);
+  border-color: rgba(248,113,113,0.18);
+}
+
+@media (max-width: 768px) {
+  .license-table {
+    font-size: 0.78rem;
+  }
+  .license-table thead th,
+  .license-table tbody td {
+    padding: 0.55rem 0.5rem;
+  }
+  .license-key-cell {
+    font-size: 0.7rem;
+  }
+}
+
 @media (max-width: 1100px) {
   body[data-page='home'] .hero::after {
     right: 50%;

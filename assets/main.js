@@ -1100,6 +1100,323 @@ SkyFrost.initSupport = async function () {
   }
 };
 
+/* ── LICENSES PAGE ── */
+SkyFrost.initLicenses = async function () {
+  const LICENSES_API = `${API_BASE}/licenses`;
+
+  const validateKeyInput = document.getElementById('validate-key');
+  const validateBtn = document.getElementById('validate-btn');
+  const validateResult = document.getElementById('validate-result');
+
+  const authState = document.getElementById('license-auth-state');
+  const secretGate = document.getElementById('admin-secret-gate');
+  const secretInput = document.getElementById('admin-secret-input');
+  const unlockBtn = document.getElementById('admin-unlock-btn');
+  const adminPanel = document.getElementById('admin-panel');
+
+  const genUsername = document.getElementById('gen-username');
+  const genNote = document.getElementById('gen-note');
+  const genBtn = document.getElementById('gen-btn');
+  const genResult = document.getElementById('gen-result');
+  const tableWrap = document.getElementById('license-table-wrap');
+
+  let adminSecret = '';
+
+  /* ── Validate (public) ── */
+  async function validateLicense() {
+    const key = safeText(validateKeyInput?.value, '');
+    if (!key) {
+      SkyFrost.toast('Inserisci una chiave di licenza.', 'error');
+      return;
+    }
+
+    if (validateBtn) {
+      validateBtn.disabled = true;
+      validateBtn.textContent = 'Verifica…';
+    }
+
+    try {
+      const res = await fetch(`${LICENSES_API}?action=validate&key=${encodeURIComponent(key)}`);
+      const data = await res.json();
+
+      if (validateResult) {
+        validateResult.style.display = '';
+        if (data.valid) {
+          validateResult.innerHTML = `
+            <div class="license-result license-valid">
+              <span class="license-result-icon">✅</span>
+              <div>
+                <strong>Licenza valida</strong>
+                <div style="font-size:.82rem;color:var(--text-dim);margin-top:.25rem;">
+                  Username: <strong style="color:var(--frost);">${escapeHtml(data.username)}</strong>
+                  ${data.createdAt ? ` · Creata: ${escapeHtml(formatDate(data.createdAt))}` : ''}
+                </div>
+              </div>
+            </div>`;
+        } else {
+          const reasons = {
+            not_found: 'Licenza non trovata nel sistema.',
+            revoked: `Licenza revocata. Username: ${escapeHtml(data.username || '-')}`
+          };
+          validateResult.innerHTML = `
+            <div class="license-result license-invalid">
+              <span class="license-result-icon">❌</span>
+              <div>
+                <strong>Licenza non valida</strong>
+                <div style="font-size:.82rem;color:var(--text-dim);margin-top:.25rem;">
+                  ${reasons[data.reason] || 'Chiave non riconosciuta.'}
+                </div>
+              </div>
+            </div>`;
+        }
+      }
+    } catch (err) {
+      console.error('License validate failed:', err);
+      SkyFrost.toast(safeText(err.message, 'Errore durante la verifica.'), 'error');
+    } finally {
+      if (validateBtn) {
+        validateBtn.disabled = false;
+        validateBtn.textContent = 'Verifica';
+      }
+    }
+  }
+
+  validateBtn?.addEventListener('click', validateLicense);
+  validateKeyInput?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') validateLicense();
+  });
+
+  /* ── Admin auth ── */
+  function setAuthStatus(message, type = '') {
+    if (!authState) return;
+    authState.textContent = message;
+    authState.classList.remove('error', 'success');
+    if (type === 'error') authState.classList.add('error');
+    if (type === 'success') authState.classList.add('success');
+  }
+
+  async function loadLicenseList() {
+    if (!tableWrap) return;
+    tableWrap.innerHTML = '<p style="color:var(--text-dim);font-size:.85rem;">Caricamento…</p>';
+
+    try {
+      const res = await fetch(`${LICENSES_API}?action=list&adminSecret=${encodeURIComponent(adminSecret)}`, {
+        credentials: 'include'
+      });
+      const data = await res.json();
+
+      if (!res.ok || data.error) {
+        throw new Error(safeText(data.error, `HTTP ${res.status}`));
+      }
+
+      const licenses = Array.isArray(data.licenses) ? data.licenses : [];
+      if (!licenses.length) {
+        tableWrap.innerHTML = '<p style="color:var(--text-dim);font-size:.85rem;padding:.5rem;">Nessuna licenza generata.</p>';
+        return;
+      }
+
+      tableWrap.innerHTML = `
+        <table class="license-table">
+          <thead>
+            <tr>
+              <th>Chiave</th>
+              <th>Username</th>
+              <th>Stato</th>
+              <th>Data</th>
+              <th>Note</th>
+              <th>Azioni</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${licenses.map(l => `<tr class="${l.active ? '' : 'license-revoked'}">
+              <td><code class="license-key-cell">${escapeHtml(l.key)}</code></td>
+              <td>${escapeHtml(l.username)}</td>
+              <td>${l.active
+                ? '<span class="badge badge-green">Attiva</span>'
+                : '<span class="badge badge-red">Revocata</span>'}</td>
+              <td style="font-size:.8rem;color:var(--text-dim);">${escapeHtml(formatDate(l.createdAt))}</td>
+              <td style="font-size:.8rem;color:var(--text-dim);">${escapeHtml(safeText(l.note, '-'))}</td>
+              <td>${l.active
+                ? `<button type="button" class="btn btn-ghost btn-sm license-revoke-btn" data-key="${escapeHtml(l.key)}">Revoca</button>`
+                : `<span style="font-size:.75rem;color:var(--text-muted);">${escapeHtml(formatDate(l.revokedAt))}</span>`}</td>
+            </tr>`).join('')}
+          </tbody>
+        </table>`;
+
+      /* Bind revoke buttons */
+      tableWrap.querySelectorAll('.license-revoke-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const key = btn.dataset.key;
+          if (!confirm(`Revocare la licenza ${key}?`)) return;
+
+          btn.disabled = true;
+          btn.textContent = '…';
+
+          try {
+            const res = await fetch(LICENSES_API, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              credentials: 'include',
+              body: JSON.stringify({ action: 'revoke', key, adminSecret })
+            });
+            const data = await res.json();
+            if (!res.ok || data.error) throw new Error(safeText(data.error, 'Errore revoca'));
+
+            SkyFrost.toast(`Licenza ${key} revocata.`, 'success');
+            await loadLicenseList();
+          } catch (err) {
+            console.error('License revoke failed:', err);
+            SkyFrost.toast(safeText(err.message, 'Errore revoca.'), 'error');
+            btn.disabled = false;
+            btn.textContent = 'Revoca';
+          }
+        });
+      });
+    } catch (err) {
+      console.error('License list failed:', err);
+      tableWrap.innerHTML = `<p style="color:var(--text-dim);font-size:.85rem;padding:.5rem;">Errore: ${escapeHtml(safeText(err.message, 'sconosciuto'))}</p>`;
+    }
+  }
+
+  /* ── Generate ── */
+  async function generateLicense() {
+    const username = safeText(genUsername?.value, '');
+    const note = safeText(genNote?.value, '');
+
+    if (!username) {
+      SkyFrost.toast('Inserisci un username Hytale.', 'error');
+      return;
+    }
+    if (username.length < 2 || username.length > 32) {
+      SkyFrost.toast('Username deve essere tra 2 e 32 caratteri.', 'error');
+      return;
+    }
+
+    if (genBtn) {
+      genBtn.disabled = true;
+      genBtn.textContent = 'Generazione…';
+    }
+
+    try {
+      const res = await fetch(LICENSES_API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ action: 'generate', username, note, adminSecret })
+      });
+      const data = await res.json();
+
+      if (!res.ok || data.error) throw new Error(safeText(data.error, `HTTP ${res.status}`));
+
+      const license = data.license;
+      if (genResult) {
+        genResult.style.display = '';
+        genResult.innerHTML = `
+          <div class="license-result license-valid">
+            <span class="license-result-icon">🔑</span>
+            <div>
+              <strong>Licenza generata!</strong>
+              <div style="margin-top:.35rem;">
+                <code class="license-key-display">${escapeHtml(license.key)}</code>
+                <button type="button" class="btn btn-ghost btn-sm" id="copy-license-key" style="margin-left:.5rem;">📋 Copia</button>
+              </div>
+              <div style="font-size:.8rem;color:var(--text-dim);margin-top:.25rem;">
+                Username: ${escapeHtml(license.username)} · ${escapeHtml(formatDate(license.createdAt))}
+              </div>
+            </div>
+          </div>`;
+        document.getElementById('copy-license-key')?.addEventListener('click', async () => {
+          try {
+            await navigator.clipboard.writeText(license.key);
+            SkyFrost.toast('Chiave copiata negli appunti!', 'success');
+          } catch {
+            SkyFrost.toast(`Copia manuale: ${license.key}`, 'info');
+          }
+        });
+      }
+
+      if (genUsername) genUsername.value = '';
+      if (genNote) genNote.value = '';
+      SkyFrost.toast('Licenza generata con successo!', 'success');
+      await loadLicenseList();
+    } catch (err) {
+      console.error('License generate failed:', err);
+      SkyFrost.toast(safeText(err.message, 'Errore generazione.'), 'error');
+    } finally {
+      if (genBtn) {
+        genBtn.disabled = false;
+        genBtn.textContent = 'Genera Licenza';
+      }
+    }
+  }
+
+  genBtn?.addEventListener('click', generateLicense);
+
+  /* ── Unlock admin ── */
+  async function unlockAdmin() {
+    const secret = safeText(secretInput?.value, '');
+    if (!secret) {
+      SkyFrost.toast('Inserisci il segreto admin.', 'error');
+      return;
+    }
+
+    if (unlockBtn) {
+      unlockBtn.disabled = true;
+      unlockBtn.textContent = 'Verifica…';
+    }
+
+    try {
+      const res = await fetch(`${LICENSES_API}?action=list&adminSecret=${encodeURIComponent(secret)}`, {
+        credentials: 'include'
+      });
+      const data = await res.json();
+
+      if (!res.ok || data.error) {
+        throw new Error(safeText(data.error, 'Segreto non valido'));
+      }
+
+      adminSecret = secret;
+      if (secretGate) secretGate.style.display = 'none';
+      if (adminPanel) adminPanel.style.display = '';
+      setAuthStatus('Pannello admin sbloccato ✅', 'success');
+      SkyFrost.toast('Pannello admin sbloccato!', 'success');
+      await loadLicenseList();
+    } catch (err) {
+      console.error('Admin unlock failed:', err);
+      SkyFrost.toast(safeText(err.message, 'Segreto admin non valido.'), 'error');
+    } finally {
+      if (unlockBtn) {
+        unlockBtn.disabled = false;
+        unlockBtn.textContent = 'Sblocca';
+      }
+    }
+  }
+
+  unlockBtn?.addEventListener('click', unlockAdmin);
+  secretInput?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') unlockAdmin();
+  });
+
+  /* ── Init: check session ── */
+  try {
+    const session = await SkyFrost.fetchAuthSession();
+    if (session.authenticated && session.user) {
+      const displayName = safeText(session.user.displayName, safeText(session.user.username, 'Utente'));
+      setAuthStatus(`Connesso come ${displayName}. Inserisci il segreto admin per continuare.`, 'success');
+      if (secretGate) secretGate.style.display = '';
+    } else {
+      setAuthStatus('Devi effettuare il login Discord per accedere al pannello admin.', 'error');
+      if (secretGate) secretGate.style.display = 'none';
+      if (adminPanel) adminPanel.style.display = 'none';
+    }
+  } catch (err) {
+    console.error('License auth check failed:', err);
+    setAuthStatus('Errore verifica sessione.', 'error');
+    if (secretGate) secretGate.style.display = 'none';
+    if (adminPanel) adminPanel.style.display = 'none';
+  }
+};
+
 /* ── VOTE PAGE ── */
 SkyFrost.initVote = function () {
   document.querySelectorAll('[data-vote-url]').forEach(btn => {

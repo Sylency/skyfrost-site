@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node server.js",
     "test": "node --test tests/*.test.cjs",
-    "check": "node --check server.js && node --check auth.js && node --check tickets.js && node --check discord.js && node --check tebex.js && node --check status.js"
+    "check": "node --check server.js && node --check auth.js && node --check tickets.js && node --check discord.js && node --check tebex.js && node --check status.js && node --check licenses.js"
   },
   "keywords": [],
   "author": "",

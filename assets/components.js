@@ -13,6 +13,7 @@
     vote: '/vote',
     supporto: '/supporto',
     wiki: '/wiki',
+    licenses: '/licenses',
     login: '/login',
     privacy: '/privacy',
     cookie: '/cookie',
@@ -61,6 +62,7 @@
         ${navLink('vote',     'Vota',      active)}
         ${navLink('supporto', 'Supporto',  active)}
         ${navLink('wiki',     'Wiki',      active)}
+        ${navLink('licenses', 'Licenze',   active)}
       </ul>
 
       <div class="nav-ctas">
@@ -96,6 +98,7 @@
       ${mobileLink('vote', 'Vota', active)}
       ${mobileLink('supporto', 'Supporto', active)}
       ${mobileLink('wiki', 'Wiki', active)}
+      ${mobileLink('licenses', 'Licenze', active)}
       <div style="display:flex;gap:.75rem;margin-top:1rem;">
         <a href="${ROUTE_PATHS.login}" class="btn btn-ghost">Accedi</a>
         <a href="${ROUTE_PATHS.supporto}" class="btn btn-primary">Apri Ticket</a>
@@ -199,6 +202,7 @@
             <li><a href="${ROUTE_PATHS.staff}">Staff</a></li>
             <li><a href="${ROUTE_PATHS.vote}">Vota</a></li>
             <li><a href="${ROUTE_PATHS.wiki}">Wiki</a></li>
+            <li><a href="${ROUTE_PATHS.licenses}">Licenze</a></li>
           </ul>
         </div>
         <div class="footer-col">
