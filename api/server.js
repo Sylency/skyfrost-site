@@ -179,11 +179,8 @@ const server = app.listen(PORT, () => {
 
 server.on('error', (err) => {
   if (err.code === 'EADDRINUSE') {
-    console.error(`❌ Porta ${PORT} già in uso. Riprovo tra 3 secondi...`);
-    setTimeout(() => {
-      server.close();
-      server.listen(PORT);
-    }, 3000);
+    console.error(`❌ Porta ${PORT} già in uso. Uscita...`);
+    process.exit(1);
   } else {
     console.error('❌ Server error:', err);
   }
