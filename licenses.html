@@ -87,19 +87,7 @@
         Verifica sessione…
       </div>
 
-      <!-- Admin secret input (shown after Discord login) -->
-      <div id="admin-secret-gate" class="card" style="padding:2rem;display:none;">
-        <p style="color:var(--text-dim);margin-bottom:1rem;font-size:.88rem;">
-          Inserisci il segreto admin per accedere al pannello di gestione licenze.
-        </p>
-        <div style="display:flex;gap:1rem;flex-wrap:wrap;align-items:flex-end;">
-          <div style="flex:1;min-width:260px;">
-            <label for="admin-secret-input" style="display:block;font-size:.78rem;color:var(--text-muted);margin-bottom:.4rem;font-family:'Rajdhani',sans-serif;">Admin Secret</label>
-            <input type="password" id="admin-secret-input" placeholder="Inserisci il segreto admin" class="form-control" style="width:100%;" autocomplete="off" />
-          </div>
-          <button type="button" id="admin-unlock-btn" class="btn btn-cyan">Sblocca</button>
-        </div>
-      </div>
+
 
       <!-- Admin panel (hidden until unlocked) -->
       <div id="admin-panel" style="display:none;">

@@ -17,10 +17,6 @@ function safeText(value, fallback = '') {
   return text || fallback;
 }
 
-function getAdminSecret() {
-  return safeText(process.env.LICENSE_ADMIN_SECRET, '');
-}
-
 /* ── Auth helpers ── */
 
 function getSessionPayload(req) {
@@ -34,12 +30,6 @@ function getSessionPayload(req) {
 function isAdmin(req) {
   const payload = getSessionPayload(req);
   if (!payload) return { ok: false, reason: 'not_authenticated' };
-
-  const adminSecret = getAdminSecret();
-  if (!adminSecret) return { ok: false, reason: 'admin_secret_not_configured' };
-
-  const provided = safeText(req.headers['x-admin-secret'] || req.query.adminSecret || req.body?.adminSecret, '');
-  if (!provided || provided !== adminSecret) return { ok: false, reason: 'invalid_admin_secret' };
 
   return { ok: true, userId: safeText(payload.sub, ''), username: safeText(payload.username, '') };
 }

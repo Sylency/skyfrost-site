@@ -1109,9 +1109,6 @@ SkyFrost.initLicenses = async function () {
   const validateResult = document.getElementById('validate-result');
 
   const authState = document.getElementById('license-auth-state');
-  const secretGate = document.getElementById('admin-secret-gate');
-  const secretInput = document.getElementById('admin-secret-input');
-  const unlockBtn = document.getElementById('admin-unlock-btn');
   const adminPanel = document.getElementById('admin-panel');
 
   const genFingerprint = document.getElementById('gen-fingerprint');
@@ -1120,8 +1117,6 @@ SkyFrost.initLicenses = async function () {
   const genResult = document.getElementById('gen-result');
   const tableWrap = document.getElementById('license-table-wrap');
   const filterStatus = document.getElementById('filter-status');
-
-  let adminSecret = '';
 
   /* ── Validate (public) ── */
   async function validateLicense() {
@@ -1202,7 +1197,7 @@ SkyFrost.initLicenses = async function () {
     tableWrap.innerHTML = '<p style="color:var(--text-dim);font-size:.85rem;">Caricamento…</p>';
 
     const statusFilter = safeText(filterStatus?.value, '');
-    const queryParams = new URLSearchParams({ action: 'list', adminSecret });
+    const queryParams = new URLSearchParams({ action: 'list' });
     if (statusFilter) queryParams.append('status', statusFilter);
 
     try {
@@ -1271,7 +1266,7 @@ SkyFrost.initLicenses = async function () {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               credentials: 'include',
-              body: JSON.stringify({ action: 'approve', fingerprint, adminSecret })
+              body: JSON.stringify({ action: 'approve', fingerprint })
             });
             const data = await res.json();
             if (!res.ok || data.error) throw new Error(safeText(data.error, 'Errore approvazione'));
@@ -1301,7 +1296,7 @@ SkyFrost.initLicenses = async function () {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               credentials: 'include',
-              body: JSON.stringify({ action: 'revoke', fingerprint, adminSecret })
+              body: JSON.stringify({ action: 'revoke', fingerprint })
             });
             const data = await res.json();
             if (!res.ok || data.error) throw new Error(safeText(data.error, 'Errore revoca'));
@@ -1348,7 +1343,7 @@ SkyFrost.initLicenses = async function () {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify({ action: 'insert', fingerprint, hostname, adminSecret })
+        body: JSON.stringify({ action: 'insert', fingerprint, hostname })
       });
       const data = await res.json();
 
@@ -1385,67 +1380,21 @@ SkyFrost.initLicenses = async function () {
 
   genBtn?.addEventListener('click', insertLicense);
 
-  /* ── Unlock admin ── */
-  async function unlockAdmin() {
-    const secret = safeText(secretInput?.value, '');
-    if (!secret) {
-      SkyFrost.toast('Inserisci il segreto admin.', 'error');
-      return;
-    }
-
-    if (unlockBtn) {
-      unlockBtn.disabled = true;
-      unlockBtn.textContent = 'Verifica…';
-    }
-
-    try {
-      const res = await fetch(`${LICENSES_API}?action=list&adminSecret=${encodeURIComponent(secret)}`, {
-        credentials: 'include'
-      });
-      const data = await res.json();
-
-      if (!res.ok || data.error) {
-        throw new Error(safeText(data.error, 'Segreto non valido'));
-      }
-
-      adminSecret = secret;
-      if (secretGate) secretGate.style.display = 'none';
-      if (adminPanel) adminPanel.style.display = '';
-      setAuthStatus('Pannello admin sbloccato ✅', 'success');
-      SkyFrost.toast('Pannello admin sbloccato!', 'success');
-      await loadLicenseList();
-    } catch (err) {
-      console.error('Admin unlock failed:', err);
-      SkyFrost.toast(safeText(err.message, 'Segreto admin non valido.'), 'error');
-    } finally {
-      if (unlockBtn) {
-        unlockBtn.disabled = false;
-        unlockBtn.textContent = 'Sblocca';
-      }
-    }
-  }
-
-  unlockBtn?.addEventListener('click', unlockAdmin);
-  secretInput?.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') unlockAdmin();
-  });
-
   /* ── Init: check session ── */
   try {
     const session = await SkyFrost.fetchAuthSession();
     if (session.authenticated && session.user) {
       const displayName = safeText(session.user.displayName, safeText(session.user.username, 'Utente'));
-      setAuthStatus(`Connesso come ${displayName}. Inserisci il segreto admin per continuare.`, 'success');
-      if (secretGate) secretGate.style.display = '';
+      setAuthStatus(`Connesso come ${displayName}. Pannello admin sbloccato.`, 'success');
+      if (adminPanel) adminPanel.style.display = '';
+      await loadLicenseList();
     } else {
       setAuthStatus('Devi effettuare il login Discord per accedere al pannello admin.', 'error');
-      if (secretGate) secretGate.style.display = 'none';
       if (adminPanel) adminPanel.style.display = 'none';
     }
   } catch (err) {
     console.error('License auth check failed:', err);
     setAuthStatus('Errore verifica sessione.', 'error');
-    if (secretGate) secretGate.style.display = 'none';
     if (adminPanel) adminPanel.style.display = 'none';
   }
 };
