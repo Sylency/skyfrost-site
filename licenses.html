@@ -63,8 +63,8 @@
         </p>
         <div style="display:flex;gap:1rem;flex-wrap:wrap;align-items:flex-end;">
           <div style="flex:1;min-width:260px;">
-            <label for="validate-key" style="display:block;font-size:.78rem;color:var(--text-muted);margin-bottom:.4rem;font-family:'Rajdhani',sans-serif;">Chiave Licenza</label>
-            <input type="text" id="validate-key" placeholder="SF-XXXX-XXXX-XXXX-XXXX" class="form-control" style="width:100%;" autocomplete="off" spellcheck="false" />
+            <label for="validate-key" style="display:block;font-size:.78rem;color:var(--text-muted);margin-bottom:.4rem;font-family:'Rajdhani',sans-serif;">Fingerprint Licenza</label>
+            <input type="text" id="validate-key" placeholder="Inserisci il fingerprint SHA-256" class="form-control" style="width:100%;" autocomplete="off" spellcheck="false" />
           </div>
           <button type="button" id="validate-btn" class="btn btn-cyan">Verifica</button>
         </div>
@@ -104,28 +104,36 @@
       <!-- Admin panel (hidden until unlocked) -->
       <div id="admin-panel" style="display:none;">
 
-        <!-- Generate license form -->
+        <!-- Insert license form -->
         <div class="card" style="padding:2rem;margin-bottom:1.5rem;">
           <h3 style="font-family:'Cinzel',serif;color:var(--frost);font-size:1.05rem;margin-bottom:1.25rem;">
-            ✨ Genera Nuova Licenza
+            ✨ Inserisci Nuova Licenza
           </h3>
           <div style="display:flex;gap:1rem;flex-wrap:wrap;align-items:flex-end;">
             <div style="flex:1;min-width:200px;">
-              <label for="gen-username" style="display:block;font-size:.78rem;color:var(--text-muted);margin-bottom:.4rem;font-family:'Rajdhani',sans-serif;">Username Hytale *</label>
-              <input type="text" id="gen-username" placeholder="NomePlayer" class="form-control" style="width:100%;" autocomplete="off" maxlength="32" />
+              <label for="gen-fingerprint" style="display:block;font-size:.78rem;color:var(--text-muted);margin-bottom:.4rem;font-family:'Rajdhani',sans-serif;">Fingerprint *</label>
+              <input type="text" id="gen-fingerprint" placeholder="Dal ticket" class="form-control" style="width:100%;" autocomplete="off" maxlength="64" />
             </div>
-            <div style="flex:1;min-width:200px;">
-              <label for="gen-note" style="display:block;font-size:.78rem;color:var(--text-muted);margin-bottom:.4rem;font-family:'Rajdhani',sans-serif;">Note (opzionale)</label>
-              <input type="text" id="gen-note" placeholder="Es. licenza beta tester" class="form-control" style="width:100%;" autocomplete="off" maxlength="200" />
+            <div style="flex:1;min-width:150px;">
+              <label for="gen-hostname" style="display:block;font-size:.78rem;color:var(--text-muted);margin-bottom:.4rem;font-family:'Rajdhani',sans-serif;">Hostname (opzionale)</label>
+              <input type="text" id="gen-hostname" placeholder="Es. play.server.it" class="form-control" style="width:100%;" autocomplete="off" maxlength="255" />
             </div>
-            <button type="button" id="gen-btn" class="btn btn-cyan">Genera Licenza</button>
+            <button type="button" id="gen-btn" class="btn btn-cyan">Inserisci</button>
           </div>
           <div id="gen-result" style="margin-top:1rem;display:none;"></div>
         </div>
 
         <!-- License table -->
         <div class="card" style="overflow-x:auto;">
-          <div class="card-header-bar">📋 Licenze Generate</div>
+          <div class="card-header-bar" style="display:flex; justify-content:space-between; align-items:center;">
+             📋 Licenze Registrate
+             <select id="filter-status" class="form-control" style="padding:0.2rem 0.5rem; font-size:0.8rem; height:auto; background:var(--bg); border:1px solid var(--border);">
+               <option value="">Tutte</option>
+               <option value="pending">In Attesa</option>
+               <option value="approved">Approvate</option>
+               <option value="revoked">Revocate</option>
+             </select>
+          </div>
           <div id="license-table-wrap" style="padding:1rem;">
             <p style="color:var(--text-dim);font-size:.85rem;">Caricamento…</p>
           </div>

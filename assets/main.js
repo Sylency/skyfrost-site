@@ -1114,19 +1114,20 @@ SkyFrost.initLicenses = async function () {
   const unlockBtn = document.getElementById('admin-unlock-btn');
   const adminPanel = document.getElementById('admin-panel');
 
-  const genUsername = document.getElementById('gen-username');
-  const genNote = document.getElementById('gen-note');
+  const genFingerprint = document.getElementById('gen-fingerprint');
+  const genHostname = document.getElementById('gen-hostname');
   const genBtn = document.getElementById('gen-btn');
   const genResult = document.getElementById('gen-result');
   const tableWrap = document.getElementById('license-table-wrap');
+  const filterStatus = document.getElementById('filter-status');
 
   let adminSecret = '';
 
   /* ── Validate (public) ── */
   async function validateLicense() {
-    const key = safeText(validateKeyInput?.value, '');
-    if (!key) {
-      SkyFrost.toast('Inserisci una chiave di licenza.', 'error');
+    const fingerprint = safeText(validateKeyInput?.value, '');
+    if (!fingerprint) {
+      SkyFrost.toast('Inserisci un fingerprint.', 'error');
       return;
     }
 
@@ -1136,35 +1137,36 @@ SkyFrost.initLicenses = async function () {
     }
 
     try {
-      const res = await fetch(`${LICENSES_API}?action=validate&key=${encodeURIComponent(key)}`);
+      const res = await fetch(`${LICENSES_API}?action=validate&fingerprint=${encodeURIComponent(fingerprint)}`);
       const data = await res.json();
 
       if (validateResult) {
         validateResult.style.display = '';
-        if (data.valid) {
+        if (data.valid && data.status === 'approved') {
           validateResult.innerHTML = `
             <div class="license-result license-valid">
               <span class="license-result-icon">✅</span>
               <div>
-                <strong>Licenza valida</strong>
+                <strong>Licenza Approvata</strong>
                 <div style="font-size:.82rem;color:var(--text-dim);margin-top:.25rem;">
-                  Username: <strong style="color:var(--frost);">${escapeHtml(data.username)}</strong>
-                  ${data.createdAt ? ` · Creata: ${escapeHtml(formatDate(data.createdAt))}` : ''}
+                  Hostname: <strong style="color:var(--frost);">${escapeHtml(data.hostname || '-')}</strong>
+                  ${data.requestedAt ? ` · Richiesta: ${escapeHtml(formatDate(data.requestedAt))}` : ''}
                 </div>
               </div>
             </div>`;
         } else {
           const reasons = {
             not_found: 'Licenza non trovata nel sistema.',
-            revoked: `Licenza revocata. Username: ${escapeHtml(data.username || '-')}`
+            revoked: `Licenza revocata. Hostname: ${escapeHtml(data.hostname || '-')}`,
+            pending: `Licenza in attesa di approvazione. Hostname: ${escapeHtml(data.hostname || '-')}`
           };
           validateResult.innerHTML = `
             <div class="license-result license-invalid">
-              <span class="license-result-icon">❌</span>
+              <span class="license-result-icon">${data.reason === 'pending' ? '⏳' : '❌'}</span>
               <div>
-                <strong>Licenza non valida</strong>
+                <strong>Licenza ${data.reason === 'pending' ? 'In Attesa' : 'Non Valida'}</strong>
                 <div style="font-size:.82rem;color:var(--text-dim);margin-top:.25rem;">
-                  ${reasons[data.reason] || 'Chiave non riconosciuta.'}
+                  ${reasons[data.reason] || 'Fingerprint non riconosciuto.'}
                 </div>
               </div>
             </div>`;
@@ -1199,8 +1201,12 @@ SkyFrost.initLicenses = async function () {
     if (!tableWrap) return;
     tableWrap.innerHTML = '<p style="color:var(--text-dim);font-size:.85rem;">Caricamento…</p>';
 
+    const statusFilter = safeText(filterStatus?.value, '');
+    const queryParams = new URLSearchParams({ action: 'list', adminSecret });
+    if (statusFilter) queryParams.append('status', statusFilter);
+
     try {
-      const res = await fetch(`${LICENSES_API}?action=list&adminSecret=${encodeURIComponent(adminSecret)}`, {
+      const res = await fetch(`${LICENSES_API}?${queryParams.toString()}`, {
         credentials: 'include'
       });
       const data = await res.json();
@@ -1211,43 +1217,81 @@ SkyFrost.initLicenses = async function () {
 
       const licenses = Array.isArray(data.licenses) ? data.licenses : [];
       if (!licenses.length) {
-        tableWrap.innerHTML = '<p style="color:var(--text-dim);font-size:.85rem;padding:.5rem;">Nessuna licenza generata.</p>';
+        tableWrap.innerHTML = '<p style="color:var(--text-dim);font-size:.85rem;padding:.5rem;">Nessuna licenza trovata.</p>';
         return;
+      }
+
+      function getStatusBadge(status) {
+        if (status === 'approved') return '<span class="badge badge-green">Approvata</span>';
+        if (status === 'pending') return '<span class="badge badge-gold">In Attesa</span>';
+        return '<span class="badge badge-red">Revocata</span>';
       }
 
       tableWrap.innerHTML = `
         <table class="license-table">
           <thead>
             <tr>
-              <th>Chiave</th>
-              <th>Username</th>
+              <th>Fingerprint</th>
+              <th>Hostname</th>
               <th>Stato</th>
-              <th>Data</th>
-              <th>Note</th>
+              <th>Data Richiesta</th>
               <th>Azioni</th>
             </tr>
           </thead>
           <tbody>
-            ${licenses.map(l => `<tr class="${l.active ? '' : 'license-revoked'}">
-              <td><code class="license-key-cell">${escapeHtml(l.key)}</code></td>
-              <td>${escapeHtml(l.username)}</td>
-              <td>${l.active
-                ? '<span class="badge badge-green">Attiva</span>'
-                : '<span class="badge badge-red">Revocata</span>'}</td>
-              <td style="font-size:.8rem;color:var(--text-dim);">${escapeHtml(formatDate(l.createdAt))}</td>
-              <td style="font-size:.8rem;color:var(--text-dim);">${escapeHtml(safeText(l.note, '-'))}</td>
-              <td>${l.active
-                ? `<button type="button" class="btn btn-ghost btn-sm license-revoke-btn" data-key="${escapeHtml(l.key)}">Revoca</button>`
-                : `<span style="font-size:.75rem;color:var(--text-muted);">${escapeHtml(formatDate(l.revokedAt))}</span>`}</td>
+            ${licenses.map(l => `<tr class="${l.status !== 'approved' ? 'license-revoked' : ''}">
+              <td><code class="license-key-cell" title="${escapeHtml(l.fingerprint)}">${escapeHtml(truncate(l.fingerprint, 16))}</code></td>
+              <td>${escapeHtml(l.hostname || '-')}</td>
+              <td>${getStatusBadge(l.status)}</td>
+              <td style="font-size:.8rem;color:var(--text-dim);">${escapeHtml(formatDate(l.requested_at))}</td>
+              <td>
+                <div style="display:flex; gap:0.5rem; align-items:center;">
+                  ${l.status === 'pending'
+                    ? `<button type="button" class="btn btn-ghost btn-sm license-approve-btn" data-fingerprint="${escapeHtml(l.fingerprint)}">Approva</button>
+                       <button type="button" class="btn btn-ghost btn-sm license-revoke-btn" data-fingerprint="${escapeHtml(l.fingerprint)}">Revoca</button>`
+                    : ''}
+                  ${l.status === 'approved'
+                    ? `<button type="button" class="btn btn-ghost btn-sm license-revoke-btn" data-fingerprint="${escapeHtml(l.fingerprint)}">Revoca</button>`
+                    : ''}
+                </div>
+              </td>
             </tr>`).join('')}
           </tbody>
         </table>`;
 
+      /* Bind approve buttons */
+      tableWrap.querySelectorAll('.license-approve-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const fingerprint = btn.dataset.fingerprint;
+          btn.disabled = true;
+          btn.textContent = '…';
+
+          try {
+            const res = await fetch(LICENSES_API, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              credentials: 'include',
+              body: JSON.stringify({ action: 'approve', fingerprint, adminSecret })
+            });
+            const data = await res.json();
+            if (!res.ok || data.error) throw new Error(safeText(data.error, 'Errore approvazione'));
+
+            SkyFrost.toast('Licenza approvata.', 'success');
+            await loadLicenseList();
+          } catch (err) {
+            console.error('License approve failed:', err);
+            SkyFrost.toast(safeText(err.message, 'Errore approvazione.'), 'error');
+            btn.disabled = false;
+            btn.textContent = 'Approva';
+          }
+        });
+      });
+
       /* Bind revoke buttons */
       tableWrap.querySelectorAll('.license-revoke-btn').forEach(btn => {
         btn.addEventListener('click', async () => {
-          const key = btn.dataset.key;
-          if (!confirm(`Revocare la licenza ${key}?`)) return;
+          const fingerprint = btn.dataset.fingerprint;
+          if (!confirm('Sicuro di voler revocare questa licenza?')) return;
 
           btn.disabled = true;
           btn.textContent = '…';
@@ -1257,12 +1301,12 @@ SkyFrost.initLicenses = async function () {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               credentials: 'include',
-              body: JSON.stringify({ action: 'revoke', key, adminSecret })
+              body: JSON.stringify({ action: 'revoke', fingerprint, adminSecret })
             });
             const data = await res.json();
             if (!res.ok || data.error) throw new Error(safeText(data.error, 'Errore revoca'));
 
-            SkyFrost.toast(`Licenza ${key} revocata.`, 'success');
+            SkyFrost.toast('Licenza revocata.', 'success');
             await loadLicenseList();
           } catch (err) {
             console.error('License revoke failed:', err);
@@ -1278,23 +1322,25 @@ SkyFrost.initLicenses = async function () {
     }
   }
 
-  /* ── Generate ── */
-  async function generateLicense() {
-    const username = safeText(genUsername?.value, '');
-    const note = safeText(genNote?.value, '');
+  filterStatus?.addEventListener('change', loadLicenseList);
 
-    if (!username) {
-      SkyFrost.toast('Inserisci un username Hytale.', 'error');
+  /* ── Insert ── */
+  async function insertLicense() {
+    const fingerprint = safeText(genFingerprint?.value, '');
+    const hostname = safeText(genHostname?.value, '');
+
+    if (!fingerprint) {
+      SkyFrost.toast('Inserisci il fingerprint.', 'error');
       return;
     }
-    if (username.length < 2 || username.length > 32) {
-      SkyFrost.toast('Username deve essere tra 2 e 32 caratteri.', 'error');
+    if (fingerprint.length > 64) {
+      SkyFrost.toast('Fingerprint troppo lungo.', 'error');
       return;
     }
 
     if (genBtn) {
       genBtn.disabled = true;
-      genBtn.textContent = 'Generazione…';
+      genBtn.textContent = 'Inserimento…';
     }
 
     try {
@@ -1302,55 +1348,42 @@ SkyFrost.initLicenses = async function () {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify({ action: 'generate', username, note, adminSecret })
+        body: JSON.stringify({ action: 'insert', fingerprint, hostname, adminSecret })
       });
       const data = await res.json();
 
       if (!res.ok || data.error) throw new Error(safeText(data.error, `HTTP ${res.status}`));
 
-      const license = data.license;
       if (genResult) {
         genResult.style.display = '';
         genResult.innerHTML = `
           <div class="license-result license-valid">
-            <span class="license-result-icon">🔑</span>
+            <span class="license-result-icon">⏳</span>
             <div>
-              <strong>Licenza generata!</strong>
-              <div style="margin-top:.35rem;">
-                <code class="license-key-display">${escapeHtml(license.key)}</code>
-                <button type="button" class="btn btn-ghost btn-sm" id="copy-license-key" style="margin-left:.5rem;">📋 Copia</button>
-              </div>
+              <strong>Licenza Inserita!</strong>
               <div style="font-size:.8rem;color:var(--text-dim);margin-top:.25rem;">
-                Username: ${escapeHtml(license.username)} · ${escapeHtml(formatDate(license.createdAt))}
+                Ora è nello stato In Attesa. Approvala dalla tabella.
               </div>
             </div>
           </div>`;
-        document.getElementById('copy-license-key')?.addEventListener('click', async () => {
-          try {
-            await navigator.clipboard.writeText(license.key);
-            SkyFrost.toast('Chiave copiata negli appunti!', 'success');
-          } catch {
-            SkyFrost.toast(`Copia manuale: ${license.key}`, 'info');
-          }
-        });
       }
 
-      if (genUsername) genUsername.value = '';
-      if (genNote) genNote.value = '';
-      SkyFrost.toast('Licenza generata con successo!', 'success');
+      if (genFingerprint) genFingerprint.value = '';
+      if (genHostname) genHostname.value = '';
+      SkyFrost.toast('Licenza inserita in attesa.', 'success');
       await loadLicenseList();
     } catch (err) {
-      console.error('License generate failed:', err);
-      SkyFrost.toast(safeText(err.message, 'Errore generazione.'), 'error');
+      console.error('License insert failed:', err);
+      SkyFrost.toast(safeText(err.message, 'Errore inserimento.'), 'error');
     } finally {
       if (genBtn) {
         genBtn.disabled = false;
-        genBtn.textContent = 'Genera Licenza';
+        genBtn.textContent = 'Inserisci';
       }
     }
   }
 
-  genBtn?.addEventListener('click', generateLicense);
+  genBtn?.addEventListener('click', insertLicense);
 
   /* ── Unlock admin ── */
   async function unlockAdmin() {

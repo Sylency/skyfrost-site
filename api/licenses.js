@@ -1,8 +1,5 @@
 'use strict';
 
-const crypto = require('crypto');
-const fs = require('fs');
-const path = require('path');
 const {
   parseCookies,
   SESSION_COOKIE_NAME,
@@ -11,8 +8,7 @@ const {
   applyCors,
   isAllowedOrigin
 } = require('./auth-utils.cjs');
-
-const LICENSES_FILE = path.join(__dirname, 'licenses.json');
+const { query } = require('./db.js');
 
 /* ── Helpers ── */
 
@@ -23,29 +19,6 @@ function safeText(value, fallback = '') {
 
 function getAdminSecret() {
   return safeText(process.env.LICENSE_ADMIN_SECRET, '');
-}
-
-function generateLicenseKey() {
-  const hex = crypto.randomBytes(8).toString('hex').toUpperCase();
-  return `SF-${hex.slice(0, 4)}-${hex.slice(4, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}`;
-}
-
-/* ── File I/O ── */
-
-function readLicenses() {
-  try {
-    if (!fs.existsSync(LICENSES_FILE)) return [];
-    const raw = fs.readFileSync(LICENSES_FILE, 'utf8').trim();
-    if (!raw) return [];
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed : [];
-  } catch {
-    return [];
-  }
-}
-
-function writeLicenses(licenses) {
-  fs.writeFileSync(LICENSES_FILE, JSON.stringify(licenses, null, 2), 'utf8');
 }
 
 /* ── Auth helpers ── */
@@ -81,32 +54,43 @@ function ensureAllowedOrigin(req, res) {
 
 /* ── Actions ── */
 
-function handleValidate(req, res) {
+async function handleValidate(req, res) {
   if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
 
-  const key = safeText(req.query.key, '');
-  if (!key) return res.status(400).json({ error: 'Parametro "key" mancante' });
+  const fingerprint = safeText(req.query.fingerprint, '');
+  if (!fingerprint) return res.status(400).json({ error: 'Parametro "fingerprint" mancante' });
 
-  const licenses = readLicenses();
-  const license = licenses.find((l) => l.key === key);
+  const rows = await query(
+    'SELECT fingerprint, hostname, status, requested_at FROM license_requests WHERE fingerprint = ?',
+    [fingerprint]
+  );
 
-  if (!license) {
-    return res.json({ valid: false, key, reason: 'not_found' });
+  if (!rows.length) {
+    return res.json({ valid: false, fingerprint, reason: 'not_found' });
   }
 
-  if (!license.active) {
-    return res.json({ valid: false, key, reason: 'revoked', username: license.username });
+  const license = rows[0];
+
+  if (license.status === 'approved') {
+    return res.json({
+      valid: true,
+      fingerprint: license.fingerprint,
+      hostname: license.hostname,
+      status: license.status,
+      requestedAt: license.requested_at
+    });
   }
 
   return res.json({
-    valid: true,
-    key: license.key,
-    username: license.username,
-    createdAt: license.createdAt
+    valid: false,
+    fingerprint: license.fingerprint,
+    hostname: license.hostname,
+    status: license.status,
+    reason: license.status === 'revoked' ? 'revoked' : 'pending'
   });
 }
 
-function handleGenerate(req, res) {
+async function handleInsert(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   const admin = isAdmin(req);
@@ -115,33 +99,69 @@ function handleGenerate(req, res) {
     return res.status(statusCode).json({ error: admin.reason });
   }
 
-  const username = safeText(req.body?.username, '');
-  if (!username) return res.status(400).json({ error: 'Campo "username" obbligatorio' });
-  if (username.length < 2 || username.length > 32) {
-    return res.status(400).json({ error: 'Username deve essere tra 2 e 32 caratteri' });
+  const fingerprint = safeText(req.body?.fingerprint, '');
+  if (!fingerprint) return res.status(400).json({ error: 'Campo "fingerprint" obbligatorio' });
+  if (fingerprint.length > 64) return res.status(400).json({ error: 'Fingerprint troppo lungo (max 64 caratteri)' });
+
+  const hostname = safeText(req.body?.hostname, '');
+
+  // Check if fingerprint already exists
+  const existing = await query('SELECT fingerprint FROM license_requests WHERE fingerprint = ?', [fingerprint]);
+  if (existing.length) {
+    return res.status(409).json({ error: 'Fingerprint già registrato nel sistema' });
   }
 
-  const note = safeText(req.body?.note, '');
-  const licenses = readLicenses();
+  await query(
+    'INSERT INTO license_requests (fingerprint, hostname, status, requested_at) VALUES (?, ?, ?, NOW())',
+    [fingerprint, hostname, 'pending']
+  );
 
-  const key = generateLicenseKey();
-  const newLicense = {
-    key,
-    username,
-    note,
-    createdAt: new Date().toISOString(),
-    createdBy: admin.userId,
-    createdByName: admin.username,
-    active: true
-  };
-
-  licenses.push(newLicense);
-  writeLicenses(licenses);
-
-  return res.status(201).json({ ok: true, license: newLicense });
+  return res.status(201).json({ ok: true, fingerprint, hostname, status: 'pending' });
 }
 
-function handleList(req, res) {
+async function handleApprove(req, res) {
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+
+  const admin = isAdmin(req);
+  if (!admin.ok) {
+    const statusCode = admin.reason === 'not_authenticated' ? 401 : 403;
+    return res.status(statusCode).json({ error: admin.reason });
+  }
+
+  const fingerprint = safeText(req.body?.fingerprint, '');
+  if (!fingerprint) return res.status(400).json({ error: 'Campo "fingerprint" obbligatorio' });
+
+  const rows = await query('SELECT fingerprint, status FROM license_requests WHERE fingerprint = ?', [fingerprint]);
+  if (!rows.length) return res.status(404).json({ error: 'Licenza non trovata' });
+  if (rows[0].status === 'approved') return res.status(400).json({ error: 'Licenza già approvata' });
+
+  await query('UPDATE license_requests SET status = ? WHERE fingerprint = ?', ['approved', fingerprint]);
+
+  return res.json({ ok: true, fingerprint, status: 'approved' });
+}
+
+async function handleRevoke(req, res) {
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+
+  const admin = isAdmin(req);
+  if (!admin.ok) {
+    const statusCode = admin.reason === 'not_authenticated' ? 401 : 403;
+    return res.status(statusCode).json({ error: admin.reason });
+  }
+
+  const fingerprint = safeText(req.body?.fingerprint, '');
+  if (!fingerprint) return res.status(400).json({ error: 'Campo "fingerprint" obbligatorio' });
+
+  const rows = await query('SELECT fingerprint, status FROM license_requests WHERE fingerprint = ?', [fingerprint]);
+  if (!rows.length) return res.status(404).json({ error: 'Licenza non trovata' });
+  if (rows[0].status === 'revoked') return res.status(400).json({ error: 'Licenza già revocata' });
+
+  await query('UPDATE license_requests SET status = ? WHERE fingerprint = ?', ['revoked', fingerprint]);
+
+  return res.json({ ok: true, fingerprint, status: 'revoked' });
+}
+
+async function handleList(req, res) {
   if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
 
   const admin = isAdmin(req);
@@ -150,34 +170,17 @@ function handleList(req, res) {
     return res.status(statusCode).json({ error: admin.reason });
   }
 
-  const licenses = readLicenses();
-  return res.json({ ok: true, total: licenses.length, licenses });
-}
+  const statusFilter = safeText(req.query.status, '');
+  let sql = 'SELECT fingerprint, hostname, status, requested_at FROM license_requests ORDER BY requested_at DESC';
+  let params = [];
 
-function handleRevoke(req, res) {
-  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
-
-  const admin = isAdmin(req);
-  if (!admin.ok) {
-    const statusCode = admin.reason === 'not_authenticated' ? 401 : 403;
-    return res.status(statusCode).json({ error: admin.reason });
+  if (statusFilter && ['pending', 'approved', 'revoked'].includes(statusFilter)) {
+    sql = 'SELECT fingerprint, hostname, status, requested_at FROM license_requests WHERE status = ? ORDER BY requested_at DESC';
+    params = [statusFilter];
   }
 
-  const key = safeText(req.body?.key, '');
-  if (!key) return res.status(400).json({ error: 'Campo "key" obbligatorio' });
-
-  const licenses = readLicenses();
-  const license = licenses.find((l) => l.key === key);
-
-  if (!license) return res.status(404).json({ error: 'Licenza non trovata' });
-  if (!license.active) return res.status(400).json({ error: 'Licenza già revocata' });
-
-  license.active = false;
-  license.revokedAt = new Date().toISOString();
-  license.revokedBy = admin.userId;
-  writeLicenses(licenses);
-
-  return res.json({ ok: true, license });
+  const licenses = await query(sql, params);
+  return res.json({ ok: true, total: licenses.length, licenses });
 }
 
 /* ── Main handler ── */
@@ -198,13 +201,15 @@ module.exports = async function handler(req, res) {
   switch (action) {
     case 'validate':
       return handleValidate(req, res);
-    case 'generate':
-      return handleGenerate(req, res);
-    case 'list':
-      return handleList(req, res);
+    case 'insert':
+      return handleInsert(req, res);
+    case 'approve':
+      return handleApprove(req, res);
     case 'revoke':
       return handleRevoke(req, res);
+    case 'list':
+      return handleList(req, res);
     default:
-      return res.status(400).json({ error: 'Azione non valida. Usa: validate, generate, list, revoke' });
+      return res.status(400).json({ error: 'Azione non valida. Usa: validate, insert, approve, revoke, list' });
   }
 };
