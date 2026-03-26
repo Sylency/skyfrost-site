@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="it"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SkyFrost | Conquista la Tundra</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&amp;family=Space+Grotesk:wght@300..700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-container-lowest": "#0a0e18",
+              "on-tertiary-fixed-variant": "#004f55",
+              "on-secondary-fixed": "#091c32",
+              "on-tertiary": "#00363b",
+              "on-error-container": "#ffdad6",
+              "on-primary": "#00363e",
+              "on-surface": "#dfe2f1",
+              "on-secondary": "#203148",
+              "inverse-surface": "#dfe2f1",
+              "secondary-container": "#394a62",
+              "tertiary-fixed": "#a1eff8",
+              "surface-variant": "#303540",
+              "primary": "#d7f8ff",
+              "surface-container-high": "#252a35",
+              "surface-tint": "#4ad8ef",
+              "surface-bright": "#353945",
+              "error": "#ffb4ab",
+              "error-container": "#93000a",
+              "tertiary": "#cdfaff",
+              "on-surface-variant": "#bbc9cc",
+              "secondary": "#b6c8e4",
+              "on-tertiary-container": "#00666e",
+              "secondary-fixed": "#d3e4ff",
+              "on-tertiary-fixed": "#002023",
+              "on-secondary-container": "#a8bad5",
+              "surface": "#0f131e",
+              "primary-fixed": "#a0efff",
+              "on-primary-container": "#006673",
+              "inverse-primary": "#006876",
+              "outline-variant": "#3c494c",
+              "outline": "#869396",
+              "on-primary-fixed-variant": "#004e59",
+              "surface-container-low": "#171b26",
+              "surface-container": "#1b1f2a",
+              "primary-fixed-dim": "#4ad8ef",
+              "on-background": "#dfe2f1",
+              "tertiary-fixed-dim": "#85d3dc",
+              "secondary-fixed-dim": "#b6c8e4",
+              "surface-container-highest": "#303540",
+              "on-secondary-fixed-variant": "#36485f",
+              "on-error": "#690005",
+              "primary-container": "#5ee7ff",
+              "inverse-on-surface": "#2c303c",
+              "on-primary-fixed": "#001f25",
+              "surface-dim": "#0f131e",
+              "tertiary-container": "#94e2eb",
+              "background": "#0f131e"
+            },
+            fontFamily: {
+              "headline": ["Newsreader", "serif"],
+              "body": ["Space Grotesk", "sans-serif"],
+              "label": ["Space Grotesk", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>.material-symbols-outlined {
+    font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24
+    }
+.frost-texture {
+    background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuCjn0cED9Ul3XSGWroCKPZf7xVuPd6nHKuNGSDA4EFYkJlYANeGTLtJbQrbJrkKJta1nQq9R_d4rS3TshnxAxvajVHTUHNcBm-x_3aGg_IBrQQMpCd840fjigbMchsQZ9u_1wkNsSLPitdj897Fd7Z2eGfcBn98xI9RgRJwDDBHdFJn2tLb6dzazcOQAuiESQm2IrRzwl5VZlVWjsF7wJ4w_uwfVBE6uToc8erZgw5OEKS2FCt8byRpEQFLBGyw3-J5VbbQEus6w4E);
+    opacity: 0.03
+    }
+.aurora-glow {
+    background: radial-gradient(circle at 50% -20%, rgba(94, 231, 255, 0.15), transparent 70%)
+    }</style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body selection:bg-primary-container selection:text-on-primary-container overflow-x-hidden">
+<!-- Background Layers -->
+<div class="fixed inset-0 z-[-1] bg-surface">
+<div class="absolute inset-0 aurora-glow"></div>
+<div class="absolute inset-0 frost-texture pointer-events-none"></div>
+</div>
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full flex justify-between items-center px-8 py-4 max-w-none bg-[#0f131e]/60 backdrop-blur-xl border-b border-[#3c494c]/20 shadow-[0_0_20px_rgba(94,231,255,0.1)] z-50">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[#5ee7ff] text-2xl">ac_unit</span>
+<span class="text-2xl font-black tracking-tighter text-[#5ee7ff] drop-shadow-[0_0_10px_rgba(94,231,255,0.4)] font-headline">SkyFrost</span>
+</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-[#5ee7ff] border-b-2 border-[#5ee7ff] pb-1 font-['Space_Grotesk'] text-sm uppercase tracking-widest" href="#">News</a>
+<a class="text-slate-400 font-medium hover:text-[#5ee7ff] transition-colors font-['Space_Grotesk'] text-sm uppercase tracking-widest" href="#">Store</a>
+<a class="text-slate-400 font-medium hover:text-[#5ee7ff] transition-colors font-['Space_Grotesk'] text-sm uppercase tracking-widest" href="#">Staff</a>
+<a class="text-slate-400 font-medium hover:text-[#5ee7ff] transition-colors font-['Space_Grotesk'] text-sm uppercase tracking-widest" href="#">Wiki</a>
+<a class="text-slate-400 font-medium hover:text-[#5ee7ff] transition-colors font-['Space_Grotesk'] text-sm uppercase tracking-widest" href="#">Support</a>
+</nav>
+<button class="bg-primary-container text-on-primary-container px-6 py-2 font-bold tracking-tight rounded-lg hover:scale-95 active:scale-90 transition-transform shadow-[0_0_15px_rgba(94,231,255,0.4)]">
+            Play Now
+        </button>
+</header>
+<main class="relative pt-32 pb-24 px-6 md:px-12 lg:px-24">
+<!-- Hero Section -->
+<section class="flex flex-col items-center text-center mb-32">
+<!-- Status Pill -->
+<div class="mb-8 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-surface-container-highest/40 backdrop-blur-md border border-outline-variant/20 shadow-lg">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+</span>
+<span class="text-xs font-bold tracking-widest uppercase text-on-surface-variant">342 Players Online</span>
+</div>
+<h1 class="font-headline text-6xl md:text-8xl lg:text-9xl font-bold tracking-tighter mb-6 leading-none">
+                Sky<span class="text-primary-container drop-shadow-[0_0_25px_rgba(94,231,255,0.6)]">Frost</span>
+</h1>
+<p class="font-headline text-xl md:text-2xl text-on-surface-variant max-w-2xl italic mb-12 opacity-80">
+                Risveglia il drago del gelo, conquista la tundra...
+            </p>
+<div class="flex flex-wrap justify-center gap-4">
+<button class="bg-primary-container text-on-primary-container px-8 py-4 rounded-xl font-bold text-lg flex items-center gap-3 hover:scale-105 transition-transform shadow-[0_0_30px_rgba(94,231,255,0.3)] group">
+<span class="material-symbols-outlined">forum</span>
+                    Accedi Discord
+                </button>
+<button class="bg-transparent border border-primary-container/40 text-primary-container px-8 py-4 rounded-xl font-bold text-lg flex items-center gap-3 hover:bg-primary-container/10 transition-all group">
+<span class="material-symbols-outlined text-primary-container/60 group-hover:text-primary-container">sports_esports</span>
+                    play.Skyfrost.it
+                </button>
+<button class="text-on-surface-variant hover:text-primary transition-colors px-6 py-4 font-bold uppercase tracking-widest text-sm flex items-center gap-2">
+<span class="w-2 h-2 bg-primary-container rounded-sm"></span>
+                    Vai allo Store
+                </button>
+</div>
+</section>
+<!-- Stats Bento Grid -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-7xl mx-auto mb-40">
+<!-- Stats Card 1 -->
+<div class="relative group overflow-hidden rounded-2xl bg-surface-container-low/70 backdrop-blur-xl border border-outline-variant/20 p-8 hover:border-primary-container/40 transition-all duration-500">
+<div class="absolute -right-8 -bottom-8 opacity-5 group-hover:opacity-10 transition-opacity">
+<span class="material-symbols-outlined text-[12rem]">shield</span>
+</div>
+<span class="text-primary-container font-label text-xs tracking-[0.2em] uppercase mb-4 block">Territorio</span>
+<h3 class="font-headline text-3xl font-bold mb-2">Dominio</h3>
+<p class="text-on-surface-variant leading-relaxed mb-6">Controlla le terre ghiacciate e stabilisci il tuo impero nella tundra infinita.</p>
+<div class="flex items-center gap-2 text-primary-container/60 font-bold group-hover:text-primary-container transition-colors cursor-pointer">
+<span class="text-sm uppercase tracking-widest">Esplora</span>
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+</div>
+</div>
+<!-- Stats Card 2 -->
+<div class="relative group overflow-hidden rounded-2xl bg-surface-container-low/70 backdrop-blur-xl border border-outline-variant/20 p-8 hover:border-primary-container/40 transition-all duration-500">
+<div class="absolute -right-8 -bottom-8 opacity-5 group-hover:opacity-10 transition-opacity">
+<span class="material-symbols-outlined text-[12rem]">swords</span>
+</div>
+<span class="text-primary-container font-label text-xs tracking-[0.2em] uppercase mb-4 block">Combattimento</span>
+<h3 class="font-headline text-3xl font-bold mb-2">Legione</h3>
+<p class="text-on-surface-variant leading-relaxed mb-6">Unisci le forze con i guerrieri del nord per battaglie PvP leggendarie.</p>
+<div class="flex items-center gap-2 text-primary-container/60 font-bold group-hover:text-primary-container transition-colors cursor-pointer">
+<span class="text-sm uppercase tracking-widest">Unisciti</span>
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+</div>
+</div>
+<!-- Stats Card 3 -->
+<div class="relative group overflow-hidden rounded-2xl bg-surface-container-low/70 backdrop-blur-xl border border-outline-variant/20 p-8 hover:border-primary-container/40 transition-all duration-500">
+<div class="absolute -right-8 -bottom-8 opacity-5 group-hover:opacity-10 transition-opacity">
+<span class="material-symbols-outlined text-[12rem]">diamond</span>
+</div>
+<span class="text-primary-container font-label text-xs tracking-[0.2em] uppercase mb-4 block">Antichità</span>
+<h3 class="font-headline text-3xl font-bold mb-2">Reliquie</h3>
+<p class="text-on-surface-variant leading-relaxed mb-6">Scopri manufatti perduti sepolti sotto secoli di permafrost magico.</p>
+<div class="flex items-center gap-2 text-primary-container/60 font-bold group-hover:text-primary-container transition-colors cursor-pointer">
+<span class="text-sm uppercase tracking-widest">Trova</span>
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+</div>
+</div>
+</section>
+<!-- News Section -->
+<section class="max-w-7xl mx-auto">
+<div class="flex justify-between items-end mb-12">
+<div>
+<span class="text-primary-container font-label text-xs tracking-[0.3em] uppercase mb-2 block">Aggiornamenti</span>
+<h2 class="font-headline text-4xl md:text-5xl font-bold">News &amp; Announcements</h2>
+</div>
+<a class="hidden md:block text-on-surface-variant hover:text-primary-container transition-colors text-sm font-bold uppercase tracking-widest border-b border-outline-variant/30 pb-1" href="#">Vedi tutte le news</a>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+<!-- News Card 1 -->
+<article class="group relative overflow-hidden rounded-2xl bg-surface-container-low/40 border border-outline-variant/10 flex flex-col md:flex-row h-full">
+<div class="w-full md:w-1/2 h-64 md:h-auto overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 opacity-80" data-alt="cinematic landscape of a frozen fantasy citadel carved into a massive ice mountain with mystical cyan aurora borealis in the sky" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCdKptp6HE-x93NW42FouHPIoYCaWiHEC6_82YKCSF6K_3Y0urzfkfvl9s0IuaAXVhCm4Su0w_L_kIclGM_t_xsZlp_W8bDMGooXIj0JmKPKb_2Rp97Z_brqApAQI0sfaL2UtQErfKhSxwvgko6loJpS30rdQRfo8JAKYZMIMtmlUMD8gS9rgS5Eqd35jOox2Z8uyLrwvOk_6-zz9tfIDngGX4sOnMwOXKyp4sph8hoxsU_wVNp7ndYrtt8AiT4JLJRCdq-aSOvxk"/>
+</div>
+<div class="p-8 md:w-1/2 flex flex-col">
+<div class="flex gap-4 mb-4">
+<span class="px-2 py-0.5 bg-primary-container/10 text-primary-container text-[10px] font-bold uppercase tracking-tighter rounded border border-primary-container/20">Patch 2.4</span>
+<span class="text-on-surface-variant/60 text-[10px] font-bold uppercase tracking-widest">12 OTT 2024</span>
+</div>
+<h4 class="font-headline text-2xl font-bold mb-4 group-hover:text-primary-container transition-colors">La Fortezza di Cristallo è aperta</h4>
+<p class="text-on-surface-variant text-sm leading-relaxed mb-6 flex-grow">Esplora il nuovo dungeon ghiacciato e affronta il Guardiano dell'Eclissi per ottenere set leggendari...</p>
+<button class="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-primary-container group-hover:gap-4 transition-all">
+                            Leggi di più <span class="material-symbols-outlined text-sm">trending_flat</span>
+</button>
+</div>
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-primary-container opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</article>
+<!-- News Card 2 -->
+<article class="group relative overflow-hidden rounded-2xl bg-surface-container-low/40 border border-outline-variant/10 flex flex-col md:flex-row h-full">
+<div class="w-full md:w-1/2 h-64 md:h-auto overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 opacity-80" data-alt="dramatic top view of a snowy pine forest at night with a mysterious glowing blue energy core pulsating in the center" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDFHLxezpgXqF71GI92R73bk7PGh6fj-K43Ay6PfYmQqN6i0c0yA24AsiasoRlWd1o58CnyZpV8sN52OCcqI1wr_MHM0mjBDjCOGcdBIbQLRxi5xnGItxc0YTIHbsgDiDStPpQj-4AmjlJKNbW5MjTOLmw61kYIenuP44qI2pGNeB7KMKGuuEcCMO60FYhxtus522m5SGeFwv8cH7vMHkciLEOZ64QW12PMD7HrwUn2AgyzpWEtVpw7270uukh6uUoHZhUf7hHxCww"/>
+</div>
+<div class="p-8 md:w-1/2 flex flex-col">
+<div class="flex gap-4 mb-4">
+<span class="px-2 py-0.5 bg-primary-container/10 text-primary-container text-[10px] font-bold uppercase tracking-tighter rounded border border-primary-container/20">Evento</span>
+<span class="text-on-surface-variant/60 text-[10px] font-bold uppercase tracking-widest">05 OTT 2024</span>
+</div>
+<h4 class="font-headline text-2xl font-bold mb-4 group-hover:text-primary-container transition-colors">Notte della Lupa d'Argento</h4>
+<p class="text-on-surface-variant text-sm leading-relaxed mb-6 flex-grow">Unisciti alla caccia stagionale. Ricompense esclusive per chi riuscirà a domare la bestia delle nevi...</p>
+<button class="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-primary-container group-hover:gap-4 transition-all">
+                            Leggi di più <span class="material-symbols-outlined text-sm">trending_flat</span>
+</button>
+</div>
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-primary-container opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</article>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-[#0a0e18] py-12 px-8 border-t border-[#3c494c]/10">
+<div class="flex flex-col md:flex-row justify-between items-center gap-6 w-full max-w-7xl mx-auto">
+<div class="flex flex-col gap-2">
+<span class="text-lg font-bold text-[#5ee7ff] font-headline">SkyFrost</span>
+<p class="text-[#5ee7ff] font-['Space_Grotesk'] text-sm uppercase tracking-widest opacity-60">© 2024 SkyFrost Network. Not an official Minecraft product.</p>
+</div>
+<div class="flex gap-8">
+<a class="text-slate-500 hover:text-slate-300 font-['Space_Grotesk'] text-sm uppercase tracking-widest hover:underline decoration-[#5ee7ff] underline-offset-4 transition-all" href="#">News</a>
+<a class="text-slate-500 hover:text-slate-300 font-['Space_Grotesk'] text-sm uppercase tracking-widest hover:underline decoration-[#5ee7ff] underline-offset-4 transition-all" href="#">Store</a>
+<a class="text-slate-500 hover:text-slate-300 font-['Space_Grotesk'] text-sm uppercase tracking-widest hover:underline decoration-[#5ee7ff] underline-offset-4 transition-all" href="#">Staff</a>
+<a class="text-slate-500 hover:text-slate-300 font-['Space_Grotesk'] text-sm uppercase tracking-widest hover:underline decoration-[#5ee7ff] underline-offset-4 transition-all" href="#">Wiki</a>
+<a class="text-slate-500 hover:text-slate-300 font-['Space_Grotesk'] text-sm uppercase tracking-widest hover:underline decoration-[#5ee7ff] underline-offset-4 transition-all" href="#">Support</a>
+</div>
+<div class="flex gap-4 opacity-80 hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-slate-500 cursor-pointer hover:text-[#5ee7ff]">language</span>
+<span class="material-symbols-outlined text-slate-500 cursor-pointer hover:text-[#5ee7ff]">share</span>
+</div>
+</div>
+</footer>
+</body></html>
