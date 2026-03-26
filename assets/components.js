@@ -52,7 +52,7 @@
         <span class="nav-logo-mark" aria-hidden="true">
           <img src="${BRAND_LOGO}" alt="" />
         </span>
-        <span class="nav-logo-wordmark">Sky<span>Frost</span></span>
+        <span class="nav-logo-wordmark">SkyFrost</span>
       </a>
 
       <ul class="nav-links">
@@ -66,7 +66,6 @@
       </ul>
 
       <div class="nav-ctas">
-        <a href="${ROUTE_PATHS.login}" class="btn btn-ghost btn-sm">Accedi</a>
         <a href="${ROUTE_PATHS.supporto}" class="btn btn-primary btn-sm">Apri Ticket</a>
       </div>
 
@@ -267,19 +266,19 @@
 
     function drawBg() {
       const sky = ctx.createLinearGradient(0, 0, 0, canvas.height);
-      sky.addColorStop(0, 'rgba(10,27,62,1)');
-      sky.addColorStop(0.36, 'rgba(5,16,39,1)');
-      sky.addColorStop(1, 'rgba(2,8,21,1)');
+      sky.addColorStop(0, 'rgba(0,12,66,1)');
+      sky.addColorStop(0.4, 'rgba(0,8,54,1)');
+      sky.addColorStop(1, 'rgba(0,4,36,1)');
       ctx.fillStyle = sky;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       const aurora = ctx.createRadialGradient(
-        canvas.width * 0.36, canvas.height * 0.12, 0,
-        canvas.width * 0.36, canvas.height * 0.12, canvas.width * 0.62
+        canvas.width * 0.5, canvas.height * -0.15, 0,
+        canvas.width * 0.5, canvas.height * -0.15, canvas.width * 0.7
       );
-      aurora.addColorStop(0, 'rgba(120,214,255,0.22)');
-      aurora.addColorStop(0.4, 'rgba(64,126,255,0.12)');
-      aurora.addColorStop(1, 'rgba(4,10,24,0)');
+      aurora.addColorStop(0, 'rgba(0,88,248,0.18)');
+      aurora.addColorStop(0.5, 'rgba(88,194,250,0.08)');
+      aurora.addColorStop(1, 'rgba(0,12,66,0)');
       ctx.fillStyle = aurora;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -287,8 +286,8 @@
         canvas.width * 0.8, canvas.height * 0.2, 0,
         canvas.width * 0.8, canvas.height * 0.2, canvas.width * 0.5
       );
-      rim.addColorStop(0, 'rgba(149,235,255,0.12)');
-      rim.addColorStop(1, 'rgba(4,10,24,0)');
+      rim.addColorStop(0, 'rgba(88,194,250,0.06)');
+      rim.addColorStop(1, 'rgba(0,12,66,0)');
       ctx.fillStyle = rim;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
@@ -298,7 +297,7 @@
       particles.forEach(p => {
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(138,229,255,${p.alpha})`;
+        ctx.fillStyle = `rgba(88,194,250,${p.alpha})`;
         ctx.fill();
         p.x += p.vx;
         p.y += p.vy;

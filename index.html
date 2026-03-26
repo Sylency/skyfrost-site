@@ -1,15 +1,14 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="it" class="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SkyFrost — Server Hytale Italiano</title>
   <meta name="description" content="SkyFrost: il server Hytale italiano. News, store ufficiale, staff, votazioni e supporto ticket con login Discord." />
   <meta name="robots" content="index,follow" />
-  <meta name="theme-color" content="#060a14" />
+  <meta name="theme-color" content="#000c42" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Oxanium:wght@400;500;600;700;800&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="canonical" href="https://skyfrost.it/" />
 
   <meta property="og:type" content="website" />
@@ -27,25 +26,7 @@
   <link rel="icon" type="image/png" href="/assets/skyfrost-logo.png" />
   <link rel="manifest" href="/site.webmanifest" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" />
-  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-  <script>
-    tailwind.config = {
-      corePlugins: { preflight: false },
-      darkMode: "class",
-      theme: { extend: { colors: {
-        "surface": "#0f131e", "on-surface": "#dfe2f1", "primary-container": "#5ee7ff",
-        "on-primary-container": "#006673", "surface-container-highest": "#303540",
-        "outline-variant": "#3c494c", "on-surface-variant": "#bbc9cc", "surface-container-low": "#171b26"
-      }}}
-    }
-  </script>
-  <style>
-    .frost-texture { background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCjn0cED9Ul3XSGWroCKPZf7xVuPd6nHKuNGSDA4EFYkJlYANeGTLtJbQrbJrkKJta1nQq9R_d4rS3TshnxAxvajVHTUHNcBm-x_3aGg_IBrQQMpCd840fjigbMchsQZ9u_1wkNsSLPitdj897Fd7Z2eGfcBn98xI9RgRJwDDBHdFJn2tLb6dzazcOQAuiESQm2IrRzwl5VZlVWjsF7wJ4w_uwfVBE6uToc8erZgw5OEKS2FCt8byRpEQFLBGyw3-J5VbbQEus6w4E'); opacity: 0.03; }
-    .aurora-glow { background: radial-gradient(circle at 50% -20%, rgba(94, 231, 255, 0.15), transparent 70%); }
-    .material-symbols-outlined { font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24; font-family: 'Material Symbols Outlined'; }
-  </style>
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="assets/style.css?v=2" />
+  <link rel="stylesheet" href="assets/style.css?v=3" />
 
   <script type="application/ld+json">
     {
@@ -64,83 +45,82 @@
 <body>
 <script src="assets/components.js"></script>
 
-<!-- Background Layers -->
-<div class="fixed inset-0 z-[-1] bg-surface pointer-events-none">
-  <div class="absolute inset-0 aurora-glow"></div>
-  <div class="absolute inset-0 frost-texture"></div>
-</div>
+<!-- Noise Overlay -->
+<div class="noise-overlay"></div>
 
 <!-- ══════════════════════════════════
-     STITCH HERO SECTION
+     HERO — Agency: Home style
 ══════════════════════════════════ -->
-<main class="relative pt-32 pb-24 px-6 md:px-12 lg:px-24">
-  <section class="flex flex-col items-center text-center mb-32">
-    <!-- Status Pill -->
-    <div class="mb-8 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-surface-container-highest/40 backdrop-blur-md border border-outline-variant/20 shadow-[0_0_15px_rgba(94,231,255,0.1)]">
-      <span class="relative flex h-2 w-2">
-        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-        <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-      </span>
-      <span class="text-xs font-bold tracking-widest uppercase text-on-surface-variant"><strong id="discord-online-count" style="color:var(--cyan)">…</strong> Giocatori su Discord</span>
-    </div>
-    
-    <h1 class="font-display text-6xl md:text-8xl lg:text-9xl font-bold tracking-tighter mb-6 leading-none" style="text-shadow: 0 0 50px rgba(94,231,255,0.2)">
-      Sky<span class="text-primary-container drop-shadow-[0_0_40px_rgba(94,231,255,0.6)]">Frost</span>
-    </h1>
-    
-    <p class="font-display text-xl md:text-2xl text-on-surface-variant max-w-2xl italic mb-12 opacity-80">
-      Risveglia il drago del gelo, conquista la tundra e unisciti a una community formidabile...
-    </p>
-    
-    <div class="flex flex-wrap justify-center gap-4">
-      <a href="/login" class="bg-primary-container text-[#060a14] px-8 py-4 rounded-xl font-bold text-lg flex items-center gap-3 hover:scale-105 transition-transform shadow-[0_0_30px_rgba(94,231,255,0.4)] group no-underline">
-        <span class="material-symbols-outlined">forum</span>
-        Accedi Discord
-      </a>
-      <button type="button" id="copy-ip-btn" class="bg-transparent border border-primary-container/40 text-primary-container px-8 py-4 rounded-xl font-bold text-lg flex items-center gap-3 hover:bg-primary-container/10 transition-all group">
-        <span class="material-symbols-outlined text-primary-container/60 group-hover:text-primary-container">sports_esports</span>
-        play.Skyfrost.it
-      </button>
-      <a href="/store" class="text-on-surface-variant hover:text-[#5ee7ff] transition-colors px-6 py-4 font-bold uppercase tracking-widest text-sm flex items-center gap-2 no-underline">
-        <span class="w-2 h-2 bg-primary-container rounded-sm"></span>
-        Vai allo Store
-      </a>
-    </div>
-  </section>
+<div class="hero">
+  <div class="hero-shell">
+    <div class="hero-copy">
+      <!-- Live Status Pill -->
+      <div class="hero-eyebrow">
+        <span class="status-dot online" style="width:6px;height:6px;"></span>
+        <span>Now Live: Glacial Engine</span>
+      </div>
 
-  <!-- ══════════════════════════════════
-       STATS BENTO GRID
-  ══════════════════════════════════ -->
-  <section class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-7xl mx-auto mb-40">
-    <!-- Card 1 -->
-    <div class="relative group overflow-hidden rounded-2xl bg-[#171b26]/70 backdrop-blur-xl border border-outline-variant/20 p-8 hover:border-[#5ee7ff]/40 transition-all duration-500 hover:-translate-y-2 shadow-lg">
-      <div class="absolute -right-8 -bottom-8 opacity-5 group-hover:opacity-10 transition-opacity">
-        <span class="material-symbols-outlined text-[12rem]">shield</span>
+      <h1 class="hero-title" style="font-family:var(--font-headline);font-style:normal;">
+        We Forge the<br>
+        <span class="glow" style="font-style:italic;color:var(--primary);">Digital Frost.</span>
+      </h1>
+
+      <p class="hero-subtitle">
+        Risveglia il drago del gelo, conquista la tundra e unisciti a una community che vuole far sembrare ogni accesso l'inizio di una battaglia epica.
+      </p>
+
+      <div class="hero-actions">
+        <a href="/login" class="btn btn-cyan btn-lg">
+          <i class="bi bi-discord" aria-hidden="true"></i>
+          Accedi Discord
+        </a>
+        <button type="button" id="copy-ip-btn" class="btn btn-outline btn-lg">
+          <i class="bi bi-hdd-network" aria-hidden="true"></i>
+          <span>play.Skyfrost.it</span>
+        </button>
       </div>
-      <span class="text-primary-container font-sans text-[10px] tracking-[0.2em] uppercase mb-4 block font-bold">Territorio</span>
-      <h3 class="font-display text-3xl font-bold mb-2 text-white">Dominio</h3>
-      <p class="text-on-surface-variant leading-relaxed mb-6 text-sm">Controlla le terre ghiacciate e stabilisci il tuo impero nella tundra infinita di SkyFrost.</p>
-    </div>
-    <!-- Card 2 -->
-    <div class="relative group overflow-hidden rounded-2xl bg-[#171b26]/70 backdrop-blur-xl border border-outline-variant/20 p-8 hover:border-[#5ee7ff]/40 transition-all duration-500 hover:-translate-y-2 shadow-lg">
-      <div class="absolute -right-8 -bottom-8 opacity-5 group-hover:opacity-10 transition-opacity">
-        <span class="material-symbols-outlined text-[12rem]">swords</span>
+
+      <div class="hero-status">
+        <div class="status-pill">
+          <span class="status-dot online"></span>
+          <span>
+            <i class="bi bi-discord" aria-hidden="true"></i>
+            <strong id="discord-online-count" style="color:var(--primary)">…</strong> online su
+            <a href="https://discord.com/invite/MfseZ57sPd" target="_blank" rel="noopener noreferrer" class="status-pill-link">Discord</a>
+          </span>
+        </div>
       </div>
-      <span class="text-primary-container font-sans text-[10px] tracking-[0.2em] uppercase mb-4 block font-bold">Combattimento</span>
-      <h3 class="font-display text-3xl font-bold mb-2 text-white">Legione</h3>
-      <p class="text-on-surface-variant leading-relaxed mb-6 text-sm">Discord attivo, staff presente e supporto rapido per le battaglie PvP leggendarie.</p>
-    </div>
-    <!-- Card 3 -->
-    <div class="relative group overflow-hidden rounded-2xl bg-[#171b26]/70 backdrop-blur-xl border border-outline-variant/20 p-8 hover:border-[#5ee7ff]/40 transition-all duration-500 hover:-translate-y-2 shadow-lg">
-      <div class="absolute -right-8 -bottom-8 opacity-5 group-hover:opacity-10 transition-opacity">
-        <span class="material-symbols-outlined text-[12rem]">diamond</span>
+
+      <div class="hero-trust-row">
+        <div class="hero-trust-card">
+          <span class="hero-trust-label">Dominio</span>
+          <strong>Eventi, progressione e sfide costruite attorno al gelo eterno di SkyFrost.</strong>
+        </div>
+        <div class="hero-trust-card">
+          <span class="hero-trust-label">Legione</span>
+          <strong>Discord attivo, staff presente e supporto rapido quando la battaglia si accende.</strong>
+        </div>
+        <div class="hero-trust-card">
+          <span class="hero-trust-label">Reliquie</span>
+          <strong>Store, premi voto e annunci ufficiali raccolti in un unico hub della community.</strong>
+        </div>
       </div>
-      <span class="text-primary-container font-sans text-[10px] tracking-[0.2em] uppercase mb-4 block font-bold">Antichità</span>
-      <h3 class="font-display text-3xl font-bold mb-2 text-white">Reliquie</h3>
-      <p class="text-on-surface-variant leading-relaxed mb-6 text-sm">Scopri manufatti perduti nello store ufficiale e sblocca ricompense uniche.</p>
     </div>
-  </section>
-</main>
+
+    <!-- Hero Glass Artifact -->
+    <div class="hero-stage" aria-hidden="true">
+      <img class="hero-stage-logo" src="/assets/skyfrost-logo.png" alt="" />
+      <div class="hero-stage-card hero-stage-card-top">
+        <span class="hero-stage-label">Drago Antico</span>
+        <strong>Entra sotto l'emblema glaciale che guida il regno di SkyFrost.</strong>
+      </div>
+      <div class="hero-stage-card hero-stage-card-bottom">
+        <span class="hero-stage-label">Forgia Glaciale</span>
+        <strong>News, store e supporto scorrono nello stesso hub della community.</strong>
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="divider"></div>
 
@@ -151,9 +131,10 @@
   <div class="container">
 
     <section class="section reveal">
-      <div class="section-header">
-        <h2 class="section-title">Annunci</h2>
-        <a href="/wiki" class="section-link">Tutti →</a>
+      <span class="section-eyebrow glacial-glow">Aggiornamenti</span>
+      <div style="display:flex;justify-content:space-between;align-items:end;margin-bottom:1.5rem;">
+        <h2 class="section-title">News & Announcements</h2>
+        <a href="/wiki" class="section-link">Tutte le news →</a>
       </div>
 
       <div id="index-news-pages">
@@ -179,7 +160,7 @@
       <div id="news-pagination" style="display:flex;align-items:center;justify-content:center;gap:1.5rem;margin-top:2rem;">
         <button id="news-prev" class="btn btn-ghost btn-sm">‹ Prec</button>
         <div id="news-dots" style="display:flex;gap:.5rem;">
-          <button class="page-dot active" aria-label="Pagina news 1" style="width:8px;height:8px;border-radius:50%;border:none;background:var(--cyan);cursor:pointer;transition:background .2s;"></button>
+          <button class="page-dot active" aria-label="Pagina news 1"></button>
         </div>
         <button id="news-next" class="btn btn-ghost btn-sm">Succ ›</button>
       </div>
@@ -206,7 +187,7 @@
             </div>
           </div>
           <div style="padding:1.5rem;">
-            <a href="https://store.skyfrost.it" target="_blank" rel="noopener noreferrer" class="btn btn-cyan btn-block btn-lg" id="index-featured-link">
+            <a href="https://store.skyfrost.it" target="_blank" rel="noopener noreferrer" class="btn btn-cyan btn-lg" id="index-featured-link" style="width:100%;justify-content:center;">
               Acquista su Tebex →
             </a>
           </div>
@@ -240,10 +221,6 @@
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     SkyFrost.initIndex();
-    /* Page dot styling */
-    const style = document.createElement('style');
-    style.textContent = '.page-dot.active{background:var(--cyan)!important;}';
-    document.head.appendChild(style);
   });
 </script>
 </body>
