@@ -1140,7 +1140,7 @@ SkyFrost.initLicenses = async function () {
         if (data.valid && data.status === 'approved') {
           validateResult.innerHTML = `
             <div class="license-result license-valid">
-              <span class="license-result-icon">✅</span>
+              <span class="license-result-icon"><i class="bi bi-patch-check-fill"></i></span>
               <div>
                 <strong>Licenza Approvata</strong>
                 <div style="font-size:.82rem;color:var(--text-dim);margin-top:.25rem;">
@@ -1157,7 +1157,7 @@ SkyFrost.initLicenses = async function () {
           };
           validateResult.innerHTML = `
             <div class="license-result license-invalid">
-              <span class="license-result-icon">${data.reason === 'pending' ? '⏳' : '❌'}</span>
+              <span class="license-result-icon"><i class="bi ${data.reason === 'pending' ? 'bi-hourglass-split' : 'bi-x-octagon-fill'}"></i></span>
               <div>
                 <strong>Licenza ${data.reason === 'pending' ? 'In Attesa' : 'Non Valida'}</strong>
                 <div style="font-size:.82rem;color:var(--text-dim);margin-top:.25rem;">

@@ -330,7 +330,7 @@
       container.id = 'toast-container';
       document.body.appendChild(container);
     }
-    const icons = { success: '✅', error: '❌', info: '❄️' };
+    const icons = { success: '<i class="bi bi-check-circle-fill"></i>', error: '<i class="bi bi-x-circle-fill"></i>', info: '<i class="bi bi-info-circle-fill"></i>' };
     const toast = document.createElement('div');
     toast.className = `toast toast-${type}`;
     toast.innerHTML = `<span class="toast-icon">${icons[type] || '❄️'}</span><span>${message}</span>`;
