@@ -52,7 +52,7 @@
         <span class="nav-logo-mark" aria-hidden="true">
           <img src="${BRAND_LOGO}" alt="" />
         </span>
-        <span class="nav-logo-wordmark">SkyFrost</span>
+        <span class="nav-logo-wordmark">Sky<span>Frost</span></span>
       </a>
 
       <ul class="nav-links">
@@ -183,6 +183,16 @@
     const footer = document.createElement('footer');
     footer.id = 'site-footer';
     footer.innerHTML = `
+      <!-- CTA BANNER -->
+      <div class="footer-cta">
+        <h2>Pronto a unirti a SkyFrost?</h2>
+        <p>Entra nella community, esplora lo store e fai sentire la tua voce con un voto!</p>
+        <div class="footer-cta-actions">
+          <a href="https://discord.com/invite/MfseZ57sPd" target="_blank" rel="noopener noreferrer" class="btn btn-cyan">Unisciti al Discord</a>
+          <a href="${ROUTE_PATHS.store}" class="btn btn-outline">Visita lo Store</a>
+        </div>
+      </div>
+
       <div class="footer-inner">
         <div class="footer-brand">
           <a href="${ROUTE_PATHS.home}" class="footer-logo">
@@ -222,7 +232,7 @@
           </ul>
         </div>
       </div>
-      <div class="footer-bottom" style="margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--border);max-width:1200px;margin-left:auto;margin-right:auto;display:flex;align-items:center;justify-content:space-between;">
+      <div class="footer-bottom">
         <div class="footer-legal">
           <span class="footer-copy">© 2026 SkyFrost — Tutti i diritti riservati</span>
           <span class="footer-disclaimer">Questo sito non e affiliato ad Hypixel Studios.</span>
@@ -266,9 +276,9 @@
 
     function drawBg() {
       const sky = ctx.createLinearGradient(0, 0, 0, canvas.height);
-      sky.addColorStop(0, 'rgba(0,12,66,1)');
-      sky.addColorStop(0.4, 'rgba(0,8,54,1)');
-      sky.addColorStop(1, 'rgba(0,4,36,1)');
+      sky.addColorStop(0, '#0b0e14');
+      sky.addColorStop(0.4, '#0a0d13');
+      sky.addColorStop(1, '#070a10');
       ctx.fillStyle = sky;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -276,9 +286,9 @@
         canvas.width * 0.5, canvas.height * -0.15, 0,
         canvas.width * 0.5, canvas.height * -0.15, canvas.width * 0.7
       );
-      aurora.addColorStop(0, 'rgba(0,88,248,0.18)');
-      aurora.addColorStop(0.5, 'rgba(88,194,250,0.08)');
-      aurora.addColorStop(1, 'rgba(0,12,66,0)');
+      aurora.addColorStop(0, 'rgba(74,108,247,0.12)');
+      aurora.addColorStop(0.5, 'rgba(74,108,247,0.04)');
+      aurora.addColorStop(1, 'rgba(11,14,20,0)');
       ctx.fillStyle = aurora;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -286,8 +296,8 @@
         canvas.width * 0.8, canvas.height * 0.2, 0,
         canvas.width * 0.8, canvas.height * 0.2, canvas.width * 0.5
       );
-      rim.addColorStop(0, 'rgba(88,194,250,0.06)');
-      rim.addColorStop(1, 'rgba(0,12,66,0)');
+      rim.addColorStop(0, 'rgba(74,108,247,0.04)');
+      rim.addColorStop(1, 'rgba(11,14,20,0)');
       ctx.fillStyle = rim;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
@@ -297,7 +307,7 @@
       particles.forEach(p => {
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(88,194,250,${p.alpha})`;
+        ctx.fillStyle = `rgba(74,108,247,${p.alpha})`;
         ctx.fill();
         p.x += p.vx;
         p.y += p.vy;
@@ -342,9 +352,17 @@
   };
 
   /* ── INIT ── */
+  /* ── GRID OVERLAY ── */
+  function injectGridOverlay() {
+    const grid = document.createElement('div');
+    grid.className = 'grid-overlay';
+    document.body.prepend(grid);
+  }
+
   document.addEventListener('DOMContentLoaded', () => {
     document.body.dataset.page = getActivePage();
     initCanvas();
+    injectGridOverlay();
     injectNav();
     injectFooter();
     initReveal();
