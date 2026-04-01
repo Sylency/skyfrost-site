@@ -62,11 +62,13 @@
         ${navLink('vote',     'Vota',      active)}
         ${navLink('supporto', 'Supporto',  active)}
         ${navLink('wiki',     'Wiki',      active)}
-        ${navLink('licenses', 'Licenze',   active)}
+        <li id="desktop-nav-licenses" style="display:none;">
+          <a href="${ROUTE_PATHS.licenses}"${active === 'licenses' ? ' class="active" aria-current="page"' : ''}>Licenze</a>
+        </li>
       </ul>
 
-      <div class="nav-ctas">
-        <a href="${ROUTE_PATHS.supporto}" class="btn btn-primary btn-sm">Apri Ticket</a>
+      <div class="nav-ctas" id="desktop-nav-cta">
+        <a href="${ROUTE_PATHS.login}" class="btn btn-primary btn-sm">Accedi con Discord</a>
       </div>
 
       <button
@@ -97,10 +99,9 @@
       ${mobileLink('vote', 'Vota', active)}
       ${mobileLink('supporto', 'Supporto', active)}
       ${mobileLink('wiki', 'Wiki', active)}
-      ${mobileLink('licenses', 'Licenze', active)}
-      <div style="display:flex;gap:.75rem;margin-top:1rem;">
-        <a href="${ROUTE_PATHS.login}" class="btn btn-ghost">Accedi</a>
-        <a href="${ROUTE_PATHS.supporto}" class="btn btn-primary">Apri Ticket</a>
+      <a href="${ROUTE_PATHS.licenses}" id="mobile-nav-licenses" style="display:none;"${active === 'licenses' ? ' class="active" aria-current="page"' : ''}>Licenze</a>
+      <div style="display:flex;gap:.75rem;margin-top:1rem;" id="mobile-nav-cta">
+        <a href="${ROUTE_PATHS.login}" class="btn btn-primary">Accedi con Discord</a>
       </div>
     `;
     document.body.appendChild(overlay);
@@ -286,8 +287,8 @@
         canvas.width * 0.5, canvas.height * -0.15, 0,
         canvas.width * 0.5, canvas.height * -0.15, canvas.width * 0.7
       );
-      aurora.addColorStop(0, 'rgba(74,108,247,0.12)');
-      aurora.addColorStop(0.5, 'rgba(74,108,247,0.04)');
+      aurora.addColorStop(0, 'rgba(88,194,250,0.12)');
+      aurora.addColorStop(0.5, 'rgba(88,194,250,0.04)');
       aurora.addColorStop(1, 'rgba(11,14,20,0)');
       ctx.fillStyle = aurora;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -296,7 +297,7 @@
         canvas.width * 0.8, canvas.height * 0.2, 0,
         canvas.width * 0.8, canvas.height * 0.2, canvas.width * 0.5
       );
-      rim.addColorStop(0, 'rgba(74,108,247,0.04)');
+      rim.addColorStop(0, 'rgba(88,194,250,0.04)');
       rim.addColorStop(1, 'rgba(11,14,20,0)');
       ctx.fillStyle = rim;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -307,7 +308,7 @@
       particles.forEach(p => {
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(74,108,247,${p.alpha})`;
+        ctx.fillStyle = `rgba(88,194,250,${p.alpha})`;
         ctx.fill();
         p.x += p.vx;
         p.y += p.vy;
@@ -352,20 +353,43 @@
   };
 
   /* ── INIT ── */
-  /* ── GRID OVERLAY ── */
-  function injectGridOverlay() {
-    const grid = document.createElement('div');
-    grid.className = 'grid-overlay';
-    document.body.prepend(grid);
-  }
 
-  document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener('DOMContentLoaded', async () => {
     document.body.dataset.page = getActivePage();
     initCanvas();
-    injectGridOverlay();
     injectNav();
     injectFooter();
     initReveal();
+
+    if (typeof SkyFrost !== 'undefined' && typeof SkyFrost.fetchAuthSession === 'function') {
+      try {
+        const session = await SkyFrost.fetchAuthSession();
+        if (session && session.authenticated && session.user) {
+          const userStr = 'Ciao ' + (session.user.displayName || session.user.username);
+          const deskCta = document.getElementById('desktop-nav-cta');
+          if (deskCta) {
+            deskCta.innerHTML = '<a href="' + ROUTE_PATHS.home + '" class="btn btn-primary btn-sm">' + userStr + '</a>';
+          }
+          const mobCta = document.getElementById('mobile-nav-cta');
+          if (mobCta) {
+            mobCta.innerHTML = '<a href="' + ROUTE_PATHS.home + '" class="btn btn-primary">' + userStr + '</a>';
+          }
+          
+          const roles = Array.isArray(session.user.roles) ? session.user.roles : [];
+          const ALLOWED_ROLES = ['1463926392109662350', '1463926392109662348'];
+          const isStaff = roles.some(r => ALLOWED_ROLES.includes(r));
+          if (isStaff) {
+            const deskLic = document.getElementById('desktop-nav-licenses');
+            if (deskLic) deskLic.style.display = '';
+            const mobLic = document.getElementById('mobile-nav-licenses');
+            if (mobLic) mobLic.style.display = '';
+          }
+        }
+      } catch (err) {
+        console.error('NavBar Auth Error:', err);
+      }
+    }
   });
 
 })();
+

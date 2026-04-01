@@ -1384,12 +1384,21 @@ SkyFrost.initLicenses = async function () {
   try {
     const session = await SkyFrost.fetchAuthSession();
     if (session.authenticated && session.user) {
-      const displayName = safeText(session.user.displayName, safeText(session.user.username, 'Utente'));
-      setAuthStatus(`Connesso come ${displayName}. Pannello admin sbloccato.`, 'success');
-      if (adminPanel) adminPanel.style.display = '';
-      await loadLicenseList();
+      const roles = Array.isArray(session.user.roles) ? session.user.roles : [];
+      const ALLOWED_ROLES = ['1463926392109662350', '1463926392109662348'];
+      const isStaff = roles.some(r => ALLOWED_ROLES.includes(r));
+      
+      if (isStaff) {
+        const displayName = safeText(session.user.displayName, safeText(session.user.username, 'Utente'));
+        setAuthStatus(`Connesso come ${displayName} (Admin).`, 'success');
+        if (adminPanel) adminPanel.style.display = '';
+        await loadLicenseList();
+      } else {
+        setAuthStatus('Accesso negato. Sono richiesti permessi Owner/Sr. Admin.', 'error');
+        if (adminPanel) adminPanel.style.display = 'none';
+      }
     } else {
-      setAuthStatus('Devi effettuare il login Discord per accedere al pannello admin.', 'error');
+      setAuthStatus('Effettua il login Discord per accedere al pannello.', 'error');
       if (adminPanel) adminPanel.style.display = 'none';
     }
   } catch (err) {

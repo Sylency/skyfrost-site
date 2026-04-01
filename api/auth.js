@@ -96,7 +96,8 @@ function publicUserFromPayload(payload) {
       avatar: safeText(payload.avatar, ''),
       discriminator: 0
     }),
-    guildId: safeText(payload.guildId, '')
+    guildId: safeText(payload.guildId, ''),
+    roles: Array.isArray(payload.roles) ? payload.roles : []
   };
 }
 
@@ -138,7 +139,7 @@ async function fetchDiscordUser(accessToken) {
 
 async function ensureGuildMembership(userId) {
   const guildId = safeText(process.env.DISCORD_GUILD_ID, '');
-  if (!guildId) return { ok: true, guildId: '' };
+  if (!guildId) return { ok: true, guildId: '', roles: [] };
 
   const botToken = safeText(process.env.DISCORD_BOT_TOKEN, '');
   if (!botToken) return { ok: false, reason: 'guild_check_needs_bot_token' };
@@ -149,7 +150,10 @@ async function ensureGuildMembership(userId) {
 
   if (response.status === 404) return { ok: false, reason: 'not_in_guild' };
   if (!response.ok) return { ok: false, reason: `guild_check_failed_${response.status}` };
-  return { ok: true, guildId };
+  
+  const member = await response.json().catch(() => ({}));
+  const roles = Array.isArray(member.roles) ? member.roles : [];
+  return { ok: true, guildId, roles };
 }
 
 function redirectWithError(res, code) {
@@ -231,7 +235,8 @@ async function completeAuth(req, res) {
       username: safeText(discordUser.username, 'DiscordUser'),
       globalName: safeText(discordUser.global_name, ''),
       avatar: safeText(discordUser.avatar, ''),
-      guildId: safeText(guildCheck.guildId, '')
+      guildId: safeText(guildCheck.guildId, ''),
+      roles: guildCheck.roles || []
     }, authSecret, SESSION_TTL_SECONDS);
 
     setCookie(res, SESSION_COOKIE_NAME, token, {

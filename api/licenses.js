@@ -31,6 +31,12 @@ function isAdmin(req) {
   const payload = getSessionPayload(req);
   if (!payload) return { ok: false, reason: 'not_authenticated' };
 
+  const roles = Array.isArray(payload.roles) ? payload.roles : [];
+  // Owner e Sr. Admin Role IDs (definiti in discord.js)
+  const ALLOWED_ROLES = ['1463926392109662350', '1463926392109662348'];
+  const hasAccess = roles.some(r => ALLOWED_ROLES.includes(r));
+  if (!hasAccess) return { ok: false, reason: 'forbidden_role' };
+
   return { ok: true, userId: safeText(payload.sub, ''), username: safeText(payload.username, '') };
 }
 
