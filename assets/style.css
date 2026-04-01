@@ -539,7 +539,16 @@ select.form-control option { background: var(--bg-1); color: var(--white); }
   margin-bottom: 1rem; padding-bottom: 0.75rem;
   border-bottom: 1px solid rgba(88,194,250,0.08);
 }
-.role-label::after { content: none; }
+.role-section { margin-top: 3.5rem; }
+.role-section:first-child { margin-top: 0; }
+
+.role-dot {
+  display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 0.4rem;
+}
+.role-dot.owner { background: var(--gold); box-shadow: 0 0 8px rgba(251,191,36,0.6); }
+.role-dot.sradmin { background: var(--green); box-shadow: 0 0 8px rgba(16,185,129,0.6); }
+.role-dot.admin { background: var(--red); box-shadow: 0 0 8px rgba(239,68,68,0.6); }
+.role-dot.staff { background: var(--primary); box-shadow: 0 0 8px rgba(88,194,250,0.6); }
 
 .staff-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.25rem; margin-bottom: 2.5rem; }
 .staff-card {
@@ -558,7 +567,7 @@ select.form-control option { background: var(--bg-1); color: var(--white); }
 .staff-name { font-family: var(--font-headline); font-size: 1rem; font-weight: 700; color: white; margin-bottom: 0.25rem; }
 .staff-role-badge { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-top: 0.35rem; }
 .staff-role-badge.owner   { color: var(--gold); }
-.staff-role-badge.sradmin { color: #fb7185; }
+.staff-role-badge.sradmin { color: var(--green); }
 .staff-role-badge.admin   { color: var(--red); }
 .staff-role-badge.staff   { color: var(--primary); }
 .staff-role-badge.mod     { color: #818cf8; }

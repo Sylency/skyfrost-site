@@ -55,26 +55,26 @@
       <!-- Live Status Pill -->
       <div class="hero-eyebrow">
         <span class="status-dot online" style="width:6px;height:6px;"></span>
-        <span>Now Live: Glacial Engine</span>
+        <span data-i18n="hero_eyebrow">Now Live: Server Minecraft & Hytale</span>
       </div>
 
       <h1 class="hero-title" style="font-family:var(--font-headline);font-style:normal;">
-        We Forge the<br>
-        <span class="glow" style="font-style:italic;color:var(--primary);">Digital Frost.</span>
+        <span data-i18n="hero_title">SkyFrost</span><br>
+        <span class="glow" style="font-style:italic;color:var(--primary);" data-i18n="hero_title_glow">Network</span>
       </h1>
 
-      <p class="hero-subtitle">
-        Risveglia il drago del gelo, conquista la tundra e unisciti a una community che vuole far sembrare ogni accesso l'inizio di una battaglia epica.
+      <p class="hero-subtitle" data-i18n="hero_subtitle">
+        Entra nel network definitivo. Esplora le modalità Minecraft o unisciti al futuro su Hytale. Community attiva, eventi periodici e divertimento senza limiti.
       </p>
 
       <div class="hero-actions">
         <a href="/login" class="btn btn-cyan btn-lg">
           <i class="bi bi-discord" aria-hidden="true"></i>
-          Accedi Discord
+          <span data-i18n="btn_discord">Accedi Discord</span>
         </a>
         <button type="button" id="copy-ip-btn" class="btn btn-outline btn-lg">
           <i class="bi bi-hdd-network" aria-hidden="true"></i>
-          <span>play.Skyfrost.it</span>
+          <span>play.skyfrost.it</span>
         </button>
       </div>
 
@@ -83,7 +83,7 @@
           <span class="status-dot online"></span>
           <span>
             <i class="bi bi-discord" aria-hidden="true"></i>
-            <strong id="discord-online-count" style="color:var(--primary)">…</strong> online su
+            <strong id="discord-online-count" style="color:var(--primary)">…</strong> <span data-i18n="status_online">online su</span>
             <a href="https://discord.com/invite/MfseZ57sPd" target="_blank" rel="noopener noreferrer" class="status-pill-link">Discord</a>
           </span>
         </div>
@@ -91,16 +91,16 @@
 
       <div class="hero-trust-row">
         <div class="hero-trust-card">
-          <span class="hero-trust-label">Dominio</span>
-          <strong>Eventi, progressione e sfide costruite attorno al gelo eterno di SkyFrost.</strong>
+          <span class="hero-trust-label" data-i18n="trust_mc_title">Minecraft</span>
+          <strong data-i18n="trust_mc_desc">Modalità uniche, economia bilanciata e sfide continue sul nostro server Minecraft.</strong>
         </div>
         <div class="hero-trust-card">
-          <span class="hero-trust-label">Legione</span>
-          <strong>Discord attivo, staff presente e supporto rapido quando la battaglia si accende.</strong>
+          <span class="hero-trust-label" data-i18n="trust_hy_title">Hytale</span>
+          <strong data-i18n="trust_hy_desc">Pronti per il futuro. Server Hytale in arrivo con minigiochi e avventure esclusive.</strong>
         </div>
         <div class="hero-trust-card">
-          <span class="hero-trust-label">Reliquie</span>
-          <strong>Store, premi voto e annunci ufficiali raccolti in un unico hub della community.</strong>
+          <span class="hero-trust-label" data-i18n="trust_com_title">Community</span>
+          <strong data-i18n="trust_com_desc">Discord attivo, assistenza veloce e aggiornamenti continui per i giocatori.</strong>
         </div>
       </div>
     </div>
@@ -109,12 +109,12 @@
     <div class="hero-stage" aria-hidden="true">
       <img class="hero-stage-logo" src="/assets/skyfrost-logo.png" alt="" />
       <div class="hero-stage-card hero-stage-card-top">
-        <span class="hero-stage-label">Drago Antico</span>
-        <strong>Entra sotto l'emblema glaciale che guida il regno di SkyFrost.</strong>
+        <span class="hero-stage-label" data-i18n="stage_top_title">Minecraft Hub</span>
+        <strong data-i18n="stage_top_desc">Entra ora su play.skyfrost.it e inizia la tua avventura!</strong>
       </div>
       <div class="hero-stage-card hero-stage-card-bottom">
-        <span class="hero-stage-label">Forgia Glaciale</span>
-        <strong>News, store e supporto scorrono nello stesso hub della community.</strong>
+        <span class="hero-stage-label" data-i18n="stage_bot_title">Hytale Ready</span>
+        <strong data-i18n="stage_bot_desc">Siamo pronti ad accogliere la nuova generazione di giocatori.</strong>
       </div>
     </div>
   </div>
@@ -129,10 +129,10 @@
   <div class="container">
 
     <section class="section reveal">
-      <span class="section-eyebrow glacial-glow">Aggiornamenti</span>
+      <span class="section-eyebrow glacial-glow" data-i18n="news_eyebrow">Aggiornamenti</span>
       <div style="display:flex;justify-content:space-between;align-items:end;margin-bottom:1.5rem;">
-        <h2 class="section-title">News & Announcements</h2>
-        <a href="/wiki" class="section-link">Tutte le news →</a>
+        <h2 class="section-title" data-i18n="news_title">News & Annunci</h2>
+        <a href="/wiki" class="section-link" data-i18n="news_link">Tutte le news →</a>
       </div>
 
       <div id="index-news-pages">
@@ -176,17 +176,17 @@
         <div class="store-featured" id="index-featured-card">
           <div class="featured-top">
             <div>
-              <span class="featured-label">⭐ In primo piano</span>
+              <span class="featured-label" data-i18n="store_featured">⭐ In primo piano</span>
               <div class="featured-name" id="index-featured-name">Caricamento...</div>
               <div class="featured-price" id="index-featured-price">Prezzo su Tebex</div>
               <ul class="featured-perks" id="index-featured-perks" style="margin-top:1rem;">
-                <li>Caricamento pacchetto in corso...</li>
+                <li data-i18n="store_perks_loading">Caricamento pacchetto in corso...</li>
               </ul>
             </div>
           </div>
           <div style="padding:1.5rem;">
             <a href="https://store.skyfrost.it" target="_blank" rel="noopener noreferrer" class="btn btn-cyan btn-lg" id="index-featured-link" style="width:100%;justify-content:center;">
-              Acquista su Tebex →
+              <span data-i18n="btn_buy_tebex">Acquista su Tebex →</span>
             </a>
           </div>
         </div>
@@ -195,14 +195,14 @@
         <div style="display:flex;flex-direction:column;gap:1.25rem;">
 
           <div class="card reveal reveal-delay-1">
-            <div class="card-header-bar">🏆 Top Donatori</div>
+            <div class="card-header-bar" data-i18n="lb_donators">🏆 Top Donatori</div>
             <table class="lb-table" id="index-top-donators">
               <tr><td class="lb-rank">#-</td><td class="lb-name">Caricamento classifica...</td><td class="lb-amount">--</td></tr>
             </table>
           </div>
 
           <div class="card reveal reveal-delay-2">
-            <div class="card-header-bar">⚡ Acquisti Recenti</div>
+            <div class="card-header-bar" data-i18n="lb_recent">⚡ Acquisti Recenti</div>
             <div id="index-recent-purchases">
               <div class="purchase-row"><div><div class="purchase-user">Caricamento acquisti...</div><div class="purchase-cat">Tebex</div></div><span class="purchase-item">--</span></div>
             </div>

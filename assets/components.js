@@ -56,19 +56,20 @@
       </a>
 
       <ul class="nav-links">
-        ${navLink('home',     'Home',      active)}
-        ${navLink('store',    'Store',     active)}
-        ${navLink('staff',    'Staff',     active)}
-        ${navLink('vote',     'Vota',      active)}
-        ${navLink('supporto', 'Supporto',  active)}
-        ${navLink('wiki',     'Wiki',      active)}
+        ${navLink('home',     '<span data-i18n="nav_home">Home</span>',      active)}
+        ${navLink('store',    '<span data-i18n="nav_store">Store</span>',     active)}
+        ${navLink('staff',    '<span data-i18n="nav_staff">Staff</span>',     active)}
+        ${navLink('vote',     '<span data-i18n="nav_vote">Vota</span>',      active)}
+        ${navLink('supporto', '<span data-i18n="nav_support">Supporto</span>',  active)}
+        ${navLink('wiki',     '<span data-i18n="nav_wiki">Wiki</span>',      active)}
         <li id="desktop-nav-licenses" style="display:none;">
-          <a href="${ROUTE_PATHS.licenses}"${active === 'licenses' ? ' class="active" aria-current="page"' : ''}>Licenze</a>
+          <a href="${ROUTE_PATHS.licenses}"${active === 'licenses' ? ' class="active" aria-current="page"' : ''} data-i18n="nav_licenses">Licenze</a>
         </li>
       </ul>
 
       <div class="nav-ctas" id="desktop-nav-cta">
-        <a href="${ROUTE_PATHS.login}" class="btn btn-primary btn-sm">Accedi con Discord</a>
+        <div id="lang-selector-container"></div>
+        <a href="${ROUTE_PATHS.login}" class="btn btn-primary btn-sm" data-i18n="nav_login">Accedi con Discord</a>
       </div>
 
       <button
@@ -93,15 +94,16 @@
     overlay.setAttribute('aria-label', 'Menu principale');
     overlay.hidden = true;
     overlay.innerHTML = `
-      ${mobileLink('home', 'Home', active)}
-      ${mobileLink('store', 'Store', active)}
-      ${mobileLink('staff', 'Staff', active)}
-      ${mobileLink('vote', 'Vota', active)}
-      ${mobileLink('supporto', 'Supporto', active)}
-      ${mobileLink('wiki', 'Wiki', active)}
-      <a href="${ROUTE_PATHS.licenses}" id="mobile-nav-licenses" style="display:none;"${active === 'licenses' ? ' class="active" aria-current="page"' : ''}>Licenze</a>
+      ${mobileLink('home', '<span data-i18n="nav_home">Home</span>', active)}
+      ${mobileLink('store', '<span data-i18n="nav_store">Store</span>', active)}
+      ${mobileLink('staff', '<span data-i18n="nav_staff">Staff</span>', active)}
+      ${mobileLink('vote', '<span data-i18n="nav_vote">Vota</span>', active)}
+      ${mobileLink('supporto', '<span data-i18n="nav_support">Supporto</span>', active)}
+      ${mobileLink('wiki', '<span data-i18n="nav_wiki">Wiki</span>', active)}
+      <a href="${ROUTE_PATHS.licenses}" id="mobile-nav-licenses" style="display:none;"${active === 'licenses' ? ' class="active" aria-current="page"' : ''} data-i18n="nav_licenses">Licenze</a>
+      <div id="mob-lang-selector-container"></div>
       <div style="display:flex;gap:.75rem;margin-top:1rem;" id="mobile-nav-cta">
-        <a href="${ROUTE_PATHS.login}" class="btn btn-primary">Accedi con Discord</a>
+        <a href="${ROUTE_PATHS.login}" class="btn btn-primary" data-i18n="nav_login">Accedi con Discord</a>
       </div>
     `;
     document.body.appendChild(overlay);
@@ -186,11 +188,11 @@
     footer.innerHTML = `
       <!-- CTA BANNER -->
       <div class="footer-cta">
-        <h2>Pronto a unirti a SkyFrost?</h2>
-        <p>Entra nella community, esplora lo store e fai sentire la tua voce con un voto!</p>
+        <h2 data-i18n="footer_cta_title">Pronto a unirti a SkyFrost?</h2>
+        <p data-i18n="footer_cta_desc">Entra nella community, esplora lo store e fai sentire la tua voce con un voto!</p>
         <div class="footer-cta-actions">
-          <a href="https://discord.com/invite/MfseZ57sPd" target="_blank" rel="noopener noreferrer" class="btn btn-cyan">Unisciti al Discord</a>
-          <a href="${ROUTE_PATHS.store}" class="btn btn-outline">Visita lo Store</a>
+          <a href="https://discord.com/invite/MfseZ57sPd" target="_blank" rel="noopener noreferrer" class="btn btn-cyan" data-i18n="footer_btn_discord">Unisciti al Discord</a>
+          <a href="${ROUTE_PATHS.store}" class="btn btn-outline" data-i18n="footer_btn_store">Visita lo Store</a>
         </div>
       </div>
 
@@ -205,14 +207,14 @@
           <p>Il server Hytale italiano. Entra nel gelo e lascia il tuo segno.</p>
         </div>
         <div class="footer-col">
-          <h4>Navigazione</h4>
+          <h4><span data-i18n="footer_nav">Navigazione</span></h4>
           <ul>
-            <li><a href="${ROUTE_PATHS.home}">Home</a></li>
-            <li><a href="${ROUTE_PATHS.store}">Store</a></li>
-            <li><a href="${ROUTE_PATHS.staff}">Staff</a></li>
-            <li><a href="${ROUTE_PATHS.vote}">Vota</a></li>
-            <li><a href="${ROUTE_PATHS.wiki}">Wiki</a></li>
-            <li><a href="${ROUTE_PATHS.licenses}">Licenze</a></li>
+            <li><a href="${ROUTE_PATHS.home}" data-i18n="nav_home">Home</a></li>
+            <li><a href="${ROUTE_PATHS.store}" data-i18n="nav_store">Store</a></li>
+            <li><a href="${ROUTE_PATHS.staff}" data-i18n="nav_staff">Staff</a></li>
+            <li><a href="${ROUTE_PATHS.vote}" data-i18n="nav_vote">Vota</a></li>
+            <li><a href="${ROUTE_PATHS.wiki}" data-i18n="nav_wiki">Wiki</a></li>
+            <li><a href="${ROUTE_PATHS.licenses}" data-i18n="nav_licenses">Licenze</a></li>
           </ul>
         </div>
         <div class="footer-col">
@@ -235,8 +237,8 @@
       </div>
       <div class="footer-bottom">
         <div class="footer-legal">
-          <span class="footer-copy">© 2026 SkyFrost — Tutti i diritti riservati</span>
-          <span class="footer-disclaimer">Questo sito non e affiliato ad Hypixel Studios.</span>
+          <span class="footer-copy" data-i18n="footer_rights">© 2026 SkyFrost — Tutti i diritti riservati</span>
+          <span class="footer-disclaimer" data-i18n="footer_disclaimer">Questo sito non e affiliato ad Hypixel Studios.</span>
         </div>
         <div class="footer-social">
           <a href="https://discord.com/invite/MfseZ57sPd" target="_blank" rel="noopener noreferrer" title="Discord">
@@ -360,6 +362,11 @@
     injectNav();
     injectFooter();
     initReveal();
+
+    // Append i18n script dynamically
+    const i18nScript = document.createElement('script');
+    i18nScript.src = 'assets/i18n.js';
+    document.body.appendChild(i18nScript);
 
     if (typeof SkyFrost !== 'undefined' && typeof SkyFrost.fetchAuthSession === 'function') {
       try {
