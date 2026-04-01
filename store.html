@@ -34,11 +34,11 @@
 <div class="page-wrap">
   <div class="page-hero">
     <div class="page-hero-copy">
-      <p class="page-hero-eyebrow">⟡ Negozio ufficiale ⟡</p>
-      <h1 class="page-hero-title">Sky<span class="glow">Store</span></h1>
-      <p class="page-hero-sub">Potenzia la tua esperienza di gioco con VIP, cosmetic ed oggetti esclusivi.</p>
+      <p class="page-hero-eyebrow" data-i18n="store_eyebrow">⟡ Negozio ufficiale ⟡</p>
+      <h1 class="page-hero-title"><span data-i18n="store_title_p1">Sky</span><span class="glow" data-i18n="store_title_glow">Store</span></h1>
+      <p class="page-hero-sub" data-i18n="store_subtitle">Potenzia la tua esperienza di gioco con VIP, cosmetic ed oggetti esclusivi.</p>
       <div style="margin-top:1.5rem;display:flex;gap:1rem;justify-content:flex-start;flex-wrap:wrap;">
-        <a href="https://store.skyfrost.it" target="_blank" rel="noopener noreferrer" class="btn btn-cyan">
+        <a href="https://store.skyfrost.it" target="_blank" rel="noopener noreferrer" class="btn btn-cyan" data-i18n="store_btn">
           Apri il negozio su Tebex →
         </a>
         <div class="status-pill">
@@ -57,9 +57,9 @@
       <!-- ── SIDEBAR ── -->
       <aside class="store-sidebar">
         <div class="card store-sidebar-card">
-          <div class="card-header-bar">📦 Categorie</div>
+          <div class="card-header-bar">📦 <span data-i18n="store_cats">Categorie</span></div>
           <ul class="sidebar-nav" id="store-categories">
-            <li><a href="/store" class="active" data-cat="all">🌐 Tutti i prodotti <span class="count">...</span></a></li>
+            <li><a href="/store" class="active" data-cat="all"><span data-i18n="store_all">Tutti i prodotti</span> <span class="count">...</span></a></li>
           </ul>
           <div class="sidebar-divider"></div>
           <ul class="sidebar-nav">
@@ -74,8 +74,8 @@
         <div class="card brand-side-card" style="margin-top:1rem;">
           <div class="card-body" style="text-align:center;">
             <div style="font-size:1.5rem;margin-bottom:.5rem;">💎</div>
-            <div style="font-family:var(--font-headline);font-size:.9rem;color:var(--frost);margin-bottom:.35rem;">Pagamenti Sicuri</div>
-            <div style="font-size:.78rem;color:var(--text-dim);line-height:1.5;">Tutti gli acquisti sono gestiti tramite <strong style="color:var(--cyan);">Tebex</strong>, la piattaforma più sicura per i server gaming.</div>
+            <div style="font-family:var(--font-headline);font-size:.9rem;color:var(--frost);margin-bottom:.35rem;" data-i18n="store_safe_title">Pagamenti Sicuri</div>
+            <div style="font-size:.78rem;color:var(--text-dim);line-height:1.5;" data-i18n="store_safe_desc">Tutti gli acquisti sono gestiti con la massima sicurezza.</div>
           </div>
         </div>
       </aside>
@@ -87,7 +87,7 @@
         <div class="store-featured reveal">
           <div class="featured-top">
             <div>
-              <span class="featured-label">⭐ Più venduto</span>
+              <span class="featured-label" data-i18n="store_featured">⭐ In primo piano</span>
               <div class="featured-name" id="store-featured-name">Caricamento...</div>
               <div class="featured-price" id="store-featured-price">Prezzo su Tebex</div>
               <ul class="featured-perks" id="store-featured-perks" style="margin-top:1rem;">
@@ -97,7 +97,7 @@
           </div>
           <div style="padding:1.5rem;display:flex;gap:1rem;align-items:center;">
             <a href="https://store.skyfrost.it" target="_blank" rel="noopener noreferrer" class="btn btn-cyan btn-lg" style="flex:1;justify-content:center;" id="store-featured-link">
-              Acquista su Tebex →
+              <span data-i18n="btn_buy_tebex">Acquista su Tebex →</span>
             </a>
             <span style="font-size:.78rem;color:var(--text-muted);" id="store-featured-meta">Consegna immediata</span>
           </div>
@@ -105,7 +105,7 @@
 
         <!-- Product grid -->
         <div class="section-header" style="margin-top:2rem;">
-          <h2 class="section-title">Tutti i prodotti</h2>
+          <h2 class="section-title" data-i18n="store_all">Tutti i prodotti</h2>
           <span style="font-size:.8rem;color:var(--text-muted);" id="store-total-label">...</span>
         </div>
 
@@ -125,8 +125,8 @@
         </div><!-- /product-grid -->
 
         <div style="text-align:center;margin-top:2.5rem;">
-          <a href="https://store.skyfrost.it" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-lg">
-            Vedi tutti i prodotti su Tebex →
+          <a href="https://store.skyfrost.it" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-lg" data-i18n="store_btn">
+            Apri negozio su Tebex →
           </a>
         </div>
 

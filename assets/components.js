@@ -372,14 +372,30 @@
       try {
         const session = await SkyFrost.fetchAuthSession();
         if (session && session.authenticated && session.user) {
-          const userStr = 'Ciao ' + (session.user.displayName || session.user.username);
-          const deskCta = document.getElementById('desktop-nav-cta');
-          if (deskCta) {
-            deskCta.innerHTML = '<a href="' + ROUTE_PATHS.home + '" class="btn btn-primary btn-sm">' + userStr + '</a>';
+          const avatar = session.user.avatar 
+            ? `https://cdn.discordapp.com/avatars/${session.user.id}/${session.user.avatar}.png`
+            : "https://cdn.discordapp.com/embed/avatars/0.png";
+          
+          const lang = localStorage.getItem('sf_lang') || 'it';
+          const helloStr = {it:'Ciao,', en:'Hello,', es:'Hola,', fr:'Salut,', de:'Hallo,'}[lang] || 'Ciao,';
+          const nameStr = session.user.displayName || session.user.username;
+
+          const userHtml = `
+            <div class="nav-userbox">
+              <span class="userbox-hello" data-i18n="nav_hello">${helloStr}</span>
+              <img src="${avatar}" class="nav-avatar" alt="" crossorigin="anonymous" />
+              <strong class="nav-username">${nameStr}</strong>
+              <a href="/api/discord/logout" class="btn-logout" title="Logout"><i class="bi bi-box-arrow-right"></i></a>
+            </div>
+          `;
+
+          const deskCtaBtn = document.querySelector('#desktop-nav-cta .btn');
+          if (deskCtaBtn) {
+            deskCtaBtn.outerHTML = userHtml;
           }
           const mobCta = document.getElementById('mobile-nav-cta');
           if (mobCta) {
-            mobCta.innerHTML = '<a href="' + ROUTE_PATHS.home + '" class="btn btn-primary">' + userStr + '</a>';
+            mobCta.innerHTML = userHtml;
           }
           
           const roles = Array.isArray(session.user.roles) ? session.user.roles : [];

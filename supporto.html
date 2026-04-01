@@ -34,9 +34,9 @@
 
 <div class="page-hero">
   <div class="page-hero-copy">
-    <p class="page-hero-eyebrow">Assistenza Community</p>
-    <h1 class="page-hero-title">Apri un <span class="glow">Ticket</span></h1>
-    <p class="page-hero-sub">
+    <p class="page-hero-eyebrow" data-i18n="sup_eyebrow">Assistenza Community</p>
+    <h1 class="page-hero-title"><span data-i18n="sup_title_p1">Apri un</span> <span class="glow" data-i18n="sup_title_glow">Ticket</span></h1>
+    <p class="page-hero-sub" data-i18n="sup_subtitle">
       Invia una richiesta al team staff: il ticket verrà consegnato direttamente sul tuo server Discord.
     </p>
   </div>
@@ -58,16 +58,16 @@
             <div class="support-profile" id="support-profile">
               <img class="support-avatar" id="support-avatar" src="https://cdn.discordapp.com/embed/avatars/0.png" alt="Avatar utente" />
               <div>
-                <div class="support-name" id="support-name">Non autenticato</div>
-                <div class="support-id" id="support-user-id">Accedi con Discord per inviare ticket.</div>
+                <div class="support-name" id="support-name" data-i18n="sup_auth_no">Non autenticato</div>
+                <div class="support-id" id="support-user-id" data-i18n="sup_auth_desc">Accedi con Discord per inviare ticket.</div>
               </div>
             </div>
 
             <div class="support-actions">
               <a id="support-login-btn" href="/api/auth?action=start" class="btn btn-cyan btn-block" style="justify-content:center;">
-                Login Discord
+                <span data-i18n="sup_login_btn">Login Discord</span>
               </a>
-              <button id="support-logout-btn" type="button" class="btn btn-ghost btn-block" style="display:none;">
+              <button id="support-logout-btn" type="button" class="btn btn-ghost btn-block" style="display:none;" data-i18n="sup_logout_btn">
                 Disconnetti
               </button>
             </div>
@@ -77,7 +77,7 @@
         <main class="card">
           <div class="card-header-bar">
             <i class="bi bi-ticket-perforated" aria-hidden="true"></i>
-            <span>Nuovo Ticket</span>
+            <span data-i18n="sup_new_ticket">Nuovo Ticket</span>
           </div>
           <div class="card-body">
             <form id="support-ticket-form">
@@ -103,17 +103,17 @@
               </div>
 
               <div class="form-group">
-                <label for="ticket-subject">Oggetto</label>
-                <input id="ticket-subject" class="form-control" type="text" maxlength="120" placeholder="Es. Problema acquisto VIP+" required />
+                <label for="ticket-subject" data-i18n="sup_form_sub">Oggetto</label>
+                <input id="ticket-subject" class="form-control" type="text" maxlength="120" placeholder="Es. Problema acquisto VIP+" data-i18n="sup_form_sub_ph" required />
               </div>
 
               <div class="form-group">
-                <label for="ticket-message">Descrizione</label>
-                <textarea id="ticket-message" class="form-control support-textarea" minlength="20" maxlength="2000" placeholder="Descrivi il problema in modo dettagliato..." required></textarea>
-                <div class="form-hint">Minimo 20 caratteri, massimo 2000.</div>
+                <label for="ticket-message" data-i18n="sup_form_desc">Descrizione</label>
+                <textarea id="ticket-message" class="form-control support-textarea" minlength="20" maxlength="2000" placeholder="Descrivi il problema in modo dettagliato..." data-i18n="sup_form_desc_ph" required></textarea>
+                <div class="form-hint" data-i18n="sup_form_hint">Minimo 20 caratteri, massimo 2000.</div>
               </div>
 
-              <button type="submit" class="btn btn-cyan btn-lg">Invia Ticket su Discord</button>
+              <button type="submit" class="btn btn-cyan btn-lg" data-i18n="sup_form_submit">Invia Ticket su Discord</button>
             </form>
           </div>
         </main>

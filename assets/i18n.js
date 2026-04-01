@@ -118,9 +118,9 @@
       margin-left: 0.5rem;
     }
     .lang-select:hover {
-      border-color: var(--primary);
+      border-color: rgba(88,194,250,0.3);
       color: var(--white);
-      background: rgba(15, 23, 42, 0.9);
+      background: rgba(15, 23, 42, 0.8);
     }
     .lang-select option {
       background: var(--bg-1);
