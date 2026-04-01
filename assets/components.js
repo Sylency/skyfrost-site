@@ -385,7 +385,7 @@
               <span class="userbox-hello" data-i18n="nav_hello">${helloStr}</span>
               <img src="${avatar}" class="nav-avatar" alt="" crossorigin="anonymous" />
               <strong class="nav-username">${nameStr}</strong>
-              <a href="/api/auth?action=logout" class="btn-logout" title="Logout"><i class="bi bi-box-arrow-right"></i></a>
+              <a href="#" onclick="event.preventDefault(); fetch('/api/auth?action=logout', {method:'POST'}).then(function(){ location.reload(); });" class="btn-logout" title="Logout"><i class="bi bi-box-arrow-right"></i></a>
             </div>
           `;
 

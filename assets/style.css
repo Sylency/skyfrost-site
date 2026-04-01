@@ -160,7 +160,7 @@ input, textarea, select, button { font-family: inherit; font-size: inherit; }
   box-shadow: 0 0 16px rgba(88, 194, 250, 0.4);
 }
 
-.nav-ctas { display: flex; gap: 0.5rem; }
+.nav-ctas { display: flex; gap: 0.5rem; align-items: center; }
 
 .nav-userbox {
   display: flex;
