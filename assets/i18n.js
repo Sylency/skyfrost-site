@@ -135,9 +135,13 @@
   `;
   document.head.appendChild(style);
 
-  // Initialize after DOM load
-  document.addEventListener('DOMContentLoaded', () => {
+  // Initialize after DOM load, or immediately if already loaded
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      SkyFrost.initI18n();
+    });
+  } else {
     SkyFrost.initI18n();
-  });
+  }
 
 })();

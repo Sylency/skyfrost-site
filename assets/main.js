@@ -800,7 +800,6 @@ SkyFrost.initStaff = async function () {
       html += `
         <div class="role-section reveal">
           <div class="role-label">
-            <span class="role-dot ${dotClass[role]}"></span>
             <h3>${role}</h3>
           </div>
           <div class="grid-auto-sm">
