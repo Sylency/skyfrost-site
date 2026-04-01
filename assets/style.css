@@ -162,6 +162,44 @@ input, textarea, select, button { font-family: inherit; font-size: inherit; }
 
 .nav-ctas { display: flex; gap: 0.5rem; }
 
+.nav-userbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(15, 23, 42, 0.6);
+  padding: 0.25rem 0.5rem 0.25rem 0.75rem;
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(88, 194, 250, 0.12);
+}
+.nav-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.nav-username {
+  font-family: var(--font-label);
+  font-size: 0.85rem;
+  color: var(--white);
+  font-weight: 600;
+}
+.userbox-hello {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+}
+.btn-logout {
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.2rem;
+  margin-left: 0.25rem;
+  transition: color var(--transition);
+}
+.btn-logout:hover {
+  color: var(--red);
+}
+
 .nav-hamburger {
   display: none; flex-direction: column; gap: 5px; cursor: pointer;
   background: none; border: none; padding: 0.5rem;
