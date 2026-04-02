@@ -32,6 +32,13 @@ const CATEGORY_ICONS = {
   pet: '🐾',
   default: '❄️'
 };
+const LANG_LOCALES = {
+  it: 'it-IT',
+  en: 'en-GB',
+  es: 'es-ES',
+  fr: 'fr-FR',
+  de: 'de-DE'
+};
 
 const FALLBACK_INDEX_NEWS = [
   {
@@ -166,11 +173,30 @@ function packageCategoryName(pkg) {
   return safeText(pkg?.rootCategoryName, safeText(pkg?.categoryName, 'Altro'));
 }
 
+function currentLangCode() {
+  try {
+    return window.SkyFrost?.getLanguage?.() || localStorage.getItem('sf_lang') || 'it';
+  } catch {
+    return 'it';
+  }
+}
+
+function currentLocale() {
+  return LANG_LOCALES[currentLangCode()] || 'it-IT';
+}
+
+function t(key, fallback = '', vars = {}) {
+  if (window.SkyFrost?.t) {
+    return window.SkyFrost.t(key, vars, undefined, fallback);
+  }
+  return safeText(fallback, key);
+}
+
 function formatMoney(value, currency = 'EUR') {
   const amount = Number(value);
-  if (!Number.isFinite(amount)) return 'Prezzo su Tebex';
+  if (!Number.isFinite(amount)) return t('price_tebex', 'Prezzo su Tebex');
   try {
-    return new Intl.NumberFormat('it-IT', {
+    return new Intl.NumberFormat(currentLocale(), {
       style: 'currency',
       currency: safeText(currency, 'EUR'),
       minimumFractionDigits: 2,
@@ -185,7 +211,7 @@ function formatDate(value) {
   if (!value) return '';
   const dt = new Date(value);
   if (Number.isNaN(dt.getTime())) return '';
-  return new Intl.DateTimeFormat('it-IT', {
+  return new Intl.DateTimeFormat(currentLocale(), {
     day: '2-digit',
     month: 'short',
     year: 'numeric'
@@ -212,7 +238,7 @@ function packagePerks(pkg) {
     return pkg.perks.map((perk) => safeText(perk, '')).filter(Boolean).slice(0, 5);
   }
   const desc = plainDescription(pkg?.description, '');
-  if (!desc) return ['Pacchetto disponibile nello store ufficiale Tebex.'];
+  if (!desc) return [t('store_package_available', 'Pacchetto disponibile nello store ufficiale Tebex.')];
   return [truncate(desc, 120)];
 }
 
@@ -361,6 +387,13 @@ SkyFrost.initIndex = function () {
   });
   void SkyFrost.initIndexNews();
   SkyFrost.loadIndexStoreData();
+  if (!document.body.dataset.indexI18nBound) {
+    document.body.dataset.indexI18nBound = '1';
+    document.addEventListener('skyfrost:languagechange', () => {
+      void SkyFrost.initIndexNews();
+      SkyFrost.loadIndexStoreData();
+    });
+  }
 };
 
 SkyFrost.fetchNews = async function () {
@@ -404,10 +437,10 @@ SkyFrost.initIndexNews = async function () {
     const rows = Array.isArray(newsItems) && newsItems.length
       ? newsItems
       : [normalizeNewsItem({
-        badge: 'Avviso',
+        badge: t('news_empty_badge', 'Avviso'),
         badgeClass: 'badge-dim',
-        title: 'Nessun annuncio disponibile',
-        description: 'Aggiungi contenuti in assets/news.json per mostrare le news in home.',
+        title: t('news_empty_title', 'Nessun annuncio disponibile'),
+        description: t('news_empty_desc', 'Aggiungi contenuti in assets/news.json per mostrare le news in home.'),
         author: 'SkyFrost'
       })];
 
@@ -419,7 +452,7 @@ SkyFrost.initIndexNews = async function () {
     dotsWrap.innerHTML = chunked.map((_, idx) => `<button
       class="page-dot${idx === 0 ? ' active' : ''}"
       type="button"
-      aria-label="Pagina news ${idx + 1}"
+      aria-label="${escapeHtml(t('news_page_label', 'Pagina news {num}', { num: idx + 1 }))}"
       style="width:8px;height:8px;border-radius:50%;border:none;background:var(--border);cursor:pointer;transition:background .2s;"
     ></button>`).join('');
 
@@ -441,11 +474,11 @@ SkyFrost.initIndexNews = async function () {
 
   try {
     const newsItems = await SkyFrost.fetchNews();
-    if (!newsItems.length) throw new Error('Nessuna news valida trovata');
+    if (!newsItems.length) throw new Error(t('news_no_valid', 'Nessuna news valida trovata'));
     render(newsItems);
   } catch (err) {
     console.warn('News feed fallback:', err);
-    render(FALLBACK_INDEX_NEWS.map((item, index) => normalizeNewsItem(item, index)));
+    render([]);
   }
 };
 
@@ -466,7 +499,7 @@ SkyFrost.loadIndexStoreData = async function () {
 
   function renderTop(topDonators, warningMessage = '') {
     if (!Array.isArray(topDonators) || !topDonators.length) {
-      const label = warningMessage || 'Nessuna donazione recente';
+      const label = warningMessage || t('lb_no_donations', 'Nessuna donazione recente');
       topTable.innerHTML = `<tr><td class="lb-rank">#-</td><td class="lb-name">${escapeHtml(label)}</td><td class="lb-amount">--</td></tr>`;
       return;
     }
@@ -483,7 +516,7 @@ SkyFrost.loadIndexStoreData = async function () {
 
   function renderRecent(recentPurchases, warningMessage = '') {
     if (!Array.isArray(recentPurchases) || !recentPurchases.length) {
-      const label = warningMessage || 'Nessun acquisto recente';
+      const label = warningMessage || t('lb_no_purchases', 'Nessun acquisto recente');
       recentWrap.innerHTML = `<div class="purchase-row"><div><div class="purchase-user">${escapeHtml(label)}</div><div class="purchase-cat">Tebex</div></div><span class="purchase-item">--</span></div>`;
       return;
     }
@@ -547,6 +580,12 @@ SkyFrost.initStore = async function () {
   const featuredMeta = document.getElementById('store-featured-meta');
 
   if (!categoryList || !productGrid) return;
+  if (!document.body.dataset.storeI18nBound) {
+    document.body.dataset.storeI18nBound = '1';
+    document.addEventListener('skyfrost:languagechange', () => {
+      void SkyFrost.initStore();
+    });
+  }
 
   function categoryHref(cat) {
     const slug = safeText(cat, 'all');
@@ -557,7 +596,7 @@ SkyFrost.initStore = async function () {
   function renderStoreFeatured(featured, storeUrl) {
     if (!featuredName || !featuredPrice || !featuredPerks || !featuredLink || !featuredMeta) return;
     const fallbackUrl = safeText(storeUrl, WEBSTORE_FALLBACK_URL);
-    featuredName.textContent = safeText(featured?.name, 'Pacchetto Store');
+    featuredName.textContent = safeText(featured?.name, t('store_package_name_fallback', 'Pacchetto Store'));
     featuredPrice.textContent = safeText(
       featured?.priceFormatted,
       formatMoney(featured?.price, featured?.currency || 'EUR')
@@ -568,7 +607,7 @@ SkyFrost.initStore = async function () {
     featuredLink.href = safeText(featured?.url, fallbackUrl);
     featuredMeta.textContent = safeText(
       featured?.rootCategoryName,
-      safeText(featured?.categoryName, 'Consegna immediata')
+      safeText(featured?.categoryName, t('store_featured_meta_default', 'Consegna immediata'))
     );
   }
 
@@ -581,7 +620,7 @@ SkyFrost.initStore = async function () {
       acc[slug] = (acc[slug] || 0) + 1;
       return acc;
     }, {});
-    const allRow = `<li><a href="${categoryHref('all')}" class="active" data-cat="all">🌐 Tutti i prodotti <span class="count">${totalCount}</span></a></li>`;
+    const allRow = `<li><a href="${categoryHref('all')}" class="active" data-cat="all">🌐 ${escapeHtml(t('store_all', 'Tutti i prodotti'))} <span class="count">${totalCount}</span></a></li>`;
     const merged = new Map();
 
     categoryRows.forEach((cat) => {
@@ -635,12 +674,12 @@ SkyFrost.initStore = async function () {
       productGrid.innerHTML = `<div class="card product-card">
         <div class="product-img-placeholder">🧊</div>
         <div class="product-body">
-          <div class="product-category">Store</div>
-          <div class="product-name">Nessun pacchetto disponibile</div>
-          <div class="product-desc">Controlla che categorie e pacchetti siano attivi nel tuo pannello Tebex.</div>
+          <div class="product-category">${escapeHtml(t('nav_store', 'Store'))}</div>
+          <div class="product-name">${escapeHtml(t('store_no_packages_title', 'Nessun pacchetto disponibile'))}</div>
+          <div class="product-desc">${escapeHtml(t('store_no_packages_desc', 'Controlla che categorie e pacchetti siano attivi nel tuo pannello Tebex.'))}</div>
           <div class="product-footer">
             <div class="product-price">--</div>
-            <a href="${escapeHtml(safeText(storeUrl, WEBSTORE_FALLBACK_URL))}" target="_blank" rel="noopener noreferrer" class="btn btn-cyan btn-sm">Apri Tebex</a>
+            <a href="${escapeHtml(safeText(storeUrl, WEBSTORE_FALLBACK_URL))}" target="_blank" rel="noopener noreferrer" class="btn btn-cyan btn-sm">${escapeHtml(t('store_open_tebex', 'Apri Tebex'))}</a>
           </div>
         </div>
       </div>`;
@@ -650,9 +689,9 @@ SkyFrost.initStore = async function () {
     productGrid.innerHTML = products.map((pkg) => {
       const slug = packageCategorySlug(pkg);
       const category = packageCategoryName(pkg);
-      const name = safeText(pkg.name, 'Pacchetto');
+      const name = safeText(pkg.name, t('store_package_single', 'Pacchetto'));
       const desc = truncate(
-        plainDescription(pkg.description, 'Pacchetto disponibile su Tebex.'),
+        plainDescription(pkg.description, t('store_package_available_short', 'Pacchetto disponibile su Tebex.')),
         150
       );
       const price = safeText(pkg.priceFormatted, formatMoney(pkg.price, pkg.currency || 'EUR'));
@@ -671,7 +710,7 @@ SkyFrost.initStore = async function () {
           <div class="product-desc">${escapeHtml(desc)}</div>
           <div class="product-footer">
             <div class="product-price">${escapeHtml(price)}</div>
-            <a href="${escapeHtml(link)}" target="_blank" rel="noopener noreferrer" class="btn btn-cyan btn-sm">Acquista</a>
+            <a href="${escapeHtml(link)}" target="_blank" rel="noopener noreferrer" class="btn btn-cyan btn-sm">${escapeHtml(t('buy_now', 'Acquista'))}</a>
           </div>
         </div>
       </div>`;
@@ -716,14 +755,14 @@ SkyFrost.initStore = async function () {
     renderStoreFeatured(featured, storeUrl);
     renderCategories(categories, products);
     renderProducts(products, storeUrl);
-    if (totalLabel) totalLabel.textContent = `${products.length} articoli`;
+    if (totalLabel) totalLabel.textContent = t('store_items_count', '{count} articoli', { count: products.length });
     const initialCat = safeText(new URLSearchParams(window.location.search).get('cat'), 'all');
     bindFilters(initialCat);
   } catch (err) {
     console.error('Store Tebex fetch failed:', err);
-    if (totalLabel) totalLabel.textContent = '0 articoli';
+    if (totalLabel) totalLabel.textContent = t('store_items_count', '{count} articoli', { count: 0 });
     renderStoreFeatured(null, WEBSTORE_FALLBACK_URL);
-    categoryList.innerHTML = `<li><a href="${categoryHref('all')}" class="active" data-cat="all">🌐 Tutti i prodotti <span class="count">0</span></a></li>`;
+    categoryList.innerHTML = `<li><a href="${categoryHref('all')}" class="active" data-cat="all">🌐 ${escapeHtml(t('store_all', 'Tutti i prodotti'))} <span class="count">0</span></a></li>`;
     renderProducts([], WEBSTORE_FALLBACK_URL);
     bindFilters();
   }
@@ -736,6 +775,7 @@ SkyFrost.initStaff = async function () {
   const STAFF_REFRESH_MS = 30000;
   let hasRendered = false;
   let requestInFlight = false;
+  let latestStaffData = null;
 
   function escapeHtml(value) {
     return String(value ?? '').replace(/[&<>"']/g, (ch) => ({
@@ -760,7 +800,8 @@ SkyFrost.initStaff = async function () {
       const data = await res.json();
       if (data.error) throw new Error(data.error);
       // La risposta ora è { staff: {...}, guild: {...} }. Usiamo data.staff.
-      renderStaff(data.staff || data);
+      latestStaffData = data.staff || data;
+      renderStaff(latestStaffData);
       hasRendered = true;
     } catch (err) {
       console.error('Staff fetch failed:', err);
@@ -768,10 +809,10 @@ SkyFrost.initStaff = async function () {
         container.innerHTML = `
           <div style="text-align:center;padding:4rem;color:var(--text-dim);">
             <div style="font-size:2rem;margin-bottom:1rem;">❄️</div>
-            <p style="color:var(--frost);font-family:'Cinzel',serif;margin-bottom:.5rem;">Impossibile caricare lo staff</p>
+            <p style="color:var(--frost);font-family:'Cinzel',serif;margin-bottom:.5rem;">${escapeHtml(t('staff_load_error_title', 'Impossibile caricare lo staff'))}</p>
             <p style="font-size:.82rem;color:var(--text-muted);">${escapeHtml(err.message)}</p>
             <p style="font-size:.78rem;color:var(--text-muted);margin-top:.5rem;">
-              Controlla che il bot sia nel server e che DISCORD_BOT_TOKEN sia configurato in api/.env
+              ${escapeHtml(t('staff_load_error_hint', 'Controlla che il bot sia nel server e che DISCORD_BOT_TOKEN sia configurato in api/.env'))}
             </p>
           </div>`;
       }
@@ -787,11 +828,20 @@ SkyFrost.initStaff = async function () {
       if (document.hidden) return;
       void loadStaff(false);
     }, STAFF_REFRESH_MS);
+    document.addEventListener('skyfrost:languagechange', () => {
+      if (latestStaffData) renderStaff(latestStaffData);
+    });
   }
 
   function renderStaff(data) {
     const order    = ['Owner', 'Sr. Admin', 'Admin', 'Staff'];
     const dotClass = { Owner: 'owner', 'Sr. Admin': 'sradmin', Admin: 'admin', Staff: 'staff' };
+    const roleLabels = {
+      Owner: t('role_owner', 'Owner'),
+      'Sr. Admin': t('role_sradmin', 'Sr. Admin'),
+      Admin: t('role_admin', 'Admin'),
+      Staff: t('role_staff', 'Staff')
+    };
 
     let html = '';
     order.forEach(role => {
@@ -800,11 +850,11 @@ SkyFrost.initStaff = async function () {
       html += `
         <div class="role-section reveal">
           <div class="role-label">
-            <h3>${role}</h3>
+            <h3>${roleLabels[role] || role}</h3>
           </div>
           <div class="grid-auto-sm">
             ${members.map(m => {
-              const name = escapeHtml(m.displayName || m.username || 'Utente');
+              const name = escapeHtml(m.displayName || m.username || t('generic_user', 'Utente'));
               const avatar = escapeHtml(m.avatar || 'https://cdn.discordapp.com/embed/avatars/0.png');
               const status = normalizeStatus(m.status);
               return `
@@ -818,7 +868,7 @@ SkyFrost.initStaff = async function () {
                   <span class="staff-online-dot ${status}"></span>
                 </div>
                 <div class="staff-name">${name}</div>
-                <div class="staff-role-badge ${dotClass[role]}">${role}</div>
+                <div class="staff-role-badge ${dotClass[role]}">${roleLabels[role] || role}</div>
               </div>
             `;
             }).join('')}
@@ -827,7 +877,7 @@ SkyFrost.initStaff = async function () {
     });
 
     container.innerHTML = html ||
-      `<p style="color:var(--text-dim);text-align:center;padding:3rem;">Nessun membro staff trovato.</p>`;
+      `<p style="color:var(--text-dim);text-align:center;padding:3rem;">${escapeHtml(t('staff_none_found', 'Nessun membro staff trovato.'))}</p>`;
 
     /* Reattiva scroll reveal per gli elementi dinamici */
     const obs = new IntersectionObserver((entries) => {
@@ -840,13 +890,13 @@ SkyFrost.initStaff = async function () {
 /* ── AUTH (DISCORD) ── */
 function authErrorMessage(code) {
   const messages = {
-    state_non_valido: 'Sessione OAuth scaduta o non valida. Riprova il login.',
-    configurazione_auth_mancante: 'Configurazione OAuth Discord incompleta sul server.',
-    utente_non_nel_server: 'Per usare il supporto devi essere nel server Discord.',
-    errore_verifica_gilda: 'Impossibile verificare la tua presenza nella gilda Discord.',
-    oauth_fallito: 'Login Discord fallito. Riprova tra qualche secondo.'
+    state_non_valido: t('auth_error_invalid_state', 'Sessione OAuth scaduta o non valida. Riprova il login.'),
+    configurazione_auth_mancante: t('auth_error_missing_config', 'Configurazione OAuth Discord incompleta sul server.'),
+    utente_non_nel_server: t('auth_error_not_in_server', 'Per usare il supporto devi essere nel server Discord.'),
+    errore_verifica_gilda: t('auth_error_guild_check', 'Impossibile verificare la tua presenza nella gilda Discord.'),
+    oauth_fallito: t('auth_error_failed', 'Login Discord fallito. Riprova tra qualche secondo.')
   };
-  return messages[code] || 'Errore durante il login Discord.';
+  return messages[code] || t('auth_error_generic', 'Errore durante il login Discord.');
 }
 
 SkyFrost.fetchAuthSession = async function () {
@@ -912,17 +962,17 @@ SkyFrost.initLogin = async function () {
   }
 
   if (params.get('logout') === '1') {
-    SkyFrost.toast('Disconnessione completata.', 'info');
+    SkyFrost.toast(t('logout_done', 'Disconnessione completata.'), 'info');
   }
 
   try {
     const session = await SkyFrost.fetchAuthSession();
     if (!session.authenticated || !session.user) return;
 
-    const displayName = safeText(session.user.displayName, safeText(session.user.username, 'Utente'));
-    if (titleEl) titleEl.textContent = `Sei già connesso, ${displayName}`;
+    const displayName = safeText(session.user.displayName, safeText(session.user.username, t('generic_user', 'Utente')));
+    if (titleEl) titleEl.textContent = t('login_already_connected', 'Sei gia connesso, {name}', { name: displayName });
     if (statusEl) {
-      statusEl.textContent = `Sessione attiva come ${displayName}. Reindirizzamento al supporto...`;
+      statusEl.textContent = t('login_active_redirect', 'Sessione attiva come {name}. Reindirizzamento al supporto...', { name: displayName });
       statusEl.classList.remove('error');
       statusEl.classList.add('success');
     }
@@ -933,7 +983,7 @@ SkyFrost.initLogin = async function () {
   } catch (err) {
     console.error('Auth session check failed:', err);
     if (statusEl && !errorCode) {
-      statusEl.textContent = `Impossibile verificare la sessione: ${safeText(err.message, 'errore')}`;
+      statusEl.textContent = t('login_verify_failed', 'Impossibile verificare la sessione: {error}', { error: safeText(err.message, 'errore') });
       statusEl.classList.add('error');
     }
   }
@@ -950,7 +1000,7 @@ SkyFrost.initSupport = async function () {
   const loginBtn = document.getElementById('support-login-btn');
   const logoutBtn = document.getElementById('support-logout-btn');
   const submitBtn = form.querySelector('[type=submit]');
-  const defaultSubmitLabel = submitBtn ? submitBtn.textContent : 'Invia Ticket su Discord';
+  const defaultSubmitLabel = submitBtn ? submitBtn.textContent : t('sup_form_submit', 'Invia Ticket su Discord');
 
   let currentUser = null;
 
@@ -970,9 +1020,9 @@ SkyFrost.initSupport = async function () {
 
   function renderGuest() {
     currentUser = null;
-    setStatus('Devi effettuare il login Discord per inviare ticket.', 'error');
-    if (nameEl) nameEl.textContent = 'Non autenticato';
-    if (userIdEl) userIdEl.textContent = 'Accedi con Discord per inviare ticket.';
+    setStatus(t('sup_status_login_required', 'Devi effettuare il login Discord per inviare ticket.'), 'error');
+    if (nameEl) nameEl.textContent = t('sup_auth_no', 'Non autenticato');
+    if (userIdEl) userIdEl.textContent = t('sup_auth_desc', 'Accedi con Discord per inviare ticket.');
     if (avatarEl) avatarEl.src = 'https://cdn.discordapp.com/embed/avatars/0.png';
     if (loginBtn) loginBtn.style.display = '';
     if (logoutBtn) logoutBtn.style.display = 'none';
@@ -981,10 +1031,10 @@ SkyFrost.initSupport = async function () {
 
   function renderUser(user) {
     currentUser = user;
-    const displayName = safeText(user.displayName, safeText(user.username, 'Utente'));
-    setStatus(`Connesso come ${displayName}`, 'success');
+    const displayName = safeText(user.displayName, safeText(user.username, t('generic_user', 'Utente')));
+    setStatus(t('sup_status_connected', 'Connesso come {name}', { name: displayName }), 'success');
     if (nameEl) nameEl.textContent = displayName;
-    if (userIdEl) userIdEl.textContent = `ID Discord: ${safeText(user.id, '-')}`;
+    if (userIdEl) userIdEl.textContent = t('sup_status_discord_id', 'ID Discord: {id}', { id: safeText(user.id, '-') });
     if (avatarEl) avatarEl.src = safeText(user.avatar, 'https://cdn.discordapp.com/embed/avatars/0.png');
     if (loginBtn) loginBtn.style.display = 'none';
     if (logoutBtn) logoutBtn.style.display = '';
@@ -1000,14 +1050,14 @@ SkyFrost.initSupport = async function () {
     if (!logoutBtn) return;
     logoutBtn.disabled = true;
     const previousLabel = logoutBtn.textContent;
-    logoutBtn.textContent = 'Disconnessione...';
+    logoutBtn.textContent = t('logout_loading', 'Disconnessione...');
     try {
       await SkyFrost.logoutDiscord();
-      SkyFrost.toast('Disconnessione completata.', 'info');
+      SkyFrost.toast(t('logout_done', 'Disconnessione completata.'), 'info');
       renderGuest();
     } catch (err) {
       console.error('Discord logout failed:', err);
-      SkyFrost.toast(safeText(err.message, 'Logout fallito.'), 'error');
+      SkyFrost.toast(safeText(err.message, t('logout_failed', 'Logout fallito.')), 'error');
     } finally {
       logoutBtn.textContent = previousLabel;
       logoutBtn.disabled = false;
@@ -1017,7 +1067,7 @@ SkyFrost.initSupport = async function () {
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     if (!currentUser) {
-      SkyFrost.toast('Effettua prima il login Discord.', 'error');
+      SkyFrost.toast(t('sup_toast_login_first', 'Effettua prima il login Discord.'), 'error');
       return;
     }
 
@@ -1027,17 +1077,17 @@ SkyFrost.initSupport = async function () {
     const message = safeText(document.getElementById('ticket-message')?.value, '');
 
     if (!subject) {
-      SkyFrost.toast('Inserisci un oggetto per il ticket.', 'error');
+      SkyFrost.toast(t('sup_toast_subject_required', 'Inserisci un oggetto per il ticket.'), 'error');
       return;
     }
     if (message.length < 20) {
-      SkyFrost.toast('La descrizione deve avere almeno 20 caratteri.', 'error');
+      SkyFrost.toast(t('sup_toast_message_short', 'La descrizione deve avere almeno 20 caratteri.'), 'error');
       return;
     }
 
     if (submitBtn) {
       submitBtn.disabled = true;
-      submitBtn.textContent = 'Invio ticket...';
+      submitBtn.textContent = t('sup_form_sending', 'Invio ticket...');
     }
 
     try {
@@ -1056,7 +1106,9 @@ SkyFrost.initSupport = async function () {
 
       const ticketId = safeText(data?.ticketId, '');
       SkyFrost.toast(
-        ticketId ? `Ticket inviato con successo (${ticketId}).` : 'Ticket inviato con successo.',
+        ticketId
+          ? t('sup_toast_ticket_sent_with_id', 'Ticket inviato con successo ({id}).', { id: ticketId })
+          : t('sup_toast_ticket_sent', 'Ticket inviato con successo.'),
         'success'
       );
       form.reset();
@@ -1064,7 +1116,7 @@ SkyFrost.initSupport = async function () {
       document.getElementById('ticket-priority').value = 'Normale';
     } catch (err) {
       console.error('Ticket submit failed:', err);
-      SkyFrost.toast(safeText(err.message, 'Invio ticket fallito.'), 'error');
+      SkyFrost.toast(safeText(err.message, t('sup_toast_ticket_failed', 'Invio ticket fallito.')), 'error');
     } finally {
       if (submitBtn) {
         submitBtn.disabled = false;
@@ -1076,13 +1128,13 @@ SkyFrost.initSupport = async function () {
   const params = new URLSearchParams(window.location.search);
   const loginError = safeText(params.get('error'), '');
   if (params.get('login') === 'ok') {
-    SkyFrost.toast('Login Discord completato.', 'success');
+    SkyFrost.toast(t('login_done', 'Login Discord completato.'), 'success');
   }
   if (loginError) {
     SkyFrost.toast(authErrorMessage(loginError), 'error');
   }
 
-  setStatus('Verifica sessione Discord in corso...');
+  setStatus(t('sup_status_checking_runtime', 'Verifica sessione Discord in corso...'));
   setFormEnabled(false);
 
   try {
@@ -1095,7 +1147,24 @@ SkyFrost.initSupport = async function () {
   } catch (err) {
     console.error('Support session fetch failed:', err);
     renderGuest();
-    setStatus(`Errore sessione: ${safeText(err.message, 'sconosciuto')}`, 'error');
+    setStatus(t('sup_status_error', 'Errore sessione: {error}', { error: safeText(err.message, 'sconosciuto') }), 'error');
+  }
+
+  if (!form.dataset.i18nBound) {
+    form.dataset.i18nBound = '1';
+    document.addEventListener('skyfrost:languagechange', () => {
+      if (submitBtn && !submitBtn.disabled) {
+        submitBtn.textContent = t('sup_form_submit', 'Invia Ticket su Discord');
+      }
+      if (logoutBtn && logoutBtn.style.display !== 'none' && !logoutBtn.disabled) {
+        logoutBtn.textContent = t('sup_logout_btn', 'Disconnetti');
+      }
+      if (currentUser) {
+        renderUser(currentUser);
+      } else {
+        renderGuest();
+      }
+    });
   }
 };
 
@@ -1116,18 +1185,20 @@ SkyFrost.initLicenses = async function () {
   const genResult = document.getElementById('gen-result');
   const tableWrap = document.getElementById('license-table-wrap');
   const filterStatus = document.getElementById('filter-status');
+  let authMode = 'guest';
+  let authDisplayName = '';
 
   /* ── Validate (public) ── */
   async function validateLicense() {
     const fingerprint = safeText(validateKeyInput?.value, '');
     if (!fingerprint) {
-      SkyFrost.toast('Inserisci un fingerprint.', 'error');
+      SkyFrost.toast(t('licenses_toast_missing_fingerprint', 'Inserisci un fingerprint.'), 'error');
       return;
     }
 
     if (validateBtn) {
       validateBtn.disabled = true;
-      validateBtn.textContent = 'Verifica…';
+      validateBtn.textContent = t('licenses_validate_loading', 'Verifica...');
     }
 
     try {
@@ -1141,26 +1212,26 @@ SkyFrost.initLicenses = async function () {
             <div class="license-result license-valid">
               <span class="license-result-icon"><i class="bi bi-patch-check-fill"></i></span>
               <div>
-                <strong>Licenza Approvata</strong>
+                <strong>${escapeHtml(t('licenses_valid_title', 'Licenza Approvata'))}</strong>
                 <div style="font-size:.82rem;color:var(--text-dim);margin-top:.25rem;">
-                  Hostname: <strong style="color:var(--frost);">${escapeHtml(data.hostname || '-')}</strong>
-                  ${data.requestedAt ? ` · Richiesta: ${escapeHtml(formatDate(data.requestedAt))}` : ''}
+                  ${escapeHtml(t('licenses_hostname', 'Hostname'))}: <strong style="color:var(--frost);">${escapeHtml(data.hostname || '-')}</strong>
+                  ${data.requestedAt ? ` · ${escapeHtml(t('licenses_requested', 'Richiesta'))}: ${escapeHtml(formatDate(data.requestedAt))}` : ''}
                 </div>
               </div>
             </div>`;
         } else {
           const reasons = {
-            not_found: 'Licenza non trovata nel sistema.',
-            revoked: `Licenza revocata. Hostname: ${escapeHtml(data.hostname || '-')}`,
-            pending: `Licenza in attesa di approvazione. Hostname: ${escapeHtml(data.hostname || '-')}`
+            not_found: t('licenses_reason_not_found', 'Licenza non trovata nel sistema.'),
+            revoked: t('licenses_reason_revoked', 'Licenza revocata. Hostname: {hostname}', { hostname: escapeHtml(data.hostname || '-') }),
+            pending: t('licenses_reason_pending', 'Licenza in attesa di approvazione. Hostname: {hostname}', { hostname: escapeHtml(data.hostname || '-') })
           };
           validateResult.innerHTML = `
             <div class="license-result license-invalid">
               <span class="license-result-icon"><i class="bi ${data.reason === 'pending' ? 'bi-hourglass-split' : 'bi-x-octagon-fill'}"></i></span>
               <div>
-                <strong>Licenza ${data.reason === 'pending' ? 'In Attesa' : 'Non Valida'}</strong>
+                <strong>${escapeHtml(data.reason === 'pending' ? t('licenses_pending_title', 'Licenza In Attesa') : t('licenses_invalid_title', 'Licenza Non Valida'))}</strong>
                 <div style="font-size:.82rem;color:var(--text-dim);margin-top:.25rem;">
-                  ${reasons[data.reason] || 'Fingerprint non riconosciuto.'}
+                  ${reasons[data.reason] || t('licenses_reason_unknown', 'Fingerprint non riconosciuto.')}
                 </div>
               </div>
             </div>`;
@@ -1168,11 +1239,11 @@ SkyFrost.initLicenses = async function () {
       }
     } catch (err) {
       console.error('License validate failed:', err);
-      SkyFrost.toast(safeText(err.message, 'Errore durante la verifica.'), 'error');
+      SkyFrost.toast(safeText(err.message, t('licenses_validate_error', 'Errore durante la verifica.')), 'error');
     } finally {
       if (validateBtn) {
         validateBtn.disabled = false;
-        validateBtn.textContent = 'Verifica';
+        validateBtn.textContent = t('licenses_validate_btn', 'Verifica');
       }
     }
   }
@@ -1193,7 +1264,7 @@ SkyFrost.initLicenses = async function () {
 
   async function loadLicenseList() {
     if (!tableWrap) return;
-    tableWrap.innerHTML = '<p style="color:var(--text-dim);font-size:.85rem;">Caricamento…</p>';
+    tableWrap.innerHTML = `<p style="color:var(--text-dim);font-size:.85rem;">${escapeHtml(t('loading_generic', 'Caricamento...'))}</p>`;
 
     const statusFilter = safeText(filterStatus?.value, '');
     const queryParams = new URLSearchParams({ action: 'list' });
@@ -1211,25 +1282,25 @@ SkyFrost.initLicenses = async function () {
 
       const licenses = Array.isArray(data.licenses) ? data.licenses : [];
       if (!licenses.length) {
-        tableWrap.innerHTML = '<p style="color:var(--text-dim);font-size:.85rem;padding:.5rem;">Nessuna licenza trovata.</p>';
+        tableWrap.innerHTML = `<p style="color:var(--text-dim);font-size:.85rem;padding:.5rem;">${escapeHtml(t('licenses_none_found', 'Nessuna licenza trovata.'))}</p>`;
         return;
       }
 
       function getStatusBadge(status) {
-        if (status === 'approved') return '<span class="badge badge-green">Approvata</span>';
-        if (status === 'pending') return '<span class="badge badge-gold">In Attesa</span>';
-        return '<span class="badge badge-red">Revocata</span>';
+        if (status === 'approved') return `<span class="badge badge-green">${escapeHtml(t('licenses_filter_approved', 'Approvate'))}</span>`;
+        if (status === 'pending') return `<span class="badge badge-gold">${escapeHtml(t('licenses_filter_pending', 'In Attesa'))}</span>`;
+        return `<span class="badge badge-red">${escapeHtml(t('licenses_filter_revoked', 'Revocate'))}</span>`;
       }
 
       tableWrap.innerHTML = `
         <table class="license-table">
           <thead>
             <tr>
-              <th>Fingerprint</th>
-              <th>Hostname</th>
-              <th>Stato</th>
-              <th>Data Richiesta</th>
-              <th>Azioni</th>
+              <th>${escapeHtml(t('licenses_table_fingerprint', 'Fingerprint'))}</th>
+              <th>${escapeHtml(t('licenses_hostname', 'Hostname'))}</th>
+              <th>${escapeHtml(t('licenses_table_status', 'Stato'))}</th>
+              <th>${escapeHtml(t('licenses_table_requested', 'Data Richiesta'))}</th>
+              <th>${escapeHtml(t('licenses_table_actions', 'Azioni'))}</th>
             </tr>
           </thead>
           <tbody>
@@ -1241,11 +1312,11 @@ SkyFrost.initLicenses = async function () {
               <td>
                 <div style="display:flex; gap:0.5rem; align-items:center;">
                   ${l.status === 'pending'
-                    ? `<button type="button" class="btn btn-ghost btn-sm license-approve-btn" data-fingerprint="${escapeHtml(l.fingerprint)}">Approva</button>
-                       <button type="button" class="btn btn-ghost btn-sm license-revoke-btn" data-fingerprint="${escapeHtml(l.fingerprint)}">Revoca</button>`
+                    ? `<button type="button" class="btn btn-ghost btn-sm license-approve-btn" data-fingerprint="${escapeHtml(l.fingerprint)}">${escapeHtml(t('licenses_action_approve', 'Approva'))}</button>
+                       <button type="button" class="btn btn-ghost btn-sm license-revoke-btn" data-fingerprint="${escapeHtml(l.fingerprint)}">${escapeHtml(t('licenses_action_revoke', 'Revoca'))}</button>`
                     : ''}
                   ${l.status === 'approved'
-                    ? `<button type="button" class="btn btn-ghost btn-sm license-revoke-btn" data-fingerprint="${escapeHtml(l.fingerprint)}">Revoca</button>`
+                    ? `<button type="button" class="btn btn-ghost btn-sm license-revoke-btn" data-fingerprint="${escapeHtml(l.fingerprint)}">${escapeHtml(t('licenses_action_revoke', 'Revoca'))}</button>`
                     : ''}
                 </div>
               </td>
@@ -1268,15 +1339,15 @@ SkyFrost.initLicenses = async function () {
               body: JSON.stringify({ action: 'approve', fingerprint })
             });
             const data = await res.json();
-            if (!res.ok || data.error) throw new Error(safeText(data.error, 'Errore approvazione'));
+            if (!res.ok || data.error) throw new Error(safeText(data.error, t('licenses_approve_error', 'Errore approvazione')));
 
-            SkyFrost.toast('Licenza approvata.', 'success');
+            SkyFrost.toast(t('licenses_approved_toast', 'Licenza approvata.'), 'success');
             await loadLicenseList();
           } catch (err) {
             console.error('License approve failed:', err);
-            SkyFrost.toast(safeText(err.message, 'Errore approvazione.'), 'error');
+            SkyFrost.toast(safeText(err.message, t('licenses_approve_error', 'Errore approvazione.')), 'error');
             btn.disabled = false;
-            btn.textContent = 'Approva';
+            btn.textContent = t('licenses_action_approve', 'Approva');
           }
         });
       });
@@ -1285,7 +1356,7 @@ SkyFrost.initLicenses = async function () {
       tableWrap.querySelectorAll('.license-revoke-btn').forEach(btn => {
         btn.addEventListener('click', async () => {
           const fingerprint = btn.dataset.fingerprint;
-          if (!confirm('Sicuro di voler revocare questa licenza?')) return;
+          if (!confirm(t('licenses_confirm_revoke', 'Sicuro di voler revocare questa licenza?'))) return;
 
           btn.disabled = true;
           btn.textContent = '…';
@@ -1298,21 +1369,21 @@ SkyFrost.initLicenses = async function () {
               body: JSON.stringify({ action: 'revoke', fingerprint })
             });
             const data = await res.json();
-            if (!res.ok || data.error) throw new Error(safeText(data.error, 'Errore revoca'));
+            if (!res.ok || data.error) throw new Error(safeText(data.error, t('licenses_revoke_error', 'Errore revoca')));
 
-            SkyFrost.toast('Licenza revocata.', 'success');
+            SkyFrost.toast(t('licenses_revoked_toast', 'Licenza revocata.'), 'success');
             await loadLicenseList();
           } catch (err) {
             console.error('License revoke failed:', err);
-            SkyFrost.toast(safeText(err.message, 'Errore revoca.'), 'error');
+            SkyFrost.toast(safeText(err.message, t('licenses_revoke_error', 'Errore revoca.')), 'error');
             btn.disabled = false;
-            btn.textContent = 'Revoca';
+            btn.textContent = t('licenses_action_revoke', 'Revoca');
           }
         });
       });
     } catch (err) {
       console.error('License list failed:', err);
-      tableWrap.innerHTML = `<p style="color:var(--text-dim);font-size:.85rem;padding:.5rem;">Errore: ${escapeHtml(safeText(err.message, 'sconosciuto'))}</p>`;
+      tableWrap.innerHTML = `<p style="color:var(--text-dim);font-size:.85rem;padding:.5rem;">${escapeHtml(t('licenses_table_error', 'Errore: {error}', { error: safeText(err.message, 'sconosciuto') }))}</p>`;
     }
   }
 
@@ -1324,17 +1395,17 @@ SkyFrost.initLicenses = async function () {
     const hostname = safeText(genHostname?.value, '');
 
     if (!fingerprint) {
-      SkyFrost.toast('Inserisci il fingerprint.', 'error');
+      SkyFrost.toast(t('licenses_toast_enter_fingerprint', 'Inserisci il fingerprint.'), 'error');
       return;
     }
     if (fingerprint.length > 64) {
-      SkyFrost.toast('Fingerprint troppo lungo.', 'error');
+      SkyFrost.toast(t('licenses_toast_fingerprint_long', 'Fingerprint troppo lungo.'), 'error');
       return;
     }
 
     if (genBtn) {
       genBtn.disabled = true;
-      genBtn.textContent = 'Inserimento…';
+      genBtn.textContent = t('licenses_insert_loading', 'Inserimento...');
     }
 
     try {
@@ -1354,9 +1425,9 @@ SkyFrost.initLicenses = async function () {
           <div class="license-result license-valid">
             <span class="license-result-icon">⏳</span>
             <div>
-              <strong>Licenza Inserita!</strong>
+              <strong>${escapeHtml(t('licenses_inserted_title', 'Licenza Inserita!'))}</strong>
               <div style="font-size:.8rem;color:var(--text-dim);margin-top:.25rem;">
-                Ora è nello stato In Attesa. Approvala dalla tabella.
+                ${escapeHtml(t('licenses_inserted_desc', 'Ora e nello stato In Attesa. Approvala dalla tabella.'))}
               </div>
             </div>
           </div>`;
@@ -1364,15 +1435,15 @@ SkyFrost.initLicenses = async function () {
 
       if (genFingerprint) genFingerprint.value = '';
       if (genHostname) genHostname.value = '';
-      SkyFrost.toast('Licenza inserita in attesa.', 'success');
+      SkyFrost.toast(t('licenses_inserted_toast', 'Licenza inserita in attesa.'), 'success');
       await loadLicenseList();
     } catch (err) {
       console.error('License insert failed:', err);
-      SkyFrost.toast(safeText(err.message, 'Errore inserimento.'), 'error');
+      SkyFrost.toast(safeText(err.message, t('licenses_insert_error', 'Errore inserimento.')), 'error');
     } finally {
       if (genBtn) {
         genBtn.disabled = false;
-        genBtn.textContent = 'Inserisci';
+        genBtn.textContent = t('licenses_insert_btn', 'Inserisci');
       }
     }
   }
@@ -1388,22 +1459,46 @@ SkyFrost.initLicenses = async function () {
       const isStaff = roles.some(r => ALLOWED_ROLES.includes(r));
       
       if (isStaff) {
-        const displayName = safeText(session.user.displayName, safeText(session.user.username, 'Utente'));
-        setAuthStatus(`Connesso come ${displayName} (Admin).`, 'success');
+        authMode = 'admin';
+        authDisplayName = safeText(session.user.displayName, safeText(session.user.username, t('generic_user', 'Utente')));
+        setAuthStatus(t('licenses_auth_admin', 'Connesso come {name} (Admin).', { name: authDisplayName }), 'success');
         if (adminPanel) adminPanel.style.display = '';
         await loadLicenseList();
       } else {
-        setAuthStatus('Accesso negato. Sono richiesti permessi Owner/Sr. Admin.', 'error');
+        authMode = 'denied';
+        setAuthStatus(t('licenses_auth_denied', 'Accesso negato. Sono richiesti permessi Owner/Sr. Admin.'), 'error');
         if (adminPanel) adminPanel.style.display = 'none';
       }
     } else {
-      setAuthStatus('Effettua il login Discord per accedere al pannello.', 'error');
+      authMode = 'guest';
+      setAuthStatus(t('licenses_auth_login_required', 'Effettua il login Discord per accedere al pannello.'), 'error');
       if (adminPanel) adminPanel.style.display = 'none';
     }
   } catch (err) {
     console.error('License auth check failed:', err);
-    setAuthStatus('Errore verifica sessione.', 'error');
+    authMode = 'error';
+    setAuthStatus(t('licenses_auth_error', 'Errore verifica sessione.'), 'error');
     if (adminPanel) adminPanel.style.display = 'none';
+  }
+
+  if (!document.body.dataset.licensesI18nBound) {
+    document.body.dataset.licensesI18nBound = '1';
+    document.addEventListener('skyfrost:languagechange', () => {
+      if (authMode === 'admin') {
+        setAuthStatus(t('licenses_auth_admin', 'Connesso come {name} (Admin).', { name: authDisplayName }), 'success');
+      } else if (authMode === 'denied') {
+        setAuthStatus(t('licenses_auth_denied', 'Accesso negato. Sono richiesti permessi Owner/Sr. Admin.'), 'error');
+      } else if (authMode === 'guest') {
+        setAuthStatus(t('licenses_auth_login_required', 'Effettua il login Discord per accedere al pannello.'), 'error');
+      } else if (authMode === 'error') {
+        setAuthStatus(t('licenses_auth_error', 'Errore verifica sessione.'), 'error');
+      }
+      if (genBtn && !genBtn.disabled) genBtn.textContent = t('licenses_insert_btn', 'Inserisci');
+      if (validateBtn && !validateBtn.disabled) validateBtn.textContent = t('licenses_validate_btn', 'Verifica');
+      if (adminPanel && adminPanel.style.display !== 'none') {
+        void loadLicenseList();
+      }
+    });
   }
 };
 
@@ -1413,15 +1508,15 @@ SkyFrost.initVote = function () {
     btn.addEventListener('click', () => {
       const url = (btn.dataset.voteUrl || '').trim();
       if (!url || url.includes('YOUR_SERVER_ID')) {
-        SkyFrost.toast('Link di voto non configurato. Aggiorna gli URL nella pagina Vota.', 'error');
+        SkyFrost.toast(t('vote_link_missing', 'Link di voto non configurato. Aggiorna gli URL nella pagina Vota.'), 'error');
         return;
       }
       const popup = window.open(url, '_blank', 'noopener,noreferrer');
       if (!popup) {
-        SkyFrost.toast('Popup bloccato. Consenti i popup per aprire il sito di voto.', 'error');
+        SkyFrost.toast(t('vote_popup_blocked', 'Popup bloccato. Consenti i popup per aprire il sito di voto.'), 'error');
         return;
       }
-      SkyFrost.toast('Grazie per il voto! Ricompensa in arrivo 🎁', 'success');
+      SkyFrost.toast(t('vote_thanks', 'Grazie per il voto! Ricompensa in arrivo 🎁'), 'success');
     });
   });
 };
@@ -1430,14 +1525,14 @@ SkyFrost.initVote = function () {
 SkyFrost.copyIP = async function () {
   const ip = 'play.skyfrost.it';
   if (!navigator.clipboard || typeof navigator.clipboard.writeText !== 'function') {
-    SkyFrost.toast(`Copia manuale: ${ip}`, 'info');
+    SkyFrost.toast(t('copy_ip_manual', 'Copia manuale: {ip}', { ip }), 'info');
     return;
   }
   try {
     await navigator.clipboard.writeText(ip);
-    SkyFrost.toast('IP copiato negli appunti! 🎮', 'success');
+    SkyFrost.toast(t('copy_ip_success', 'IP copiato negli appunti! 🎮'), 'success');
   } catch (err) {
     console.error('Clipboard copy failed:', err);
-    SkyFrost.toast(`Copia non riuscita. IP: ${ip}`, 'error');
+    SkyFrost.toast(t('copy_ip_failed', 'Copia non riuscita. IP: {ip}', { ip }), 'error');
   }
 };

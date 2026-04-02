@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Gestione licenze per il plugin Hytale di SkyFrost. Genera, valida e gestisci le licenze del tuo server." />
+  <meta name="description" content="Gestione licenze per il plugin Hytale di SkyFrost Network. Genera, valida e gestisci le licenze del tuo server." data-i18n-content="meta_licenses_desc" />
   <meta name="robots" content="noindex,follow" />
   <meta name="theme-color" content="#000c42" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -12,21 +12,21 @@
   <link rel="canonical" href="https://skyfrost.it/licenses" />
 
   <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="SkyFrost" />
-  <meta property="og:title" content="Licenze Plugin — SkyFrost" />
-  <meta property="og:description" content="Gestione licenze per il plugin Hytale di SkyFrost." />
+  <meta property="og:site_name" content="SkyFrost Network" data-i18n-content="meta_site_name" />
+  <meta property="og:title" content="Licenze Plugin — SkyFrost Network" data-i18n-content="meta_licenses_title" />
+  <meta property="og:description" content="Gestione licenze per il plugin Hytale di SkyFrost Network." data-i18n-content="meta_licenses_desc" />
   <meta property="og:url" content="https://skyfrost.it/licenses" />
   <meta property="og:image" content="https://skyfrost.it/assets/skyfrost-logo.png" />
 
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Licenze Plugin — SkyFrost" />
-  <meta name="twitter:description" content="Genera e gestisci le licenze del plugin Hytale SkyFrost." />
+  <meta name="twitter:title" content="Licenze Plugin — SkyFrost Network" data-i18n-content="meta_licenses_title" />
+  <meta name="twitter:description" content="Genera e gestisci le licenze del plugin Hytale SkyFrost Network." data-i18n-content="meta_licenses_desc" />
   <meta name="twitter:image" content="https://skyfrost.it/assets/skyfrost-logo.png" />
 
   <link rel="icon" type="image/png" href="/assets/skyfrost-logo.png" />
   <link rel="manifest" href="/site.webmanifest" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" />
-  <title>Licenze Plugin — SkyFrost</title>
+  <title data-i18n="meta_licenses_title">Licenze Plugin — SkyFrost Network</title>
   <link rel="stylesheet" href="assets/style.css?v=3" />
 </head>
 <body>
@@ -35,13 +35,13 @@
 <div class="page-wrap">
   <div class="page-hero">
     <div class="page-hero-copy">
-      <p class="page-hero-eyebrow"><i class="bi bi-key" aria-hidden="true"></i> Sistema Licenze</p>
-      <h1 class="page-hero-title">Sky<span class="glow">License</span></h1>
-      <p class="page-hero-sub">Genera, gestisci e verifica le licenze per il plugin Hytale di SkyFrost.</p>
+      <p class="page-hero-eyebrow"><i class="bi bi-key" aria-hidden="true"></i> <span data-i18n="licenses_eyebrow">Sistema Licenze</span></p>
+      <h1 class="page-hero-title"><span data-i18n="licenses_title_plain">Sky</span><span class="glow" data-i18n="licenses_title_glow">License</span></h1>
+      <p class="page-hero-sub" data-i18n="licenses_subtitle">Genera, gestisci e verifica le licenze per il plugin Hytale di SkyFrost.</p>
       <div style="margin-top:1.5rem;display:flex;gap:1rem;justify-content:flex-start;flex-wrap:wrap;">
         <div class="status-pill">
           <span class="status-dot online"></span>
-          <span>Sistema licenze attivo</span>
+          <span data-i18n="licenses_status_active">Sistema licenze attivo</span>
         </div>
       </div>
     </div>
@@ -55,18 +55,18 @@
     ══════════════════════════════ -->
     <section class="section reveal" id="license-check-section">
       <div class="section-header">
-        <h2 class="section-title"><i class="bi bi-search" aria-hidden="true" style="font-size:0.8em;margin-right:0.3em;color:var(--primary);"></i> Verifica Licenza</h2>
+        <h2 class="section-title"><i class="bi bi-search" aria-hidden="true" style="font-size:0.8em;margin-right:0.3em;color:var(--primary);"></i> <span data-i18n="licenses_validate_title">Verifica Licenza</span></h2>
       </div>
       <div class="card" style="padding:2rem;">
-        <p style="color:var(--text-dim);margin-bottom:1.5rem;font-size:.88rem;">
+        <p style="color:var(--text-dim);margin-bottom:1.5rem;font-size:.88rem;" data-i18n="licenses_validate_desc">
           Inserisci la chiave di licenza per verificarne la validità.
         </p>
         <div style="display:flex;gap:1rem;flex-wrap:wrap;align-items:flex-end;">
           <div style="flex:1;min-width:260px;">
-            <label for="validate-key" style="display:block;font-size:.78rem;color:var(--text-muted);margin-bottom:.4rem;font-family:'Rajdhani',sans-serif;">Fingerprint Licenza</label>
-            <input type="text" id="validate-key" placeholder="Inserisci il fingerprint SHA-256" class="form-control" style="width:100%;" autocomplete="off" spellcheck="false" />
+            <label for="validate-key" style="display:block;font-size:.78rem;color:var(--text-muted);margin-bottom:.4rem;font-family:'Rajdhani',sans-serif;" data-i18n="licenses_validate_label">Fingerprint Licenza</label>
+            <input type="text" id="validate-key" placeholder="Inserisci il fingerprint SHA-256" data-i18n-placeholder="licenses_validate_placeholder" class="form-control" style="width:100%;" autocomplete="off" spellcheck="false" />
           </div>
-          <button type="button" id="validate-btn" class="btn btn-cyan">Verifica</button>
+          <button type="button" id="validate-btn" class="btn btn-cyan" data-i18n="licenses_validate_btn">Verifica</button>
         </div>
         <div id="validate-result" style="margin-top:1.25rem;display:none;"></div>
       </div>
@@ -79,12 +79,12 @@
     ══════════════════════════════ -->
     <section class="section reveal" id="license-admin-section">
       <div class="section-header">
-        <h2 class="section-title"><i class="bi bi-shield-lock" aria-hidden="true" style="font-size:0.8em;margin-right:0.3em;color:var(--primary);"></i> Pannello Admin</h2>
+        <h2 class="section-title"><i class="bi bi-shield-lock" aria-hidden="true" style="font-size:0.8em;margin-right:0.3em;color:var(--primary);"></i> <span data-i18n="licenses_admin_title">Pannello Admin</span></h2>
       </div>
 
       <!-- Auth status -->
       <div id="license-auth-state" class="support-auth-state" style="margin-bottom:1.5rem;">
-        Verifica sessione…
+        <span data-i18n="licenses_auth_checking">Verifica sessione…</span>
       </div>
 
 
@@ -95,18 +95,18 @@
         <!-- Insert license form -->
         <div class="card" style="padding:2rem;margin-bottom:1.5rem;">
           <h3 style="font-family:var(--font-headline);color:var(--frost);font-size:1.05rem;margin-bottom:1.25rem;">
-            <i class="bi bi-plus-circle" aria-hidden="true" style="color:var(--primary);margin-right:0.3em;"></i> Inserisci Nuova Licenza
+            <i class="bi bi-plus-circle" aria-hidden="true" style="color:var(--primary);margin-right:0.3em;"></i> <span data-i18n="licenses_insert_title">Inserisci Nuova Licenza</span>
           </h3>
           <div style="display:flex;gap:1rem;flex-wrap:wrap;align-items:flex-end;">
             <div style="flex:1;min-width:200px;">
-              <label for="gen-fingerprint" style="display:block;font-size:.78rem;color:var(--text-muted);margin-bottom:.4rem;font-family:'Rajdhani',sans-serif;">Fingerprint *</label>
-              <input type="text" id="gen-fingerprint" placeholder="Dal ticket" class="form-control" style="width:100%;" autocomplete="off" maxlength="64" />
+              <label for="gen-fingerprint" style="display:block;font-size:.78rem;color:var(--text-muted);margin-bottom:.4rem;font-family:'Rajdhani',sans-serif;" data-i18n="licenses_insert_fingerprint">Fingerprint *</label>
+              <input type="text" id="gen-fingerprint" placeholder="Dal ticket" data-i18n-placeholder="licenses_insert_fingerprint_ph" class="form-control" style="width:100%;" autocomplete="off" maxlength="64" />
             </div>
             <div style="flex:1;min-width:150px;">
-              <label for="gen-hostname" style="display:block;font-size:.78rem;color:var(--text-muted);margin-bottom:.4rem;font-family:'Rajdhani',sans-serif;">Hostname (opzionale)</label>
-              <input type="text" id="gen-hostname" placeholder="Es. play.server.it" class="form-control" style="width:100%;" autocomplete="off" maxlength="255" />
+              <label for="gen-hostname" style="display:block;font-size:.78rem;color:var(--text-muted);margin-bottom:.4rem;font-family:'Rajdhani',sans-serif;" data-i18n="licenses_insert_hostname">Hostname (opzionale)</label>
+              <input type="text" id="gen-hostname" placeholder="Es. play.server.it" data-i18n-placeholder="licenses_insert_hostname_ph" class="form-control" style="width:100%;" autocomplete="off" maxlength="255" />
             </div>
-            <button type="button" id="gen-btn" class="btn btn-cyan">Inserisci</button>
+            <button type="button" id="gen-btn" class="btn btn-cyan" data-i18n="licenses_insert_btn">Inserisci</button>
           </div>
           <div id="gen-result" style="margin-top:1rem;display:none;"></div>
         </div>
@@ -114,16 +114,16 @@
         <!-- License table -->
         <div class="card" style="overflow-x:auto;">
           <div class="card-header-bar" style="display:flex; justify-content:space-between; align-items:center;">
-             <i class="bi bi-list-check" aria-hidden="true" style="color:var(--primary);margin-right:0.3em;"></i> Licenze Registrate
+             <i class="bi bi-list-check" aria-hidden="true" style="color:var(--primary);margin-right:0.3em;"></i> <span data-i18n="licenses_registered_title">Licenze Registrate</span>
              <select id="filter-status" class="form-control" style="padding:0.2rem 0.5rem; font-size:0.8rem; height:auto; border:1px solid var(--border);">
-               <option value="">Tutte</option>
-               <option value="pending">In Attesa</option>
-               <option value="approved">Approvate</option>
-               <option value="revoked">Revocate</option>
+               <option value="" data-i18n="licenses_filter_all">Tutte</option>
+               <option value="pending" data-i18n="licenses_filter_pending">In Attesa</option>
+               <option value="approved" data-i18n="licenses_filter_approved">Approvate</option>
+               <option value="revoked" data-i18n="licenses_filter_revoked">Revocate</option>
              </select>
           </div>
           <div id="license-table-wrap" style="padding:1rem;">
-            <p style="color:var(--text-dim);font-size:.85rem;">Caricamento…</p>
+            <p style="color:var(--text-dim);font-size:.85rem;" data-i18n="loading_generic">Caricamento...</p>
           </div>
         </div>
 

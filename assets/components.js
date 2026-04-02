@@ -204,7 +204,7 @@
             </span>
             <span class="footer-logo-wordmark">SkyFrost</span>
           </a>
-          <p>Il server Hytale italiano. Entra nel gelo e lascia il tuo segno.</p>
+          <p data-i18n="footer_desc">SkyFrost Network unisce server Minecraft e Hytale in un'unica community. Entra nel gelo e lascia il tuo segno.</p>
         </div>
         <div class="footer-col">
           <h4><span data-i18n="footer_nav">Navigazione</span></h4>
@@ -218,27 +218,27 @@
           </ul>
         </div>
         <div class="footer-col">
-          <h4>Community</h4>
+          <h4 data-i18n="footer_community">Community</h4>
           <ul>
             <li><a href="https://discord.com/invite/MfseZ57sPd" target="_blank" rel="noopener noreferrer">discord.skyfrost.it</a></li>
-            <li><a href="${ROUTE_PATHS.supporto}">Supporto Ticket</a></li>
-            <li><a href="${ROUTE_PATHS.login}">Login Discord</a></li>
+            <li><a href="${ROUTE_PATHS.supporto}" data-i18n="footer_support_link">Supporto Ticket</a></li>
+            <li><a href="${ROUTE_PATHS.login}" data-i18n="footer_login_link">Login Discord</a></li>
           </ul>
         </div>
         <div class="footer-col">
-          <h4>Legale</h4>
+          <h4 data-i18n="footer_legal">Legale</h4>
           <ul>
-            <li><a href="${ROUTE_PATHS.privacy}">Privacy Policy</a></li>
-            <li><a href="${ROUTE_PATHS.cookie}">Cookie Policy</a></li>
-            <li><a href="${ROUTE_PATHS.terms}">Termini di Servizio</a></li>
-            <li><a href="sitemap.xml">Sitemap</a></li>
+            <li><a href="${ROUTE_PATHS.privacy}" data-i18n="footer_privacy_link">Privacy Policy</a></li>
+            <li><a href="${ROUTE_PATHS.cookie}" data-i18n="footer_cookie_link">Cookie Policy</a></li>
+            <li><a href="${ROUTE_PATHS.terms}" data-i18n="footer_terms_link">Termini di Servizio</a></li>
+            <li><a href="sitemap.xml" data-i18n="footer_sitemap_link">Sitemap</a></li>
           </ul>
         </div>
       </div>
       <div class="footer-bottom">
         <div class="footer-legal">
           <span class="footer-copy" data-i18n="footer_rights">© 2026 SkyFrost — Tutti i diritti riservati</span>
-          <span class="footer-disclaimer" data-i18n="footer_disclaimer">Questo sito non e affiliato ad Hypixel Studios.</span>
+          <span class="footer-disclaimer" data-i18n="footer_disclaimer">SkyFrost Network e una community indipendente e non e affiliata a Mojang Studios, Microsoft o Hypixel Studios.</span>
         </div>
         <div class="footer-social">
           <a href="https://discord.com/invite/MfseZ57sPd" target="_blank" rel="noopener noreferrer" title="Discord">

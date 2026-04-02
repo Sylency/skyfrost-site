@@ -1,7 +1,7 @@
 {
-  "name": "SkyFrost",
+  "name": "SkyFrost Network",
   "short_name": "SkyFrost",
-  "description": "Portale ufficiale del server SkyFrost.",
+  "description": "Portale ufficiale di SkyFrost Network per Minecraft e Hytale.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

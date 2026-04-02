@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Accedi con Discord a SkyFrost per gestire ticket e supporto personalizzato." />
+  <meta name="description" content="Accedi con Discord a SkyFrost Network per gestire ticket e supporto personalizzato." data-i18n-content="meta_login_desc" />
   <meta name="robots" content="noindex,follow" />
   <meta name="theme-color" content="#000c42" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -12,20 +12,20 @@
   <link rel="canonical" href="https://skyfrost.it/login" />
 
   <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="SkyFrost" />
-  <meta property="og:title" content="Login Discord — SkyFrost" />
-  <meta property="og:description" content="Autenticati con Discord per aprire ticket sul supporto SkyFrost." />
+  <meta property="og:site_name" content="SkyFrost Network" data-i18n-content="meta_site_name" />
+  <meta property="og:title" content="Login Discord — SkyFrost Network" data-i18n-content="meta_login_title" />
+  <meta property="og:description" content="Autenticati con Discord per aprire ticket sul supporto SkyFrost Network." data-i18n-content="meta_login_desc" />
   <meta property="og:url" content="https://skyfrost.it/login" />
   <meta property="og:image" content="https://skyfrost.it/assets/skyfrost-logo.png" />
 
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Login Discord — SkyFrost" />
-  <meta name="twitter:description" content="Accesso Discord per ticket e supporto." />
+  <meta name="twitter:title" content="Login Discord — SkyFrost Network" data-i18n-content="meta_login_title" />
+  <meta name="twitter:description" content="Accesso Discord per ticket e supporto SkyFrost Network." data-i18n-content="meta_login_desc" />
   <meta name="twitter:image" content="https://skyfrost.it/assets/skyfrost-logo.png" />
 
   <link rel="icon" type="image/png" href="/assets/skyfrost-logo.png" />
   <link rel="manifest" href="/site.webmanifest" />
-  <title>Login Discord — SkyFrost</title>
+  <title data-i18n="meta_login_title">Login Discord — SkyFrost Network</title>
   <link rel="stylesheet" href="assets/style.css?v=3" />
 </head>
 <body>
@@ -46,23 +46,22 @@
     <h2 class="auth-title" id="login-title" data-i18n="login_title">Accedi con Discord</h2>
     <p class="auth-sub" data-i18n="login_subtitle">Per aprire ticket supporto devi autenticarti con il tuo account Discord.</p>
 
-    <div id="login-status" class="support-auth-state" style="margin-bottom:1rem;">Nessuna sessione attiva.</div>
+    <div id="login-status" class="support-auth-state" style="margin-bottom:1rem;" data-i18n="login_status_idle">Nessuna sessione attiva.</div>
 
     <a id="discord-login-btn" href="/api/auth?action=start" class="btn btn-cyan btn-block btn-lg" style="justify-content:center;gap:.55rem;">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.03.056A19.9 19.9 0 0 0 6.1 21.01a.077.077 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/></svg>
       <span data-i18n="login_btn_discord">Login con Discord</span>
     </a>
 
-    <div class="auth-divider">dopo il login</div>
+    <div class="auth-divider" data-i18n="login_after">dopo il login</div>
     <div class="card" style="padding:1rem 1.1rem;background:rgba(255,255,255,.02);">
       <p style="font-size:.84rem;color:var(--text-dim);line-height:1.6;">
-        Verrai reindirizzato su <strong style="color:var(--frost);">Supporto</strong> per aprire ticket che arrivano
-        direttamente nel tuo server Discord.
+        <span data-i18n="login_redirect_desc">Verrai reindirizzato su <strong style="color:var(--frost);">Supporto</strong> per aprire ticket che arrivano direttamente nel tuo server Discord.</span>
       </p>
     </div>
 
     <div class="auth-footer">
-      Ti serve prima una guida? <a href="/wiki">Apri la Wiki</a>
+      <span data-i18n="login_guide_prefix">Ti serve prima una guida?</span> <a href="/wiki" data-i18n="login_guide_link">Apri la Wiki</a>
     </div>
 
   </div>

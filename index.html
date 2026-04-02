@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SkyFrost — Server Hytale Italiano</title>
-  <meta name="description" content="SkyFrost: il server Hytale italiano. News, store ufficiale, staff, votazioni e supporto ticket con login Discord." />
+  <title data-i18n="meta_home_title">SkyFrost Network</title>
+  <meta name="description" content="SkyFrost Network: community italiana con server Minecraft e Hytale, news, store ufficiale, staff, votazioni e supporto ticket con login Discord." data-i18n-content="meta_home_desc" />
   <meta name="robots" content="index,follow" />
   <meta name="theme-color" content="#000c42" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -12,15 +12,15 @@
   <link rel="canonical" href="https://skyfrost.it/" />
 
   <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="SkyFrost" />
-  <meta property="og:title" content="SkyFrost — Server Hytale Italiano" />
-  <meta property="og:description" content="Entra nel mondo di SkyFrost: community italiana, aggiornamenti live, store e supporto rapido." />
+  <meta property="og:site_name" content="SkyFrost Network" data-i18n-content="meta_site_name" />
+  <meta property="og:title" content="SkyFrost Network" data-i18n-content="meta_home_title" />
+  <meta property="og:description" content="Entra nel mondo di SkyFrost Network: community italiana, server Minecraft e Hytale, aggiornamenti live, store e supporto rapido." data-i18n-content="meta_home_desc" />
   <meta property="og:url" content="https://skyfrost.it/" />
   <meta property="og:image" content="https://skyfrost.it/assets/skyfrost-logo.png" />
 
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="SkyFrost — Server Hytale Italiano" />
-  <meta name="twitter:description" content="News, store, staff, votazioni e supporto ticket del server SkyFrost." />
+  <meta name="twitter:title" content="SkyFrost Network" data-i18n-content="meta_home_title" />
+  <meta name="twitter:description" content="SkyFrost Network: news, store, staff, votazioni e supporto ticket per la community Minecraft e Hytale." data-i18n-content="meta_home_desc" />
   <meta name="twitter:image" content="https://skyfrost.it/assets/skyfrost-logo.png" />
 
   <link rel="icon" type="image/png" href="/assets/skyfrost-logo.png" />
@@ -139,15 +139,15 @@
         <div class="news-page">
           <div class="grid-3">
             <article class="card news-card card-body">
-              <span class="badge badge-cyan">Caricamento</span>
-              <h3>Carico gli annunci...</h3>
-              <p>Sto leggendo le ultime news da <code>assets/news.json</code>.</p>
+              <span class="badge badge-cyan" data-i18n="news_loading_badge">Caricamento</span>
+              <h3 data-i18n="news_loading_title">Carico gli annunci...</h3>
+              <p data-i18n="news_loading_desc">Sto leggendo le ultime news da <code>assets/news.json</code>.</p>
               <div class="news-meta">
                 <div class="news-author">
                   <div class="author-avatar">SF</div>
                   <span>SkyFrost</span>
                 </div>
-                <span>Adesso</span>
+                <span data-i18n="news_loading_now">Adesso</span>
               </div>
             </article>
           </div>
@@ -156,11 +156,11 @@
 
       <!-- Pagination -->
       <div id="news-pagination" style="display:flex;align-items:center;justify-content:center;gap:1.5rem;margin-top:2rem;">
-        <button id="news-prev" class="btn btn-ghost btn-sm">‹ Prec</button>
+        <button id="news-prev" class="btn btn-ghost btn-sm" data-i18n="news_prev">‹ Prec</button>
         <div id="news-dots" style="display:flex;gap:.5rem;">
           <button class="page-dot active" aria-label="Pagina news 1"></button>
         </div>
-        <button id="news-next" class="btn btn-ghost btn-sm">Succ ›</button>
+        <button id="news-next" class="btn btn-ghost btn-sm" data-i18n="news_next">Succ ›</button>
       </div>
     </section>
 
@@ -177,8 +177,8 @@
           <div class="featured-top">
             <div>
               <span class="featured-label" data-i18n="store_featured">⭐ In primo piano</span>
-              <div class="featured-name" id="index-featured-name">Caricamento...</div>
-              <div class="featured-price" id="index-featured-price">Prezzo su Tebex</div>
+              <div class="featured-name" id="index-featured-name" data-i18n="loading_generic">Caricamento...</div>
+              <div class="featured-price" id="index-featured-price" data-i18n="price_tebex">Prezzo su Tebex</div>
               <ul class="featured-perks" id="index-featured-perks" style="margin-top:1rem;">
                 <li data-i18n="store_perks_loading">Caricamento pacchetto in corso...</li>
               </ul>
@@ -197,14 +197,14 @@
           <div class="card reveal reveal-delay-1">
             <div class="card-header-bar" data-i18n="lb_donators">🏆 Top Donatori</div>
             <table class="lb-table" id="index-top-donators">
-              <tr><td class="lb-rank">#-</td><td class="lb-name">Caricamento classifica...</td><td class="lb-amount">--</td></tr>
+              <tr><td class="lb-rank">#-</td><td class="lb-name" data-i18n="lb_loading">Caricamento classifica...</td><td class="lb-amount">--</td></tr>
             </table>
           </div>
 
           <div class="card reveal reveal-delay-2">
             <div class="card-header-bar" data-i18n="lb_recent">⚡ Acquisti Recenti</div>
             <div id="index-recent-purchases">
-              <div class="purchase-row"><div><div class="purchase-user">Caricamento acquisti...</div><div class="purchase-cat">Tebex</div></div><span class="purchase-item">--</span></div>
+              <div class="purchase-row"><div><div class="purchase-user" data-i18n="purchases_loading">Caricamento acquisti...</div><div class="purchase-cat">Tebex</div></div><span class="purchase-item">--</span></div>
             </div>
           </div>
 

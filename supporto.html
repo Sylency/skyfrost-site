@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Apri un ticket supporto SkyFrost con login Discord e ricevi assistenza dallo staff." />
+  <meta name="description" content="Apri un ticket supporto SkyFrost Network con login Discord e ricevi assistenza dallo staff." data-i18n-content="meta_support_desc" />
   <meta name="robots" content="noindex,follow" />
   <meta name="theme-color" content="#000c42" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -12,21 +12,21 @@
   <link rel="canonical" href="https://skyfrost.it/supporto" />
 
   <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="SkyFrost" />
-  <meta property="og:title" content="Supporto — SkyFrost" />
-  <meta property="og:description" content="Assistenza community e ticket integrati con Discord." />
+  <meta property="og:site_name" content="SkyFrost Network" data-i18n-content="meta_site_name" />
+  <meta property="og:title" content="Supporto — SkyFrost Network" data-i18n-content="meta_support_title" />
+  <meta property="og:description" content="Assistenza community e ticket integrati con Discord per SkyFrost Network." data-i18n-content="meta_support_desc" />
   <meta property="og:url" content="https://skyfrost.it/supporto" />
   <meta property="og:image" content="https://skyfrost.it/assets/skyfrost-logo.png" />
 
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Supporto — SkyFrost" />
-  <meta name="twitter:description" content="Apri un ticket e contatta il team SkyFrost." />
+  <meta name="twitter:title" content="Supporto — SkyFrost Network" data-i18n-content="meta_support_title" />
+  <meta name="twitter:description" content="Apri un ticket e contatta il team SkyFrost Network." data-i18n-content="meta_support_desc" />
   <meta name="twitter:image" content="https://skyfrost.it/assets/skyfrost-logo.png" />
 
   <link rel="icon" type="image/png" href="/assets/skyfrost-logo.png" />
   <link rel="manifest" href="/site.webmanifest" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" />
-  <title>Supporto — SkyFrost</title>
+  <title data-i18n="meta_support_title">Supporto — SkyFrost Network</title>
   <link rel="stylesheet" href="assets/style.css?v=3" />
 </head>
 <body>
@@ -50,10 +50,10 @@
         <aside class="card support-user-card">
           <div class="card-header-bar">
             <i class="bi bi-discord" aria-hidden="true"></i>
-            <span>Account Discord</span>
+            <span data-i18n="sup_account_title">Account Discord</span>
           </div>
           <div class="card-body">
-            <div id="support-auth-state" class="support-auth-state">Verifica sessione in corso...</div>
+            <div id="support-auth-state" class="support-auth-state" data-i18n="sup_status_checking">Verifica sessione in corso...</div>
 
             <div class="support-profile" id="support-profile">
               <img class="support-avatar" id="support-avatar" src="https://cdn.discordapp.com/embed/avatars/0.png" alt="Avatar utente" />
@@ -83,21 +83,21 @@
             <form id="support-ticket-form">
               <div class="ticket-form-grid">
                 <div class="form-group">
-                  <label for="ticket-category">Categoria</label>
+                  <label for="ticket-category" data-i18n="sup_category_label">Categoria</label>
                   <select id="ticket-category" class="form-control" required>
-                    <option value="Generale">Generale</option>
-                    <option value="Bug">Bug</option>
-                    <option value="Store">Store</option>
-                    <option value="Ban Appeal">Ban Appeal</option>
-                    <option value="Partnership">Partnership</option>
+                    <option value="Generale" data-i18n="sup_category_general">Generale</option>
+                    <option value="Bug" data-i18n="sup_category_bug">Bug</option>
+                    <option value="Store" data-i18n="sup_category_store">Store</option>
+                    <option value="Ban Appeal" data-i18n="sup_category_ban">Ban Appeal</option>
+                    <option value="Partnership" data-i18n="sup_category_partnership">Partnership</option>
                   </select>
                 </div>
                 <div class="form-group">
-                  <label for="ticket-priority">Priorità</label>
+                  <label for="ticket-priority" data-i18n="sup_priority_label">Priorità</label>
                   <select id="ticket-priority" class="form-control" required>
-                    <option value="Normale">Normale</option>
-                    <option value="Alta">Alta</option>
-                    <option value="Critica">Critica</option>
+                    <option value="Normale" data-i18n="sup_priority_normal">Normale</option>
+                    <option value="Alta" data-i18n="sup_priority_high">Alta</option>
+                    <option value="Critica" data-i18n="sup_priority_critical">Critica</option>
                   </select>
                 </div>
               </div>
