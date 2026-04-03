@@ -733,7 +733,54 @@ select.form-control option { background: var(--bg-1); color: var(--white); }
 /* ═══════════════════════════════════════════════
    VOTE
    ═══════════════════════════════════════════════ */
-.vote-card { text-align: center; padding: 2rem; }
+.vote-groups { display: flex; flex-direction: column; gap: 2rem; }
+.vote-group { display: flex; flex-direction: column; gap: 1.25rem; }
+.vote-group-head { display: flex; flex-direction: column; gap: 0.55rem; }
+.vote-group-title {
+  font-family: var(--font-headline);
+  font-size: clamp(1.25rem, 2vw, 1.6rem);
+  color: var(--white);
+  line-height: 1.1;
+}
+.vote-group-desc {
+  max-width: 760px;
+  color: var(--text-dim);
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+.vote-grid-compact { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.vote-lane-shell {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 0.6rem;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(88,194,250,0.35) transparent;
+}
+.vote-lane-shell::-webkit-scrollbar { height: 10px; }
+.vote-lane-shell::-webkit-scrollbar-track { background: transparent; }
+.vote-lane-shell::-webkit-scrollbar-thumb {
+  background: rgba(88,194,250,0.25);
+  border-radius: var(--radius-full);
+}
+.vote-lane {
+  display: flex;
+  align-items: stretch;
+  gap: 1.25rem;
+  width: max-content;
+  scroll-snap-type: x proximity;
+}
+.vote-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  text-align: center;
+  padding: 2rem;
+}
+.vote-card-inline {
+  flex: 0 0 min(290px, calc(100vw - 3.5rem));
+  scroll-snap-align: start;
+}
 .vote-icon { font-size: 2.5rem; margin-bottom: 1rem; }
 .vote-site { font-family: var(--font-headline); font-size: 1.1rem; font-weight: 700; color: var(--white); margin-bottom: 0.5rem; }
 .vote-desc { font-size: 0.85rem; color: var(--text-dim); margin-bottom: 1.5rem; }
@@ -743,6 +790,7 @@ select.form-control option { background: var(--bg-1); color: var(--white); }
   background: rgba(251,191,36,0.06); border: 1px solid rgba(251,191,36,0.15);
   padding: 0.3rem 0.75rem; border-radius: var(--radius-full); margin-bottom: 1.25rem;
 }
+.vote-card .btn-block { margin-top: auto; }
 
 /* ═══════════════════════════════════════════════
    LEADERBOARD & PURCHASES
@@ -915,6 +963,7 @@ select.form-control option { background: var(--bg-1); color: var(--white); }
   .hero-stage { display: none; }
   .page-hero { padding: calc(var(--nav-h) + 2rem) 1.25rem 2rem; }
   .auth-brand-lockup { flex-direction: column; gap: 0.75rem; }
+  .vote-card-inline { flex-basis: min(280px, calc(100vw - 2.5rem)); }
 }
 
 @media (max-width: 480px) {
