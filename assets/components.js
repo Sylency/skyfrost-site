@@ -365,7 +365,7 @@
 
     // Append i18n script dynamically
     const i18nScript = document.createElement('script');
-    i18nScript.src = 'assets/i18n.js';
+    i18nScript.src = 'assets/i18n.js?v=2';
     document.body.appendChild(i18nScript);
 
     if (typeof SkyFrost !== 'undefined' && typeof SkyFrost.fetchAuthSession === 'function') {

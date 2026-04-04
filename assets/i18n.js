@@ -4,12 +4,41 @@
   window.SkyFrost = window.SkyFrost || {};
   const { SkyFrost } = window;
 
+  function createFlagDataUri(svg) {
+    return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
+  }
+
   const SUPPORTED_LANGS = [
-    { code: 'it', name: 'Italiano', flag: '🇮🇹' },
-    { code: 'en', name: 'English', flag: '🇬🇧' },
-    { code: 'es', name: 'Español', flag: '🇪🇸' },
-    { code: 'fr', name: 'Français', flag: '🇫🇷' },
-    { code: 'de', name: 'Deutsch', flag: '🇩🇪' }
+    {
+      code: 'it',
+      name: 'Italiano',
+      flag: '🇮🇹',
+      flagSvg: createFlagDataUri('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 12"><rect width="6" height="12" fill="#009246"/><rect x="6" width="6" height="12" fill="#ffffff"/><rect x="12" width="6" height="12" fill="#ce2b37"/></svg>')
+    },
+    {
+      code: 'en',
+      name: 'English',
+      flag: '🇬🇧',
+      flagSvg: createFlagDataUri('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 12"><rect width="18" height="12" fill="#012169"/><path d="M0 0l18 12M18 0L0 12" stroke="#ffffff" stroke-width="2.4"/><path d="M0 0l18 12M18 0L0 12" stroke="#c8102e" stroke-width="1.2"/><path d="M9 0v12M0 6h18" stroke="#ffffff" stroke-width="4"/><path d="M9 0v12M0 6h18" stroke="#c8102e" stroke-width="2.2"/></svg>')
+    },
+    {
+      code: 'es',
+      name: 'Español',
+      flag: '🇪🇸',
+      flagSvg: createFlagDataUri('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 12"><rect width="18" height="12" fill="#aa151b"/><rect y="3" width="18" height="6" fill="#f1bf00"/></svg>')
+    },
+    {
+      code: 'fr',
+      name: 'Français',
+      flag: '🇫🇷',
+      flagSvg: createFlagDataUri('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 12"><rect width="6" height="12" fill="#0055a4"/><rect x="6" width="6" height="12" fill="#ffffff"/><rect x="12" width="6" height="12" fill="#ef4135"/></svg>')
+    },
+    {
+      code: 'de',
+      name: 'Deutsch',
+      flag: '🇩🇪',
+      flagSvg: createFlagDataUri('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 12"><rect width="18" height="4" fill="#000000"/><rect y="4" width="18" height="4" fill="#dd0000"/><rect y="8" width="18" height="4" fill="#ffce00"/></svg>')
+    }
   ];
   const DEFAULT_LANG = 'it';
   const LANG_KEY = 'sf_lang';
@@ -122,9 +151,9 @@
     document.querySelectorAll('.lang-select-wrap').forEach((wrap) => {
       const flag = wrap.querySelector('.lang-select-flag');
       if (!flag) return;
-      flag.textContent = selectedLang.flag;
-      flag.setAttribute('aria-label', selectedLang.name);
-      flag.setAttribute('title', selectedLang.name);
+      flag.src = selectedLang.flagSvg;
+      flag.alt = selectedLang.name;
+      flag.title = selectedLang.name;
     });
   }
 
@@ -134,9 +163,11 @@
     const wrap = document.createElement('div');
     wrap.className = `lang-select-wrap${mobile ? ' mob' : ''}`;
 
-    const flag = document.createElement('span');
+    const flag = document.createElement('img');
     flag.className = 'lang-select-flag';
-    flag.setAttribute('aria-hidden', 'true');
+    flag.width = 18;
+    flag.height = 12;
+    flag.decoding = 'async';
 
     const select = document.createElement('select');
     select.className = `lang-select${mobile ? ' mob' : ''}`;
@@ -768,13 +799,13 @@
       background: rgba(15, 23, 42, 0.8);
     }
     .lang-select-flag {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-width: 1.1rem;
-      font-size: 0.95rem;
-      line-height: 1;
-      font-family: "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif;
+      display: block;
+      width: 18px;
+      height: 12px;
+      border-radius: 2px;
+      object-fit: cover;
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.12);
+      flex-shrink: 0;
     }
     .lang-select {
       background: transparent;
