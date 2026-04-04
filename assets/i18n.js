@@ -107,6 +107,57 @@
     currentLang = langCode;
     localStorage.setItem(LANG_KEY, langCode);
     applyTranslations({ dispatchEvent: true });
+    syncLanguageSelectors();
+  }
+
+  function getSupportedLanguage(langCode = currentLang) {
+    return SUPPORTED_LANGS.find((lang) => lang.code === langCode) || SUPPORTED_LANGS[0];
+  }
+
+  function syncLanguageSelectors(langCode = currentLang) {
+    const selectedLang = getSupportedLanguage(langCode);
+    document.querySelectorAll('.lang-select').forEach((select) => {
+      select.value = selectedLang.code;
+    });
+    document.querySelectorAll('.lang-select-wrap').forEach((wrap) => {
+      const flag = wrap.querySelector('.lang-select-flag');
+      if (!flag) return;
+      flag.textContent = selectedLang.flag;
+      flag.setAttribute('aria-label', selectedLang.name);
+      flag.setAttribute('title', selectedLang.name);
+    });
+  }
+
+  function buildLanguageSelector(container, { mobile = false } = {}) {
+    if (!container) return;
+
+    const wrap = document.createElement('div');
+    wrap.className = `lang-select-wrap${mobile ? ' mob' : ''}`;
+
+    const flag = document.createElement('span');
+    flag.className = 'lang-select-flag';
+    flag.setAttribute('aria-hidden', 'true');
+
+    const select = document.createElement('select');
+    select.className = `lang-select${mobile ? ' mob' : ''}`;
+    select.setAttribute('aria-label', 'Seleziona lingua');
+
+    SUPPORTED_LANGS.forEach((lang) => {
+      const option = document.createElement('option');
+      option.value = lang.code;
+      option.textContent = mobile ? lang.name : lang.code.toUpperCase();
+      if (lang.code === currentLang) option.selected = true;
+      select.appendChild(option);
+    });
+
+    select.addEventListener('change', (event) => {
+      setLanguage(event.target.value);
+    });
+
+    wrap.append(flag, select);
+    container.innerHTML = '';
+    container.appendChild(wrap);
+    syncLanguageSelectors();
   }
 
   SkyFrost.initI18n = async function () {
@@ -114,49 +165,8 @@
     applyTranslations({ dispatchEvent: true });
 
     // Setup language selector in navbar
-    const selectorContainer = document.getElementById('lang-selector-container');
-    if (selectorContainer) {
-      const select = document.createElement('select');
-      select.className = 'lang-select';
-      select.setAttribute('aria-label', 'Seleziona lingua');
-      
-      SUPPORTED_LANGS.forEach(l => {
-        const option = document.createElement('option');
-        option.value = l.code;
-        option.textContent = l.flag + ' ' + l.code.toUpperCase();
-        if (l.code === currentLang) option.selected = true;
-        select.appendChild(option);
-      });
-
-      select.addEventListener('change', (e) => {
-        setLanguage(e.target.value);
-      });
-      selectorContainer.appendChild(select);
-    }
-    
-    const mobContainer = document.getElementById('mob-lang-selector-container');
-    if (mobContainer) {
-      const select = document.createElement('select');
-      select.className = 'lang-select mob';
-      select.setAttribute('aria-label', 'Seleziona lingua');
-      
-      SUPPORTED_LANGS.forEach(l => {
-        const option = document.createElement('option');
-        option.value = l.code;
-        option.textContent = l.flag + ' ' + l.name;
-        if (l.code === currentLang) option.selected = true;
-        select.appendChild(option);
-      });
-
-      select.addEventListener('change', (e) => {
-        setLanguage(e.target.value);
-        // Also update the desktop selector to match
-        const deskSelect = document.querySelector('.lang-select:not(.mob)');
-        if (deskSelect) deskSelect.value = e.target.value;
-      });
-      mobContainer.innerHTML = '';
-      mobContainer.appendChild(select);
-    }
+    buildLanguageSelector(document.getElementById('lang-selector-container'));
+    buildLanguageSelector(document.getElementById('mob-lang-selector-container'), { mobile: true });
   };
 
   Object.assign(EXTRA_DICTIONARY.it, {
@@ -743,32 +753,60 @@
   // CSS for selector
   const style = document.createElement('style');
   style.textContent = `
-    .lang-select {
+    .lang-select-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
       background: rgba(15, 23, 42, 0.6);
-      color: var(--text-dim);
       border: 1px solid rgba(88,194,250,0.12);
       border-radius: var(--radius-sm);
-      padding: 0.35rem;
+      padding-left: 0.6rem;
+      transition: all var(--transition);
+    }
+    .lang-select-wrap:hover {
+      border-color: rgba(88,194,250,0.3);
+      background: rgba(15, 23, 42, 0.8);
+    }
+    .lang-select-flag {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 1.1rem;
+      font-size: 0.95rem;
+      line-height: 1;
+      font-family: "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif;
+    }
+    .lang-select {
+      background: transparent;
+      color: var(--text-dim);
+      border: none;
+      border-radius: var(--radius-sm);
+      padding: 0.45rem 0.9rem 0.45rem 0;
       font-size: 0.8rem;
       font-weight: 600;
       cursor: pointer;
       outline: none;
       transition: all var(--transition);
-      margin-left: 0.5rem;
+      font-family: var(--font-label), "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif;
     }
     .lang-select:hover {
-      border-color: rgba(88,194,250,0.3);
       color: var(--white);
-      background: rgba(15, 23, 42, 0.8);
     }
     .lang-select option {
       background: var(--bg-1);
       color: var(--white);
+      font-family: var(--font-label), "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif;
+    }
+    .lang-select-wrap.mob {
+      display: flex;
+      width: 100%;
+      margin-top: 1rem;
+      padding-left: 0.85rem;
     }
     .lang-select.mob {
       width: 100%;
-      margin: 1rem 0 0 0;
-      padding: 0.6rem;
+      margin: 0;
+      padding: 0.7rem 1rem 0.7rem 0;
       font-size: 1rem;
     }
   `;
