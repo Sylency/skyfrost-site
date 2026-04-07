@@ -2,9 +2,9 @@
 
 const { applyCors, isAllowedOrigin } = require('./auth-utils.cjs');
 
-const DEFAULT_SERVER_ADDRESS = 'play.skyfrost.it';
-const DEFAULT_STATUS_URL_TEMPLATE = 'https://api.mcsrvstat.us/3/{server}';
-const CACHE_TTL_MS = 30000;
+const DEFAULT_SERVER_ADDRESS = 'play.skyfrost.eu';
+const DEFAULT_STATUS_URL_TEMPLATE = 'https://api.mcstatus.io/v2/status/java/{server}';
+const CACHE_TTL_MS = 60000;
 
 let cachedStatus = null;
 let cacheExpiresAt = 0;
@@ -15,8 +15,43 @@ function safeText(value, fallback = '') {
 }
 
 function asNumber(value) {
+  const num = Number(value);
+  return Number.isFinite(num) ? num : null;
+}
+
+function asPort(value, fallback = 25565) {
+  const port = Number.parseInt(String(value ?? ''), 10);
+  return Number.isFinite(port) && port > 0 ? port : fallback;
+}
+
+function asTimestamp(value) {
   const num = Number.parseInt(String(value ?? ''), 10);
-  return Number.isFinite(num) && num >= 0 ? num : null;
+  return Number.isFinite(num) && num > 0 ? num : null;
+}
+
+function normalizedPlayerName(player) {
+  return safeText(
+    player?.name_clean,
+    safeText(player?.name_raw, safeText(player?.name_html, ''))
+  );
+}
+
+function normalizePlugin(plugin) {
+  const name = safeText(plugin?.name, '');
+  if (!name) return null;
+  return {
+    name,
+    version: safeText(plugin?.version, '')
+  };
+}
+
+function normalizeMod(mod) {
+  const name = safeText(mod?.name, '');
+  if (!name) return null;
+  return {
+    name,
+    version: safeText(mod?.version, '')
+  };
 }
 
 function resolveStatusUrl(serverAddress) {
@@ -28,24 +63,58 @@ function resolveStatusUrl(serverAddress) {
 }
 
 function parseStatusPayload(payload) {
-  const online = asNumber(
-    payload?.players?.online ??
-    payload?.onlinePlayers ??
-    payload?.online_count ??
-    payload?.data?.players?.online
-  );
+  const retrievedAt = asTimestamp(payload?.retrieved_at) ?? Date.now();
+  const expiresAt = asTimestamp(payload?.expires_at);
+  const onlinePlayers = asNumber(payload?.players?.online);
+  const maxPlayers = asNumber(payload?.players?.max);
+  const samplePlayers = Array.isArray(payload?.players?.list)
+    ? payload.players.list.map(normalizedPlayerName).filter(Boolean).slice(0, 8)
+    : [];
+  const plugins = Array.isArray(payload?.plugins)
+    ? payload.plugins.map(normalizePlugin).filter(Boolean)
+    : [];
+  const mods = Array.isArray(payload?.mods)
+    ? payload.mods.map(normalizeMod).filter(Boolean)
+    : [];
+  const srvRecordHost = safeText(payload?.srv_record?.host, '');
+  const srvRecordPort = asNumber(payload?.srv_record?.port);
+  const isOnline = payload?.online === true;
 
-  const max = asNumber(
-    payload?.players?.max ??
-    payload?.maxPlayers ??
-    payload?.max_count ??
-    payload?.data?.players?.max
-  );
-
-  const explicitOnline = typeof payload?.online === 'boolean' ? payload.online : null;
-  const isOnline = explicitOnline !== null ? explicitOnline : online !== null;
-
-  return { online, max, isOnline };
+  return {
+    sourceProvider: 'mcstatus.io',
+    serverHost: safeText(payload?.host, DEFAULT_SERVER_ADDRESS),
+    serverPort: asPort(payload?.port, 25565),
+    ipAddress: safeText(payload?.ip_address, '') || null,
+    eulaBlocked: payload?.eula_blocked === true,
+    isOnline,
+    status: isOnline ? 'online' : 'offline',
+    onlinePlayers,
+    maxPlayers,
+    samplePlayers,
+    version: {
+      name: safeText(payload?.version?.name_clean, safeText(payload?.version?.name_raw, '')),
+      protocol: asNumber(payload?.version?.protocol)
+    },
+    motd: {
+      raw: safeText(payload?.motd?.raw, ''),
+      clean: safeText(payload?.motd?.clean, ''),
+      html: safeText(payload?.motd?.html, '')
+    },
+    icon: safeText(payload?.icon, '') || null,
+    software: safeText(payload?.software, ''),
+    plugins,
+    pluginCount: plugins.length,
+    mods,
+    modCount: mods.length,
+    srvRecord: srvRecordHost
+      ? {
+          host: srvRecordHost,
+          port: srvRecordPort
+        }
+      : null,
+    updatedAt: new Date(retrievedAt).toISOString(),
+    expiresAt: expiresAt ? new Date(expiresAt).toISOString() : null
+  };
 }
 
 async function fetchLiveStatus(serverAddress) {
@@ -65,14 +134,37 @@ async function fetchLiveStatus(serverAddress) {
 }
 
 function fallbackStatus(serverAddress, reason = '') {
-  const fallbackOnline = null;
   return {
     ok: false,
+    sourceProvider: 'mcstatus.io',
     serverAddress,
-    onlinePlayers: fallbackOnline,
+    serverHost: serverAddress,
+    serverPort: 25565,
+    ipAddress: null,
+    eulaBlocked: false,
+    isOnline: null,
+    status: 'unavailable',
+    onlinePlayers: null,
     maxPlayers: null,
-    isOnline: fallbackOnline !== null ? fallbackOnline > 0 : null,
+    samplePlayers: [],
+    version: {
+      name: '',
+      protocol: null
+    },
+    motd: {
+      raw: '',
+      clean: '',
+      html: ''
+    },
+    icon: null,
+    software: '',
+    plugins: [],
+    pluginCount: 0,
+    mods: [],
+    modCount: 0,
+    srvRecord: null,
     updatedAt: new Date().toISOString(),
+    expiresAt: null,
     error: safeText(reason, 'status_unavailable')
   };
 }
@@ -99,11 +191,7 @@ module.exports = async function handler(req, res) {
     const payload = {
       ok: true,
       serverAddress,
-      onlinePlayers: live.online,
-      maxPlayers: live.max,
-      isOnline: live.isOnline,
-      updatedAt: new Date().toISOString(),
-      sourceUrl: live.sourceUrl
+      ...live
     };
 
     cachedStatus = payload;
@@ -113,7 +201,7 @@ module.exports = async function handler(req, res) {
   } catch (err) {
     const payload = fallbackStatus(serverAddress, safeText(err?.message, 'status_unavailable'));
     cachedStatus = payload;
-    cacheExpiresAt = now + Math.min(10000, CACHE_TTL_MS);
+    cacheExpiresAt = now + Math.min(15000, CACHE_TTL_MS);
     res.setHeader('Cache-Control', 'no-store');
     return res.status(200).json(payload);
   }

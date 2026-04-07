@@ -74,11 +74,19 @@
         </a>
         <button type="button" id="copy-ip-btn" class="btn btn-outline btn-lg">
           <i class="bi bi-hdd-network" aria-hidden="true"></i>
-          <span>play.skyfrost.it</span>
+          <span>play.skyfrost.eu</span>
         </button>
       </div>
 
       <div class="hero-status">
+        <div class="status-pill" id="hero-mc-pill">
+          <span class="status-dot" id="hero-mc-dot"></span>
+          <span>
+            <i class="bi bi-controller" aria-hidden="true"></i>
+            <strong id="hero-mc-online-count" style="color:var(--primary)">…</strong> <span data-i18n="mc_hero_players_label">online su</span>
+            <a href="#minecraft-live" class="status-pill-link">Minecraft</a>
+          </span>
+        </div>
         <div class="status-pill">
           <span class="status-dot online"></span>
           <span>
@@ -110,13 +118,131 @@
       <img class="hero-stage-logo" src="/assets/skyfrost-logo.png" alt="" />
       <div class="hero-stage-card hero-stage-card-top">
         <span class="hero-stage-label" data-i18n="stage_top_title">Minecraft Hub</span>
-        <strong data-i18n="stage_top_desc">Entra ora su play.skyfrost.it e inizia la tua avventura!</strong>
+        <strong data-i18n="stage_top_desc">Entra ora su play.skyfrost.eu e inizia la tua avventura!</strong>
       </div>
       <div class="hero-stage-card hero-stage-card-bottom">
         <span class="hero-stage-label" data-i18n="stage_bot_title">Hytale Ready</span>
         <strong data-i18n="stage_bot_desc">Siamo pronti ad accogliere la nuova generazione di giocatori.</strong>
       </div>
     </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<div class="page-wrap">
+  <div class="container">
+    <section class="section reveal minecraft-live-section" id="minecraft-live">
+      <span class="section-eyebrow glacial-glow" data-i18n="mc_section_eyebrow">Minecraft Live</span>
+      <div class="minecraft-live-grid">
+        <article class="card minecraft-command-card">
+          <div class="card-body minecraft-command-body">
+            <div class="minecraft-command-head">
+              <div>
+                <h2 class="section-title minecraft-title" data-i18n="mc_section_title">Survival & Skyblock</h2>
+                <p class="minecraft-intro" data-i18n="mc_section_desc">
+                  Due modalita, un solo hub e un'identita precisa: progressione costante, economia pulita e sessioni che restano memorabili.
+                </p>
+              </div>
+              <div class="minecraft-address-stack">
+                <span class="minecraft-state-badge" id="mc-live-badge" data-state="loading" data-i18n="mc_loading_badge">Connessione...</span>
+                <span class="minecraft-address-label">play.skyfrost.eu</span>
+              </div>
+            </div>
+
+            <div class="minecraft-kpi-grid">
+              <div class="minecraft-kpi-card">
+                <span class="minecraft-kpi-label" data-i18n="mc_kpi_players">Giocatori</span>
+                <strong id="mc-online-count">--</strong>
+                <span class="minecraft-kpi-sub" id="mc-player-cap">/ -- max</span>
+              </div>
+              <div class="minecraft-kpi-card">
+                <span class="minecraft-kpi-label" data-i18n="mc_kpi_version">Versione</span>
+                <strong id="mc-version">--</strong>
+                <span class="minecraft-kpi-sub" data-i18n="mc_kpi_version_sub">Compatibilita live</span>
+              </div>
+              <div class="minecraft-kpi-card">
+                <span class="minecraft-kpi-label" data-i18n="mc_kpi_software">Software</span>
+                <strong id="mc-software">--</strong>
+                <span class="minecraft-kpi-sub" data-i18n="mc_kpi_software_sub">Stack del server</span>
+              </div>
+              <div class="minecraft-kpi-card">
+                <span class="minecraft-kpi-label" data-i18n="mc_kpi_plugins">Plugin</span>
+                <strong id="mc-plugin-count">--</strong>
+                <span class="minecraft-kpi-sub" data-i18n="mc_kpi_plugins_sub">Moduli rilevati</span>
+              </div>
+            </div>
+
+            <div class="minecraft-mode-grid">
+              <article class="minecraft-mode-card" data-mode="survival">
+                <span class="minecraft-mode-icon"><i class="bi bi-tree-fill" aria-hidden="true"></i></span>
+                <div>
+                  <h3 data-i18n="mc_mode_survival_title">Survival</h3>
+                  <p data-i18n="mc_mode_survival_desc">Economia bilanciata, progressione chiara e loop di gioco pensato per rimanere fresco anche nel lungo periodo.</p>
+                </div>
+              </article>
+              <article class="minecraft-mode-card" data-mode="skyblock">
+                <span class="minecraft-mode-icon"><i class="bi bi-cloud-fill" aria-hidden="true"></i></span>
+                <div>
+                  <h3 data-i18n="mc_mode_skyblock_title">Skyblock</h3>
+                  <p data-i18n="mc_mode_skyblock_desc">Isole che crescono davvero, obiettivi continui e una progressione che premia creativita e costanza.</p>
+                </div>
+              </article>
+            </div>
+
+            <div class="minecraft-action-row">
+              <button type="button" id="minecraft-copy-ip-btn" class="btn btn-cyan btn-lg">
+                <i class="bi bi-copy" aria-hidden="true"></i>
+                <span data-i18n="mc_copy_cta">Copia IP Minecraft</span>
+              </button>
+              <a href="/wiki" class="btn btn-outline btn-lg">
+                <i class="bi bi-journal-text" aria-hidden="true"></i>
+                <span data-i18n="mc_wiki_cta">Apri la Wiki</span>
+              </a>
+            </div>
+          </div>
+        </article>
+
+        <aside class="card minecraft-signal-card">
+          <div class="card-body minecraft-signal-body">
+            <div class="minecraft-signal-top">
+              <img id="mc-server-icon" class="minecraft-server-icon" src="/assets/skyfrost-logo.png" alt="SkyFrost Minecraft server icon" />
+              <div>
+                <span class="minecraft-panel-label" data-i18n="mc_panel_label">Server Snapshot</span>
+                <h3 data-i18n="mc_panel_title">Segnale in tempo reale</h3>
+              </div>
+            </div>
+
+            <div class="minecraft-motd-box">
+              <span class="minecraft-panel-caption" data-i18n="mc_motd_label">MOTD</span>
+              <p id="mc-motd" class="minecraft-motd-text" data-i18n="mc_loading_motd">Sto leggendo il messaggio live del server...</p>
+            </div>
+
+            <div class="minecraft-meta-list">
+              <div class="minecraft-meta-row">
+                <span data-i18n="mc_meta_address">Indirizzo</span>
+                <strong id="mc-address">play.skyfrost.eu</strong>
+              </div>
+              <div class="minecraft-meta-row">
+                <span data-i18n="mc_meta_srv">SRV</span>
+                <strong id="mc-srv-record">--</strong>
+              </div>
+              <div class="minecraft-meta-row">
+                <span data-i18n="mc_meta_updated">Aggiornato</span>
+                <strong id="mc-updated-at">--</strong>
+              </div>
+            </div>
+
+            <div class="minecraft-player-list-wrap">
+              <span class="minecraft-panel-caption" data-i18n="mc_players_label">Giocatori visibili</span>
+              <div id="mc-player-list" class="minecraft-player-list">
+                <span class="minecraft-chip" data-i18n="mc_players_waiting">In attesa dei dati live</span>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
   </div>
 </div>
 

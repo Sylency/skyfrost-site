@@ -17,6 +17,7 @@ const NEWS_JSON_URL = '/assets/news.json';
 const AUTH_API = `${API_BASE}/auth`;
 const TICKETS_API = `${API_BASE}/tickets`;
 const STATUS_API = `${API_BASE}/status`;
+const MINECRAFT_SERVER_ADDRESS = 'play.skyfrost.eu';
 
 const CATEGORY_ICONS = {
   survival: '🌲',
@@ -218,6 +219,18 @@ function formatDate(value) {
   }).format(dt);
 }
 
+function formatDateTime(value) {
+  if (!value) return '';
+  const dt = new Date(value);
+  if (Number.isNaN(dt.getTime())) return '';
+  return new Intl.DateTimeFormat(currentLocale(), {
+    day: '2-digit',
+    month: 'short',
+    hour: '2-digit',
+    minute: '2-digit'
+  }).format(dt);
+}
+
 function categoryIcon(name) {
   const normalized = safeText(name, '').toLowerCase();
   for (const [key, icon] of Object.entries(CATEGORY_ICONS)) {
@@ -349,6 +362,170 @@ SkyFrost.loadServerStatus = function (el) {
   }, REFRESH_MS);
 };
 
+/* ── MINECRAFT LIVE PANEL ── */
+SkyFrost.loadMinecraftStatus = function () {
+  const liveBadge = document.getElementById('mc-live-badge');
+  const heroDot = document.getElementById('hero-mc-dot');
+  const heroStatusText = document.getElementById('hero-mc-online-count');
+  const onlineCount = document.getElementById('mc-online-count');
+  const playerCap = document.getElementById('mc-player-cap');
+  const versionEl = document.getElementById('mc-version');
+  const softwareEl = document.getElementById('mc-software');
+  const pluginCountEl = document.getElementById('mc-plugin-count');
+  const motdEl = document.getElementById('mc-motd');
+  const addressEl = document.getElementById('mc-address');
+  const srvRecordEl = document.getElementById('mc-srv-record');
+  const updatedAtEl = document.getElementById('mc-updated-at');
+  const playerListEl = document.getElementById('mc-player-list');
+  const serverIconEl = document.getElementById('mc-server-icon');
+
+  if (!liveBadge || !heroDot || !heroStatusText || !onlineCount || !playerCap || !versionEl || !softwareEl || !pluginCountEl || !motdEl || !addressEl || !srvRecordEl || !updatedAtEl || !playerListEl || !serverIconEl) {
+    return;
+  }
+
+  const REFRESH_MS = 60000;
+
+  function formatStatusLabel(status) {
+    if (status === 'online') return t('mc_badge_online', 'Online ora');
+    if (status === 'offline') return t('mc_badge_offline', 'Offline');
+    if (status === 'loading') return t('mc_loading_badge', 'Connessione...');
+    return t('mc_badge_unavailable', 'Dato non disponibile');
+  }
+
+  function setHeroDot(status) {
+    heroDot.classList.remove('offline', 'loading');
+    if (status === 'offline' || status === 'unavailable') heroDot.classList.add('offline');
+    if (status === 'loading') heroDot.classList.add('loading');
+  }
+
+  function renderPlayers(list) {
+    playerListEl.innerHTML = '';
+    const values = Array.isArray(list) ? list.filter(Boolean).slice(0, 8) : [];
+    if (!values.length) {
+      const fallbackChip = document.createElement('span');
+      fallbackChip.className = 'minecraft-chip';
+      if (SkyFrost.latestMinecraftStatus?.status === 'online') {
+        fallbackChip.textContent = t('mc_players_none_visible', 'Nessun nome esposto dal provider');
+      } else if (SkyFrost.latestMinecraftStatus?.status === 'offline') {
+        fallbackChip.textContent = t('mc_players_offline', 'Server offline al momento');
+      } else {
+        fallbackChip.textContent = t('mc_players_waiting', 'In attesa dei dati live');
+      }
+      playerListEl.appendChild(fallbackChip);
+      return;
+    }
+
+    values.forEach((name) => {
+      const chip = document.createElement('span');
+      chip.className = 'minecraft-chip';
+      chip.textContent = name;
+      playerListEl.appendChild(chip);
+    });
+  }
+
+  function renderStatus(data) {
+    const payload = data && typeof data === 'object' ? data : {};
+    const status = safeText(payload.status, 'unavailable');
+    const online = Number.isFinite(Number(payload.onlinePlayers)) ? Math.floor(Number(payload.onlinePlayers)) : null;
+    const max = Number.isFinite(Number(payload.maxPlayers)) ? Math.floor(Number(payload.maxPlayers)) : null;
+    const software = safeText(payload.software, '');
+    const version = safeText(payload?.version?.name, '');
+    const pluginCount = Number.isFinite(Number(payload.pluginCount)) ? Math.floor(Number(payload.pluginCount)) : null;
+    const motd = safeText(payload?.motd?.clean, '');
+    const updatedAt = formatDateTime(payload.updatedAt);
+    const srvHost = safeText(payload?.srvRecord?.host, '');
+    const srvPort = Number.isFinite(Number(payload?.srvRecord?.port)) ? Math.floor(Number(payload.srvRecord.port)) : null;
+    const address = safeText(payload.serverAddress, MINECRAFT_SERVER_ADDRESS);
+    const icon = safeText(payload.icon, '');
+
+    SkyFrost.latestMinecraftStatus = payload;
+    SkyFrost.renderMinecraftStatus = renderStatus;
+
+    liveBadge.dataset.state = status;
+    liveBadge.textContent = formatStatusLabel(status);
+    setHeroDot(status);
+
+    if (status === 'online') {
+      heroStatusText.textContent = online !== null
+        ? t('mc_hero_online_players', '{count} player', { count: online })
+        : t('mc_hero_online_generic', 'Online ora');
+    } else if (status === 'offline') {
+      heroStatusText.textContent = t('mc_hero_offline', 'Offline');
+    } else if (status === 'loading') {
+      heroStatusText.textContent = t('mc_loading_badge', 'Connessione...');
+    } else {
+      heroStatusText.textContent = t('mc_hero_unavailable', 'Stato non disponibile');
+    }
+
+    onlineCount.textContent = online !== null ? String(online) : '--';
+    playerCap.textContent = max !== null
+      ? t('mc_player_cap', '/ {count} max', { count: max })
+      : t('mc_player_cap_unknown', '/ -- max');
+    versionEl.textContent = version || t('mc_unknown_version', 'Rilevamento...');
+    softwareEl.textContent = software || t('mc_unknown_software', 'Auto');
+    pluginCountEl.textContent = pluginCount !== null ? String(pluginCount) : t('mc_query_unavailable', 'N/D');
+    motdEl.textContent = motd || (
+      status === 'offline'
+        ? t('mc_motd_offline', 'Il server e offline in questo momento, ma la base e pronta per tornare live.')
+        : t('mc_loading_motd', 'Sto leggendo il messaggio live del server...')
+    );
+    addressEl.textContent = address;
+    srvRecordEl.textContent = srvHost ? `${srvHost}${srvPort ? `:${srvPort}` : ''}` : t('mc_direct_connection', 'Connessione diretta');
+    updatedAtEl.textContent = updatedAt || '--';
+    renderPlayers(payload.samplePlayers);
+
+    if (icon) {
+      serverIconEl.src = icon;
+    } else {
+      serverIconEl.src = '/assets/skyfrost-logo.png';
+    }
+  }
+
+  async function refresh() {
+    try {
+      const res = await fetch(STATUS_API, { cache: 'no-store' });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      renderStatus(data);
+    } catch (err) {
+      console.error('Minecraft status fetch failed:', err);
+      renderStatus({
+        status: 'unavailable',
+        serverAddress: MINECRAFT_SERVER_ADDRESS,
+        onlinePlayers: null,
+        maxPlayers: null,
+        pluginCount: null,
+        samplePlayers: [],
+        motd: {
+          clean: t('mc_motd_unavailable', 'Il feed live non e raggiungibile al momento. Riprova tra poco.')
+        },
+        updatedAt: new Date().toISOString()
+      });
+    }
+  }
+
+  renderStatus({
+    status: 'loading',
+    serverAddress: MINECRAFT_SERVER_ADDRESS,
+    onlinePlayers: null,
+    maxPlayers: null,
+    pluginCount: null,
+    samplePlayers: [],
+    motd: {
+      clean: t('mc_loading_motd', 'Sto leggendo il messaggio live del server...')
+    }
+  });
+  void refresh();
+
+  if (!document.body.dataset.minecraftStatusIntervalBound) {
+    document.body.dataset.minecraftStatusIntervalBound = '1';
+    setInterval(() => {
+      if (document.hidden) return;
+      void refresh();
+    }, REFRESH_MS);
+  }
+};
+
 /* ── DISCORD COUNTER ── */
 SkyFrost.loadDiscordStatus = function (el) {
   if (!el) return;
@@ -381,8 +558,12 @@ SkyFrost.loadDiscordStatus = function (el) {
 
 /* ── INDEX PAGE ── */
 SkyFrost.initIndex = function () {
+  SkyFrost.loadMinecraftStatus();
   SkyFrost.loadDiscordStatus(document.getElementById('discord-online-count'));
   document.getElementById('copy-ip-btn')?.addEventListener('click', () => {
+    void SkyFrost.copyIP();
+  });
+  document.getElementById('minecraft-copy-ip-btn')?.addEventListener('click', () => {
     void SkyFrost.copyIP();
   });
   void SkyFrost.initIndexNews();
@@ -390,6 +571,9 @@ SkyFrost.initIndex = function () {
   if (!document.body.dataset.indexI18nBound) {
     document.body.dataset.indexI18nBound = '1';
     document.addEventListener('skyfrost:languagechange', () => {
+      if (typeof SkyFrost.renderMinecraftStatus === 'function' && SkyFrost.latestMinecraftStatus) {
+        SkyFrost.renderMinecraftStatus(SkyFrost.latestMinecraftStatus);
+      }
       void SkyFrost.initIndexNews();
       SkyFrost.loadIndexStoreData();
     });
@@ -1523,7 +1707,7 @@ SkyFrost.initVote = function () {
 
 /* ── COPY IP ── */
 SkyFrost.copyIP = async function () {
-  const ip = 'play.skyfrost.it';
+  const ip = MINECRAFT_SERVER_ADDRESS;
   if (!navigator.clipboard || typeof navigator.clipboard.writeText !== 'function') {
     SkyFrost.toast(t('copy_ip_manual', 'Copia manuale: {ip}', { ip }), 'info');
     return;
