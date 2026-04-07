@@ -188,10 +188,15 @@ const API_BASE = 'http://tuodominio.it:3001/api';
 
 In `vote.html` sono configurati questi siti:
 ```html
+data-vote-url="https://minecraftservers.org/server/685962"
+data-vote-url="https://best-minecraft-servers.co/server-skyfrost-network.32636/vote"
+data-vote-url="https://minecraft-mp.com/server-s356651"
+data-vote-url="https://topminecraftservers.org/vote/43187"
 data-vote-url="https://hytaleservers.it/server/86-skyfrost"
 data-vote-url="https://servers.hytale.it/server/40-skyfrost"
 data-vote-url="https://hytalist.com/skyfrost"
 data-vote-url="https://hytale-italia.com/servers/skyfrost"
+data-vote-url="https://hytale-servers.com/server/skyfrost-network"
 ```
 
 ---

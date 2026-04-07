@@ -50,17 +50,17 @@
         <div>
           <div style="font-family:var(--font-headline);font-size:1.3rem;color:var(--frost);margin-bottom:.5rem;" data-i18n="vote_rewards_title">🎁 Ricompense per voto</div>
           <div style="font-size:.9rem;color:var(--text-dim);max-width:500px;line-height:1.6;" data-i18n="vote_rewards_desc">
-            Ogni voto ti regala: monete e Vote Key. Chi vota di più ottiene premi straordinari!
+            Le ricompense cambiano in base alla piattaforma: su Minecraft ricevi 5 Gems in tutte le modalità, su Hytale 1000 monete + 2 Vote Key.
           </div>
         </div>
-        <div style="display:flex;gap:1.5rem;flex-wrap:wrap;flex-shrink:0;">
-          <div style="text-align:center;">
-            <div style="font-family:var(--font-headline);font-size:1.8rem;color:var(--cyan);">1000</div>
-            <div style="font-size:.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;" data-i18n="vote_reward_coins">Monete</div>
+        <div style="display:flex;gap:1rem;flex-wrap:wrap;flex-shrink:0;">
+          <div style="min-width:220px;padding:1rem 1.1rem;border:1px solid rgba(88,194,250,0.16);border-radius:var(--radius-md);background:rgba(7,14,36,0.55);">
+            <div style="font-family:var(--font-headline);font-size:1rem;color:var(--cyan);margin-bottom:.35rem;" data-i18n="vote_reward_mc_title">Minecraft</div>
+            <div style="font-size:.9rem;color:var(--white);line-height:1.5;" data-i18n="vote_reward_mc_line">🎁 5 Gems in tutte le modalità</div>
           </div>
-          <div style="text-align:center;">
-            <div style="font-family:var(--font-headline);font-size:1.8rem;color:var(--gold);">2</div>
-            <div style="font-size:.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;" data-i18n="vote_reward_key">Vote Key</div>
+          <div style="min-width:220px;padding:1rem 1.1rem;border:1px solid rgba(240,200,92,0.18);border-radius:var(--radius-md);background:rgba(7,14,36,0.55);">
+            <div style="font-family:var(--font-headline);font-size:1rem;color:var(--gold);margin-bottom:.35rem;" data-i18n="vote_reward_hytale_title">Hytale</div>
+            <div style="font-size:.9rem;color:var(--white);line-height:1.5;" data-i18n="vote_reward_hytale_line">🎁 1000 monete + 2 Vote Key</div>
           </div>
         </div>
       </div>
@@ -76,6 +76,7 @@
         <div class="vote-group-head">
           <span class="badge badge-gold">Minecraft</span>
           <h3 class="vote-group-title" id="vote-minecraft-title">Minecraft</h3>
+          <p class="vote-group-desc" data-i18n="vote_group_minecraft_desc">Quattro portali Minecraft per supportare SkyFrost con il tuo voto giornaliero.</p>
         </div>
 
         <div class="grid-2 vote-grid-compact">
@@ -83,7 +84,7 @@
             <div class="vote-icon">⛏️</div>
             <div class="vote-site">MinecraftServers.org</div>
             <div class="vote-desc" data-i18n="vote_site_mc_1_desc">Portale internazionale Minecraft: il tuo voto aiuta SkyFrost a restare visibile ogni giorno.</div>
-            <div class="vote-reward" data-i18n="vote_reward_line">🎁 1000 monete + 2 Vote Key</div>
+            <div class="vote-reward" data-i18n="vote_reward_mc_line">🎁 5 Gems in tutte le modalità</div>
             <button type="button" class="btn btn-cyan btn-block"
               data-vote-url="https://minecraftservers.org/server/685962">
               <span data-i18n="vote_btn">Vota ora →</span>
@@ -94,9 +95,31 @@
             <div class="vote-icon">🧱</div>
             <div class="vote-site">Best-Minecraft-Servers.co</div>
             <div class="vote-desc" data-i18n="vote_site_mc_2_desc">Lista Minecraft molto visitata: un voto in più per far crescere SkyFrost.</div>
-            <div class="vote-reward" data-i18n="vote_reward_line">🎁 1000 monete + 2 Vote Key</div>
+            <div class="vote-reward" data-i18n="vote_reward_mc_line">🎁 5 Gems in tutte le modalità</div>
             <button type="button" class="btn btn-cyan btn-block"
               data-vote-url="https://best-minecraft-servers.co/server-skyfrost-network.32636/vote">
+              <span data-i18n="vote_btn">Vota ora →</span>
+            </button>
+          </div>
+
+          <div class="card vote-card">
+            <div class="vote-icon">🌍</div>
+            <div class="vote-site">Minecraft-MP.com</div>
+            <div class="vote-desc" data-i18n="vote_site_mc_3_desc">Directory globale per server Minecraft: un voto in più per aumentare la visibilità di SkyFrost.</div>
+            <div class="vote-reward" data-i18n="vote_reward_mc_line">🎁 5 Gems in tutte le modalità</div>
+            <button type="button" class="btn btn-cyan btn-block"
+              data-vote-url="https://minecraft-mp.com/server-s356651">
+              <span data-i18n="vote_btn">Vota ora →</span>
+            </button>
+          </div>
+
+          <div class="card vote-card">
+            <div class="vote-icon">🏆</div>
+            <div class="vote-site">TopMinecraftServers.org</div>
+            <div class="vote-desc" data-i18n="vote_site_mc_4_desc">Portale dedicato alle classifiche Minecraft: il tuo voto giornaliero aiuta SkyFrost a salire ancora.</div>
+            <div class="vote-reward" data-i18n="vote_reward_mc_line">🎁 5 Gems in tutte le modalità</div>
+            <button type="button" class="btn btn-cyan btn-block"
+              data-vote-url="https://topminecraftservers.org/vote/43187">
               <span data-i18n="vote_btn">Vota ora →</span>
             </button>
           </div>
@@ -107,6 +130,7 @@
         <div class="vote-group-head">
           <span class="badge badge-cyan">Hytale</span>
           <h3 class="vote-group-title" id="vote-hytale-title">Hytale</h3>
+          <p class="vote-group-desc" data-i18n="vote_group_hytale_desc">I 5 siti Hytale restano sulla stessa riga: scorri lateralmente per vederli tutti.</p>
         </div>
 
         <div class="vote-lane-shell">
@@ -115,7 +139,7 @@
               <div class="vote-icon">🌐</div>
               <div class="vote-site">HytaleServers.it</div>
               <div class="vote-desc" data-i18n="vote_site_1_desc">Portale italiano dedicato ai server Hytale. Vota ogni 24 ore.</div>
-              <div class="vote-reward" data-i18n="vote_reward_line">🎁 1000 monete + 2 Vote Key</div>
+              <div class="vote-reward" data-i18n="vote_reward_hytale_line">🎁 1000 monete + 2 Vote Key</div>
               <button type="button" class="btn btn-cyan btn-block"
                 data-vote-url="https://hytaleservers.it/server/86-skyfrost">
                 <span data-i18n="vote_btn">Vota ora →</span>
@@ -126,7 +150,7 @@
               <div class="vote-icon">🪐</div>
               <div class="vote-site">Servers.Hytale.it</div>
               <div class="vote-desc" data-i18n="vote_site_2_desc">Directory italiana Hytale: il tuo voto aiuta SkyFrost a salire in classifica.</div>
-              <div class="vote-reward" data-i18n="vote_reward_line">🎁 1000 monete + 2 Vote Key</div>
+              <div class="vote-reward" data-i18n="vote_reward_hytale_line">🎁 1000 monete + 2 Vote Key</div>
               <button type="button" class="btn btn-cyan btn-block"
                 data-vote-url="https://servers.hytale.it/server/40-skyfrost">
                 <span data-i18n="vote_btn">Vota ora →</span>
@@ -137,7 +161,7 @@
               <div class="vote-icon">⚡</div>
               <div class="vote-site">Hytalist.com</div>
               <div class="vote-desc" data-i18n="vote_site_3_desc">Una delle liste più usate per i server Hytale. Ogni voto fa la differenza.</div>
-              <div class="vote-reward" data-i18n="vote_reward_line">🎁 1000 monete + 2 Vote Key</div>
+              <div class="vote-reward" data-i18n="vote_reward_hytale_line">🎁 1000 monete + 2 Vote Key</div>
               <button type="button" class="btn btn-cyan btn-block"
                 data-vote-url="https://hytalist.com/skyfrost">
                 <span data-i18n="vote_btn">Vota ora →</span>
@@ -148,7 +172,7 @@
               <div class="vote-icon">🧊</div>
               <div class="vote-site">Hytale-Italia.com</div>
               <div class="vote-desc" data-i18n="vote_site_4_desc">Community italiana Hytale: supporta il server con un voto giornaliero.</div>
-              <div class="vote-reward" data-i18n="vote_reward_line">🎁 1000 monete + 2 Vote Key</div>
+              <div class="vote-reward" data-i18n="vote_reward_hytale_line">🎁 1000 monete + 2 Vote Key</div>
               <button type="button" class="btn btn-cyan btn-block"
                 data-vote-url="https://hytale-italia.com/servers/skyfrost">
                 <span data-i18n="vote_btn">Vota ora →</span>
@@ -159,7 +183,7 @@
               <div class="vote-icon">🛰️</div>
               <div class="vote-site">Hytale-Servers.com</div>
               <div class="vote-desc" data-i18n="vote_site_5_desc">Directory internazionale per server Hytale: il tuo voto conta.</div>
-              <div class="vote-reward" data-i18n="vote_reward_line">🎁 1000 monete + 2 Vote Key</div>
+              <div class="vote-reward" data-i18n="vote_reward_hytale_line">🎁 1000 monete + 2 Vote Key</div>
               <button type="button" class="btn btn-cyan btn-block"
                 data-vote-url="https://hytale-servers.com/server/skyfrost-network">
                 <span data-i18n="vote_btn">Vota ora →</span>
