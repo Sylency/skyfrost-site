@@ -370,16 +370,12 @@ SkyFrost.loadMinecraftStatus = function () {
   const onlineCount = document.getElementById('mc-online-count');
   const playerCap = document.getElementById('mc-player-cap');
   const versionEl = document.getElementById('mc-version');
-  const softwareEl = document.getElementById('mc-software');
-  const pluginCountEl = document.getElementById('mc-plugin-count');
   const motdEl = document.getElementById('mc-motd');
   const addressEl = document.getElementById('mc-address');
-  const srvRecordEl = document.getElementById('mc-srv-record');
   const updatedAtEl = document.getElementById('mc-updated-at');
-  const playerListEl = document.getElementById('mc-player-list');
   const serverIconEl = document.getElementById('mc-server-icon');
 
-  if (!liveBadge || !heroDot || !heroStatusText || !onlineCount || !playerCap || !versionEl || !softwareEl || !pluginCountEl || !motdEl || !addressEl || !srvRecordEl || !updatedAtEl || !playerListEl || !serverIconEl) {
+  if (!liveBadge || !heroDot || !heroStatusText || !onlineCount || !playerCap || !versionEl || !motdEl || !addressEl || !updatedAtEl || !serverIconEl) {
     return;
   }
 
@@ -398,43 +394,13 @@ SkyFrost.loadMinecraftStatus = function () {
     if (status === 'loading') heroDot.classList.add('loading');
   }
 
-  function renderPlayers(list) {
-    playerListEl.innerHTML = '';
-    const values = Array.isArray(list) ? list.filter(Boolean).slice(0, 8) : [];
-    if (!values.length) {
-      const fallbackChip = document.createElement('span');
-      fallbackChip.className = 'minecraft-chip';
-      if (SkyFrost.latestMinecraftStatus?.status === 'online') {
-        fallbackChip.textContent = t('mc_players_none_visible', 'Nessun nome esposto dal provider');
-      } else if (SkyFrost.latestMinecraftStatus?.status === 'offline') {
-        fallbackChip.textContent = t('mc_players_offline', 'Server offline al momento');
-      } else {
-        fallbackChip.textContent = t('mc_players_waiting', 'In attesa dei dati live');
-      }
-      playerListEl.appendChild(fallbackChip);
-      return;
-    }
-
-    values.forEach((name) => {
-      const chip = document.createElement('span');
-      chip.className = 'minecraft-chip';
-      chip.textContent = name;
-      playerListEl.appendChild(chip);
-    });
-  }
-
   function renderStatus(data) {
     const payload = data && typeof data === 'object' ? data : {};
     const status = safeText(payload.status, 'unavailable');
     const online = Number.isFinite(Number(payload.onlinePlayers)) ? Math.floor(Number(payload.onlinePlayers)) : null;
     const max = Number.isFinite(Number(payload.maxPlayers)) ? Math.floor(Number(payload.maxPlayers)) : null;
-    const software = safeText(payload.software, '');
-    const version = safeText(payload?.version?.name, '');
-    const pluginCount = Number.isFinite(Number(payload.pluginCount)) ? Math.floor(Number(payload.pluginCount)) : null;
     const motd = safeText(payload?.motd?.clean, '');
     const updatedAt = formatDateTime(payload.updatedAt);
-    const srvHost = safeText(payload?.srvRecord?.host, '');
-    const srvPort = Number.isFinite(Number(payload?.srvRecord?.port)) ? Math.floor(Number(payload.srvRecord.port)) : null;
     const address = safeText(payload.serverAddress, MINECRAFT_SERVER_ADDRESS);
     const icon = safeText(payload.icon, '');
 
@@ -461,18 +427,14 @@ SkyFrost.loadMinecraftStatus = function () {
     playerCap.textContent = max !== null
       ? t('mc_player_cap', '/ {count} max', { count: max })
       : t('mc_player_cap_unknown', '/ -- max');
-    versionEl.textContent = version || t('mc_unknown_version', 'Rilevamento...');
-    softwareEl.textContent = software || t('mc_unknown_software', 'Auto');
-    pluginCountEl.textContent = pluginCount !== null ? String(pluginCount) : t('mc_query_unavailable', 'N/D');
+    versionEl.textContent = '1.21+';
     motdEl.textContent = motd || (
       status === 'offline'
         ? t('mc_motd_offline', 'Il server e offline in questo momento, ma la base e pronta per tornare live.')
         : t('mc_loading_motd', 'Sto leggendo il messaggio live del server...')
     );
     addressEl.textContent = address;
-    srvRecordEl.textContent = srvHost ? `${srvHost}${srvPort ? `:${srvPort}` : ''}` : t('mc_direct_connection', 'Connessione diretta');
     updatedAtEl.textContent = updatedAt || '--';
-    renderPlayers(payload.samplePlayers);
 
     if (icon) {
       serverIconEl.src = icon;
