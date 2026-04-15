@@ -4,8 +4,15 @@
 <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18093249003"></script>
 <script>
 window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
+window.gtag = window.gtag || function(){dataLayer.push(arguments);};
 gtag('js', new Date());
+gtag('consent', 'default', {
+ad_storage: 'denied',
+ad_user_data: 'denied',
+ad_personalization: 'denied',
+analytics_storage: 'denied',
+wait_for_update: 500
+});
 
 gtag('config', 'AW-18093249003');
 </script>
@@ -96,6 +103,7 @@ gtag('config', 'AW-18093249003');
   </style>
   </head>
 <body class="bg-surface text-on-surface font-body selection:bg-primary-container selection:text-on-primary-container overflow-x-hidden">
+<script src="assets/consent.js"></script>
 <!-- Background Layers -->
 <div class="fixed inset-0 z-[-1] bg-surface">
 <div class="absolute inset-0 aurora-glow"></div>

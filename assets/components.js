@@ -230,6 +230,7 @@
           <ul>
             <li><a href="${ROUTE_PATHS.privacy}" data-i18n="footer_privacy_link">Privacy Policy</a></li>
             <li><a href="${ROUTE_PATHS.cookie}" data-i18n="footer_cookie_link">Cookie Policy</a></li>
+            <li><a href="#" onclick="event.preventDefault(); if (window.SkyFrost && typeof window.SkyFrost.openConsentSettings === 'function') window.SkyFrost.openConsentSettings();" data-i18n="footer_cookie_manage">Gestisci preferenze cookie</a></li>
             <li><a href="${ROUTE_PATHS.terms}" data-i18n="footer_terms_link">Termini di Servizio</a></li>
             <li><a href="sitemap.xml" data-i18n="footer_sitemap_link">Sitemap</a></li>
           </ul>

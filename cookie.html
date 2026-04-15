@@ -5,14 +5,21 @@
   <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18093249003"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
+    window.gtag = window.gtag || function(){dataLayer.push(arguments);};
     gtag('js', new Date());
+    gtag('consent', 'default', {
+      ad_storage: 'denied',
+      ad_user_data: 'denied',
+      ad_personalization: 'denied',
+      analytics_storage: 'denied',
+      wait_for_update: 500
+    });
 
     gtag('config', 'AW-18093249003');
   </script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Cookie Policy ufficiale di SkyFrost Network." data-i18n-content="meta_cookie_desc" />
+  <meta name="description" content="Informazioni sui cookie tecnici e sugli strumenti di misurazione con consenso usati da SkyFrost Network." data-i18n-content="meta_cookie_desc" />
   <meta name="robots" content="index,follow" />
   <meta name="theme-color" content="#000c42" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -39,12 +46,13 @@
 </head>
 <body>
 <script src="assets/components.js"></script>
+<script src="assets/consent.js"></script>
 
   <div class="page-hero">
     <div class="page-hero-copy">
     <p class="page-hero-eyebrow" data-i18n="legal_eyebrow">Conformita e Trasparenza</p>
     <h1 class="page-hero-title"><span data-i18n="cookie_title_plain">Cookie</span> <span class="glow" data-i18n="cookie_title_glow">Policy</span></h1>
-    <p class="page-hero-sub" data-i18n="legal_updated">Ultimo aggiornamento: 1 marzo 2026.</p>
+    <p class="page-hero-sub" data-i18n="legal_updated">Ultimo aggiornamento: 15 aprile 2026.</p>
   </div>
 </div>
 
@@ -63,18 +71,19 @@
             <ul class="wiki-list">
               <li data-i18n="cookie_item_1"><code>sf_session</code>: mantiene la sessione autenticata Discord.</li>
               <li data-i18n="cookie_item_2"><code>sf_oauth_state</code>: protegge il flusso OAuth da richieste non valide.</li>
+              <li data-i18n="cookie_item_3"><code>sf_cookie_consent</code>: memorizza la tua scelta sul banner cookie nel browser.</li>
             </ul>
-            <p data-i18n="cookie_section_2_desc">Questi cookie sono tecnici, necessari al funzionamento del supporto e non usati per profilazione pubblicitaria.</p>
+            <p data-i18n="cookie_section_2_desc">Questi strumenti sono tecnici o funzionali alla gestione del consenso e servono a mantenere login, sicurezza OAuth e preferenze privacy.</p>
           </section>
 
           <section class="wiki-section">
-            <h3 data-i18n="cookie_section_3_title">Cookie di terze parti</h3>
-            <p data-i18n="cookie_section_3_desc">SkyFrost integra servizi esterni (Discord e Tebex). Visitando i loro domini possono essere applicate policy cookie autonome di tali provider.</p>
+            <h3 data-i18n="cookie_section_3_title">Misurazione e servizi di terze parti</h3>
+            <p data-i18n="cookie_section_3_desc">SkyFrost usa il Google tag per misurare visite e conversioni solo dopo consenso esplicito. Restano inoltre presenti integrazioni esterne come Discord e Tebex, soggette alle rispettive policy quando visiti i loro domini.</p>
           </section>
 
           <section class="wiki-section">
-            <h3 data-i18n="cookie_section_4_title">Gestione e disattivazione</h3>
-            <p data-i18n="cookie_section_4_desc">Puoi cancellare o bloccare i cookie dalle impostazioni del browser. Disabilitare i cookie tecnici puo impedire login Discord e invio ticket.</p>
+            <h3 data-i18n="cookie_section_4_title">Gestione e revoca del consenso</h3>
+            <p data-i18n="cookie_section_4_desc">Puoi accettare o rifiutare i cookie di misurazione dal banner e riaprire le preferenze dal footer del sito. Puoi anche cancellare i cookie dal browser; disabilitare quelli tecnici puo impedire login Discord e invio ticket.</p>
           </section>
         </div>
       </article>
